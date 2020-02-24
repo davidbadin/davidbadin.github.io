@@ -48,7 +48,9 @@ sap.ui.define([
 						// clear input and set focus
 						oInput.setValue("");
 						oView.byId("saveWordButton").setEnabled(false);
-						oInput.focus();
+						jQuery.sap.delayedCall(500, this, function () {
+							oView.byId("inputWord").focus();
+						});
 					},
 					
 					onCloseDialog: function () {
@@ -64,12 +66,15 @@ sap.ui.define([
 					// connect dialog to the root view of this component (models, lifecycle)
 					oView.addDependent(oDialog);
 					oDialog.open();
-					jQuery.sap.delayedCall(1000, this, function () {
+					jQuery.sap.delayedCall(500, this, function () {
 						oView.byId("inputWord").focus();
 					});
 				});
 			} else {
 				oView.byId("addWordDialog").open();
+				jQuery.sap.delayedCall(500, this, function () {
+					oView.byId("inputWord").focus();
+				});
 			}
 
 			oView.byId("inputWord").setValue("");
