@@ -65,7 +65,7 @@ sap.ui.define([
 					oView.addDependent(oDialog);
 					oDialog.open();
 					jQuery.sap.delayedCall(0, this, function () {
-						this.byId("input").focus();
+						oView.byId("inputWord").focus();
 					});
 				});
 			} else {
