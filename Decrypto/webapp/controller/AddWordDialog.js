@@ -1,7 +1,8 @@
 sap.ui.define([
 	"sap/ui/base/ManagedObject",
-	"sap/ui/core/Fragment"
-], function (ManagedObject, Fragment) {
+	"sap/ui/core/Fragment",
+	"sap/m/MessageToast"
+], function (ManagedObject, Fragment, MessageToast) {
 	"use strict";
 
 	return ManagedObject.extend("Project.Decrypto.controller.AddWordDialog", {
@@ -48,9 +49,11 @@ sap.ui.define([
 						// clear input and set focus
 						oInput.setValue("");
 						oView.byId("saveWordButton").setEnabled(false);
+						MessageToast.show("Word added!");
 						jQuery.sap.delayedCall(500, this, function () {
 							oView.byId("inputWord").focus();
 						});
+
 					},
 					
 					onCloseDialog: function () {
