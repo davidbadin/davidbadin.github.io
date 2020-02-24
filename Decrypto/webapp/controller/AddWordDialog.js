@@ -64,6 +64,7 @@ sap.ui.define([
 					// connect dialog to the root view of this component (models, lifecycle)
 					oView.addDependent(oDialog);
 					oDialog.open();
+					oView.byId("inputWord").focus();
 				});
 			} else {
 				oView.byId("addWordDialog").open();
