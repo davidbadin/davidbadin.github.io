@@ -1,0 +1,27 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:html="http://www.w3.org/1999/xhtml"
+	controllerName="Project.Decrypto.controller.wordsDtb">
+	<App>
+		<pages>
+			<Page title="{parts: [{path: 'i18n>viewDtbTitle'}, {path: 'settingsModel>/numberOfWords'}], formatter: '.formatDtbTitle'}"
+				showNavButton="true" navButtonPress=".onNavBack">
+				<content>
+					<List noDataText="{i18n>noWords}" id="list0" mode="Delete" delete="onDeleteItem" items="{path: '/WordsCollection'}"
+						enableBusyIndicator="true">
+						<items>
+							<StandardListItem title="{word}"/>
+						</items>
+					</List>
+				</content>
+				<footer>
+					<Toolbar width="100%" id="toolbar1">
+						<content>
+							<ToolbarSpacer id="spacer0"/>
+							<Button xmlns="sap.m" id="deleteAllWordsButton" text="{i18n>deleteAllWords}" icon="sap-icon://delete" type="Reject" press="onDeleteAllWords"/>
+							<Button xmlns="sap.m" id="addWordsButton" text="{i18n>TileAddWordsTitle}" icon="sap-icon://add" type="Emphasized" press="onAddWord"/>
+						</content>
+					</Toolbar>
+				</footer>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>

@@ -1,0 +1,28 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="Project.Decrypto.controller.intro" displayBlock="true">
+	<Shell id="shell">
+		<App id="app">
+			<pages>
+				<Page id="page" title="{i18n>title}">
+					<content>
+						<TileContainer id="container0">
+							<tiles>
+								<StandardTile id="tileIntroPlay" title="{i18n>TilePlayTitle}" icon="sap-icon://theater" removable="false" press="onPressPlay"
+									infoState="Success"/></tiles>
+								<StandardTile id="tileIntroDatabase" title="{i18n>TileInYourDtb}" icon="sap-icon://list" removable="false" press="onPressDtb"
+									infoState="{= ${settingsModel>/numberOfWords} >= 4 ? 'Success' : 'Error' }" info="{i18n>TileWordsInfo}" number="{settingsModel>/numberOfWords}" 
+									numberUnit="{= ${settingsModel>/numberOfWords} === 1 ? ${i18n>wordsUnitSing} : ${i18n>wordsUnitPlu} }"/>
+						</TileContainer>
+					</content>
+					<footer>
+						<Toolbar width="100%" id="toolbar1">
+							<content>
+								<ToolbarSpacer id="spacer0"/>
+								<Button xmlns="sap.m" id="addWordsButton" text="{i18n>TileAddWordsTitle}" icon="sap-icon://add" type="Emphasized" press="onAddWord"/>
+							</content>
+						</Toolbar>
+					</footer>
+				</Page>
+			</pages>
+		</App>
+	</Shell>
+</mvc:View>

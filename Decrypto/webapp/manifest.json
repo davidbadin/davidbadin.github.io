@@ -1,0 +1,145 @@
+{
+	"_version": "1.12.0",
+	"sap.app": {
+		"id": "Project.Decrypto",
+		"type": "application",
+		"i18n": "i18n/i18n.properties",
+		"applicationVersion": {
+			"version": "1.0.0"
+		},
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}",
+		"sourceTemplate": {
+			"id": "ui5template.basicSAPUI5ApplicationProject",
+			"version": "1.40.12"
+		},
+		"dataSources": {
+			"settingsModelSource": {
+				"uri": "./model/settings.json",
+				"type": "JSON"
+			}
+		}
+	},
+	"sap.ui": {
+		"technology": "UI5",
+		"icons": {
+			"icon": "",
+			"favIcon": "",
+			"phone": "",
+			"phone@2": "",
+			"tablet": "",
+			"tablet@2": ""
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		}
+	},
+	"sap.ui5": {
+		"flexEnabled": false,
+		"rootView": {
+			"viewName": "Project.Decrypto.view.intro",
+			"type": "XML",
+			"async": true,
+			"id": "intro"
+		},
+		"dependencies": {
+			"minUI5Version": "1.65.6",
+			"libs": {
+				"sap.ui.layout": {},
+				"sap.ui.core": {},
+				"sap.m": {}
+			}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleName": "Project.Decrypto.i18n.i18n"
+				}
+			},
+			"settingsModel": {
+				"type": "sap.ui.model.json.JSONModel",
+				"dataSource": "settingsModelSource",
+				"preload": true
+			}
+		},
+		"resources": {
+			"css": [
+				{
+					"uri": "css/style.css"
+				}
+			]
+		},
+		"routing": {
+			"config": {
+				"routerClass": "sap.m.routing.Router",
+				"viewType": "XML",
+				"async": true,
+				"viewPath": "Project.Decrypto.view",
+				"controlAggregation": "pages",
+				"controlId": "app",
+				"clearControlAggregation": false
+			},
+			"routes": [
+				{
+					"name": "RouteIntro",
+					"pattern": "",
+					"target": [
+						"TargetIntro"
+					]
+				},
+				{
+					"name": "RouteDtb",
+					"pattern": "yourwords",
+					"target": [
+						"TargetDtb"
+					]
+				},
+				{
+					"name": "RoutePlay",
+					"pattern": "playdecrypto",
+					"target": [
+						"TargetPlay"
+					]
+				}
+			],
+			"targets": {
+				"TargetIntro": {
+					"viewType": "XML",
+					"transition": "slide",
+					"clearControlAggregation": false,
+					"viewName": "intro",
+					"viewLevel": 1
+				},
+				"TargetDtb": {
+					"viewType": "XML",
+					"transition": "slide",
+					"clearControlAggregation": false,
+					"viewName": "wordsDtb",
+					"viewLevel": 2
+				},
+				"TargetPlay": {
+					"viewType": "XML",
+					"transition": "slide",
+					"clearControlAggregation": false,
+					"viewName": "play",
+					"viewLevel": 2
+				},
+				"play": {
+					"viewType": "XML",
+					"viewName": "play"
+				}
+			}
+		}
+	},
+	"sap.platform.hcp": {
+		"uri": "webapp",
+		"_version": "1.1.0"
+	}
+}
