@@ -33,6 +33,7 @@ sap.ui.define([
 
 					onSaveWord: function () {
 						var oModel = oView.getModel();
+						var oI18N = oView.getModel("i18n").getResourceBundle();
 						var oData = oModel.getData();
 						var oInput = oView.byId("inputWord");
 						var sQuery = oInput.getValue();
@@ -49,7 +50,7 @@ sap.ui.define([
 						// clear input and set focus
 						oInput.setValue("");
 						oView.byId("saveWordButton").setEnabled(false);
-						MessageToast.show("Word added!");
+						MessageToast.show(oI18N.getText("wordAdded", sQuery));
 						jQuery.sap.delayedCall(500, this, function () {
 							oView.byId("inputWord").focus();
 						});
