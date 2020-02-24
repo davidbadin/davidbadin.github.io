@@ -64,6 +64,9 @@ sap.ui.define([
 					// connect dialog to the root view of this component (models, lifecycle)
 					oView.addDependent(oDialog);
 					oDialog.open();
+					jQuery.sap.delayedCall(0, this, function () {
+						this.byId("input").focus();
+					});
 				});
 			} else {
 				oView.byId("addWordDialog").open();
