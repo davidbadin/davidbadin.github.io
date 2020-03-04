@@ -60,10 +60,6 @@ sap.ui.define([
 
 			this.getView().setModel(oCodeJsonModel, "codeModel");
 
-			console.log(oStorage.get("generatedWords")); // eslint-disable-line no-console
-			console.log(oStorage.get("generatedIndex")); // eslint-disable-line no-console
-			console.log(oStorage.get("generatedCode")); // eslint-disable-line no-console
-
 		},
 
 		onGenerateWords: function () {
