@@ -9,12 +9,61 @@ sap.ui.define([
 
 	return Controller.extend("Project.Decrypto.controller.play", {
 		onInit: function () {
-			var oCodeJsonModel = new JSONModel({
-				"cCode1": "X",
-				"cCode2": "X",
-				"cCode3": "X"
-			});
+			var oView = this.getView();
+			var oCodeJsonModel = new JSONModel();
+			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
+			
+			if (!oStorage.get("generatedWords")) {
+
+				oCodeJsonModel.setData({
+					"cCode1": "X",
+					"cCode2": "X",
+					"cCode3": "X"
+				});	
+
+			} else {	// in case the game didn't finnish properly / was resumed / the page was reloaded
+				var aGeneratedWords = oStorage.get("generatedWords");
+				var aGeneratedIndex = oStorage.get("generatedIndex");
+				var oSettingsModel = this.getOwnerComponent().getModel("settingsModel");
+				var oButtonGenerateWords = oView.byId("generateWordsButton");
+				
+				// restore words and indexes
+				oView.byId("codeWord01").setText("1: " + aGeneratedWords[0]);
+				oView.byId("codeWord02").setText("2: " + aGeneratedWords[1]);
+				oView.byId("codeWord03").setText("3: " + aGeneratedWords[2]);
+				oView.byId("codeWord04").setText("4: " + aGeneratedWords[3]);
+				oSettingsModel.setProperty("/savedIndex", aGeneratedIndex);
+
+				oButtonGenerateWords.setText(this.getOwnerComponent().getModel("i18n").getProperty("regenerateWords"));
+				oSettingsModel.setProperty("/wordsGenerated", true);
+
+				if (!oStorage.get("generatedCode")) {
+					oCodeJsonModel.setData({
+						"cCode1": "X",
+						"cCode2": "X",
+						"cCode3": "X"
+					});	
+				} else {
+					var aGeneratedCode = oStorage.get("generatedCode");
+
+					// restore code
+					oCodeJsonModel.setData({
+						"cCode1": aGeneratedCode[0],
+						"cCode2": aGeneratedCode[1],
+						"cCode3": aGeneratedCode[2]
+					});	
+
+					oSettingsModel.setProperty("/gameStarted", true);
+					oSettingsModel.setProperty("/codeExpanded", true);
+				}
+			}
+
 			this.getView().setModel(oCodeJsonModel, "codeModel");
+
+			console.log(oStorage.get("generatedWords")); // eslint-disable-line no-console
+			console.log(oStorage.get("generatedIndex")); // eslint-disable-line no-console
+			console.log(oStorage.get("generatedCode")); // eslint-disable-line no-console
+
 		},
 
 		onGenerateWords: function () {
@@ -24,6 +73,8 @@ sap.ui.define([
 			var oModel = this.getOwnerComponent().getModel();
 			var oData = oModel.getProperty("/WordsCollection");
 			var oSettingsModel = this.getOwnerComponent().getModel("settingsModel");
+			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
+			var aGeneratedWords = [];
 			var oButtonGenerateWords = oView.byId("generateWordsButton");
 
 			// Generate codewords
@@ -41,6 +92,16 @@ sap.ui.define([
 				return b - a;
 			});
 			oSettingsModel.setProperty("/savedIndex", aIndex);
+
+			// backup words & index in case of page being reloaded
+			aGeneratedWords = [
+				oData[aCode[0] - 1].word, 
+				oData[aCode[1] - 1].word, 
+				oData[aCode[2] - 1].word, 
+				oData[aCode[3] - 1].word
+			];
+			oStorage.put("generatedWords", aGeneratedWords);
+			oStorage.put("generatedIndex", aIndex);
 
 			// If generated for first time
 			if (!oSettingsModel.getProperty("/wordsGenerated")) {
@@ -73,12 +134,16 @@ sap.ui.define([
 		onGenerateNewCode: function () {
 			var aCode = [];
 			var oView = this.getView();
-
+			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
+			
 			aCode = this.generateCode(4);
 
 			oView.byId("code1").setText(aCode[0]);
 			oView.byId("code2").setText(aCode[1]);
 			oView.byId("code3").setText(aCode[2]);
+
+			oStorage.put("generatedCode", aCode);
+
 		},
 
 		generateCode: function (iLength) {
@@ -96,17 +161,6 @@ sap.ui.define([
 				aCode[iLength] = aCode[j];
 				aCode[j] = temp;
 			}
-
-			// OTHER METHOD
-			// var aTempCode = [];
-			// for (var i=0; i<iLength; i++) {
-			// 	aTempCode[i] = i + 1;
-			// }
-			// while (iLength--) {
-			// 	j = Math.floor(Math.random() * (iLength + 1) );
-			// 	aCode.push(aTempCode[j]);
-			// 	aTempCode.splice(j, 1);
-			// }
 
 			return aCode;
 		},
@@ -134,6 +188,20 @@ sap.ui.define([
 
 						if (sAction === "YES") {
 							var oButtonGenerateWords = oView.byId("generateWordsButton");
+							var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
+
+							// delete stored data
+							if (oStorage.get("generatedWords")) {
+								oStorage.remove("generatedWords");
+							}	
+				
+							if (oStorage.get("generatedIndex")) {
+								oStorage.remove("generatedIndex");
+							}	
+				
+							if (oStorage.get("generatedCode")) {
+								oStorage.remove("generatedCode");
+							}	
 							
 							if (sPreviousHash !== undefined) {
 								window.history.go(-1);
@@ -168,6 +236,7 @@ sap.ui.define([
 			var oComponent = this.getOwnerComponent();
 			var oModel = oComponent.getModel();
 			var oSettingsModel = oComponent.getModel("settingsModel");
+			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
 			
 			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
 			var oHistory = History.getInstance();
@@ -191,6 +260,20 @@ sap.ui.define([
 							var oButtonGenerateWords = oView.byId("generateWordsButton");
 							var aIndex = [];
 							var numberOfWords;
+							var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
+
+							// delete stored data
+							if (oStorage.get("generatedWords")) {
+								oStorage.remove("generatedWords");
+							}	
+				
+							if (oStorage.get("generatedIndex")) {
+								oStorage.remove("generatedIndex");
+							}	
+				
+							if (oStorage.get("generatedCode")) {
+								oStorage.remove("generatedCode");
+							}	
 
 							if (sPreviousHash !== undefined) {
 								window.history.go(-1);
@@ -217,6 +300,9 @@ sap.ui.define([
 								aData.splice(aIndex[i], 1);
 							}
 							oModel.setProperty("/WordsCollection", aData);
+
+							var oData = oModel.getData();
+							oStorage.put("wordsDtb", oData);
 
 							// update the number of words in settingsModel
 							numberOfWords = oModel.getProperty("/WordsCollection/length");

@@ -37,6 +37,7 @@ sap.ui.define([
 						var oData = oModel.getData();
 						var oInput = oView.byId("inputWord");
 						var sQuery = oInput.getValue();
+						var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
 						var numberOfWords;
 
 						// update word database and number of words
@@ -46,6 +47,7 @@ sap.ui.define([
 						oModel.setData(oData);
 						numberOfWords = oModel.getProperty("/WordsCollection/length");
 						oView.getModel("settingsModel").setProperty("/numberOfWords", numberOfWords);
+						oStorage.put("wordsDtb", oData);
 
 						// clear input and set focus
 						oInput.setValue("");

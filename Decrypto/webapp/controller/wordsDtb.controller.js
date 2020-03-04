@@ -5,7 +5,20 @@ sap.ui.define([
 	"use strict";
 
 	return Controller.extend("Project.Decrypto.controller.wordsDtb", {
-		onInit: function () {},
+		onInit: function () {
+			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
+			if (oStorage.get("generatedWords")) {
+				oStorage.remove("generatedWords");
+			}	
+
+			if (oStorage.get("generatedIndex")) {
+				oStorage.remove("generatedIndex");
+			}	
+
+			if (oStorage.get("generatedCode")) {
+				oStorage.remove("generatedCode");
+			}	
+		},
 
 		onNavBack: function () {
 			var oHistory = History.getInstance();
@@ -26,6 +39,7 @@ sap.ui.define([
 		onDeleteItem: function (oEvent) {
 			var oModel = this.getOwnerComponent().getModel();
 			var aData = oModel.getProperty("/WordsCollection");
+			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
 
 			var oItem = oEvent.getParameter("listItem");
 			var iIndex = oItem.getParent().indexOfItem(oItem);
@@ -33,7 +47,10 @@ sap.ui.define([
 
 			aData.splice(iIndex, 1);
 			oModel.setProperty("/WordsCollection", aData);
-
+			
+			var oData = oModel.getData();
+			oStorage.put("wordsDtb", oData);
+			
 			// update the number of words in settingsModel
 			numberOfWords = oModel.getProperty("/WordsCollection/length");
 			this.getOwnerComponent().getModel("settingsModel").setProperty("/numberOfWords", numberOfWords);
@@ -41,7 +58,6 @@ sap.ui.define([
 
 		onAddWord: function () {
 			this.getOwnerComponent().openAddWordDialog();
-			// sap.ui.controller("Project.Decrypto.controller.intro").onAddWord();
 		},
 
 		onDeleteAllWords: function () {
@@ -54,10 +70,14 @@ sap.ui.define([
 		
 		onDeleteAllWordsConfirmed: function () {
 			var oModel = this.getOwnerComponent().getModel();
+			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
 			var oData = {
 				"WordsCollection": []
 			};
+
 			oModel.setData(oData);
+			oStorage.put("wordsDtb", oData);
+
 			var numberOfWords = oModel.getProperty("/WordsCollection/length");
 			this.getOwnerComponent().getModel("settingsModel").setProperty("/numberOfWords", numberOfWords);
 			this._oConfirmDialog.close();

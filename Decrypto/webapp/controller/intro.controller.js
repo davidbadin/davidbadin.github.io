@@ -5,9 +5,20 @@ sap.ui.define([
 	"use strict";
 	return Controller.extend("Project.Decrypto.controller.intro", {
 		onInit: function () {
-			var oData = {
-				"WordsCollection": []
-			};
+
+			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
+
+			// check if there are any locally stored words, if not, create an empty wordDtb
+			if ( !oStorage.get("wordsDtb") ) {
+				var oData = {
+					"WordsCollection": []
+				};
+				oStorage.put("wordsDtb", oData);
+
+			} else {
+				var oData = oStorage.get("wordsDtb");
+			}
+
 			this.getOwnerComponent().getModel().setData(oData);
 			this.getOwnerComponent().getModel("settingsModel").setProperty("/numberOfWords", this.getOwnerComponent().getModel().getProperty("/WordsCollection/length"));
 			
@@ -24,11 +35,6 @@ sap.ui.define([
 			} else {
 				oRouter.navTo("RoutePlay");
 			}
-
-			// var oModel = this.getOwnerComponent().getModel();
-			// console.log(oModel.getData()); // eslint-disable-line no-console
-			// console.log(oModel.getProperty("/WordsCollection/length") ); // eslint-disable-line no-console
-			// MessageToast.show("id: " + oModel.getProperty("/WordsCollection/1/id"));
 		},
 
 		onPressDtb: function () {
@@ -38,52 +44,7 @@ sap.ui.define([
 
 		onAddWord: function () {
 			this.getOwnerComponent().openAddWordDialog();
-			// EASIER WAY TO CREATE DIALOG, works for current view only
-			// if (!this._oDialogAddWord) {
-			// 	this._oDialogAddWord = sap.ui.xmlfragment(this.getView().getId(), "Project.Decrypto.view.fragments.addWord", this);
-			// 	this.getView().addDependent(this._oDialogAddWord);
-			// }
-			// this._oDialogAddWord.open();
-			// this.getView().byId("inputWord").setValue("");
 		}
 		
-		// DIALOG/FRAGMENT FUNCTIONS:
-		
-		// onCloseDialog: function () {
-		// 	this._oDialogAddWord.close();
-		// }
-
-		// onWordEnter: function (oEvent) {
-		// 	var sQuery = oEvent.getParameter("newValue");
-		// 	if (sQuery) {
-		// 		this.getView().byId("saveWordButton").setEnabled(true);
-		// 	} else {
-		// 		this.getView().byId("saveWordButton").setEnabled(false);
-		// 	}
-		// },
-
-		// onSaveWord: function () {
-		// 	var oModel = this.getOwnerComponent().getModel();
-		// 	var oData = oModel.getData();
-		// 	var oInput = this.getView().byId("inputWord");
-		// 	var sQuery = oInput.getValue();
-		// 	var numberOfWords;
-
-		// 	// update word database and number of words
-		// 	oData.WordsCollection.push({
-		// 		"word": sQuery
-		// 	});
-		// 	oModel.setData(oData);
-		// 	numberOfWords = oModel.getProperty("/WordsCollection/length");
-		// 	this.getOwnerComponent().getModel("settingsModel").setProperty("/numberOfWords", numberOfWords);
-
-		// 	// clear input and set focus
-		// 	oInput.setValue("");
-		// 	this.getView().byId("saveWordButton").setEnabled(false);
-		// 	oInput.focus();
-		// },
-
-
-
 	});
 });
