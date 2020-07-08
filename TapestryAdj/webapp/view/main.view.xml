@@ -6,14 +6,22 @@
 					<content>
 					    <List noDataText="Loading..." id="civ_list" items="{/}">
 					        <items>
-					            <StandardListItem title="{Civilization}" description="{Adjustment}" 
-									icon="sap-icon://picture" type="Active" press=".onPressItem"/>
+					            <StandardListItem title="{Civilization}" description="{Adjustment}" icon="sap-icon://picture" type="Active" press=".onPressItem"/>
 					        </items>
 					    </List>
 					</content>
 				<headerContent>
 				    <!-- <Button xmlns="sap.m" id="filter_btn" activeIcon="sap-icon://filter" text="Filter"/> -->
 				</headerContent>
+				<footer>
+				    <Toolbar width="100%" id="toolbar1">
+				        <content>
+				            <CheckBox xmlns="sap.m" text="Adjusted only" selected="false" id="boxAdjusted"/>
+   				            <ToolbarSpacer id="spacer0"/>
+				            <CheckBox xmlns="sap.m" text="Automa compatible only" selected="false" id="boxAutoma"/>
+				        </content>
+				    </Toolbar>
+				</footer>
 				</Page>
 			</pages>
 		</App>
