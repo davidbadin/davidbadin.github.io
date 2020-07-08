@@ -62,6 +62,10 @@ sap.ui.define([
 
 			console.log(oModel); // eslint-disable-line no-console
 
+		},
+
+		onPressItem: function () {
+			console.log("Item pressed");	// eslint-disable-line no-console
 		}
 		
 		
