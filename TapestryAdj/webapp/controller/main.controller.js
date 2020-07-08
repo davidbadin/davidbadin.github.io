@@ -60,14 +60,43 @@ sap.ui.define([
 			oModel.setData(oDataJson);
 			oSourceModel.detachRequestCompleted(this.afterDataLoaded, this);
 
-			console.log(oModel); // eslint-disable-line no-console
+			// console.log(oModel); // eslint-disable-line no-console
 
 		},
 
-		onPressItem: function () {
-			console.log("Item pressed");	// eslint-disable-line no-console
+		onPressItem: function (oEvent) {
+			var oBindingContext = oEvent.getSource().getBindingContext();
+			var sCivilization = oBindingContext.getProperty("Civilization");
+			var sAdjustment = oBindingContext.getProperty("Adjustment");
+			var iIsAdjusted = oBindingContext.getProperty("IsAdjusted");
+
+			if (iIsAdjusted == 1) {
+
+				var oDialog = new sap.m.Dialog({
+					title: sCivilization,
+					type: 'Message',
+					content: new sap.m.Text({
+						text: sAdjustment
+					}),
+					beginButton: new sap.m.Button({	
+						text: 'Close',
+						press: function () {
+							oDialog.close();
+						}
+					}),
+					afterClose: function () {
+						oDialog.destroy();
+					}
+				});
+
+				oDialog.open();
+
+				console.log(sAdjustment);	// eslint-disable-line no-console
+
+			}
 		}
-		
+
+
 		
 	});
 });

@@ -12,7 +12,7 @@
 					    </List>
 					</content>
 				<headerContent>
-				    <Button xmlns="sap.m" id="filter_btn" activeIcon="sap-icon://filter" text="Filter"/>
+				    <!-- <Button xmlns="sap.m" id="filter_btn" activeIcon="sap-icon://filter" text="Filter"/> -->
 				</headerContent>
 				</Page>
 			</pages>
