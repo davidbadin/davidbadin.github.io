@@ -12,6 +12,12 @@
 		"sourceTemplate": {
 			"id": "ui5template.basicSAPUI5ApplicationProject",
 			"version": "1.40.12"
+		},
+		"dataSources": {
+			"sheetSource": {
+				"uri": "https://spreadsheets.google.com/feeds/cells/1uShgHUL_ca6TcOO7SbPNDnr4PWvERZpXIhY_SrByI3A/1/public/full?alt=json",
+				"type": "JSON"
+			}
 		}
 	},
 
@@ -58,6 +64,11 @@
 				"settings": {
 					"bundleName": "Project.TapestryAdj.i18n.i18n"
 				}
+			},
+			"sheetSourceModel": {
+				"type": "sap.ui.model.json.JSONModel",
+				"dataSource": "sheetSource",
+				"preload": true
 			}
 		},
 		"resources": {
