@@ -1,9 +1,18 @@
-<mvc:View controllerName="Project.TapestryAdj.controller.main" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="Project.TapestryAdj.controller.main" displayBlock="true">
 	<Shell id="shell">
 		<App id="app">
 			<pages>
 				<Page id="page" title="{i18n>title}">
-					<content></content>
+					<content>
+					    <List noDataText="Drop list items here" id="civ_list">
+					        <items>
+					            <StandardListItem type="Navigation" title="List Item 1" description="Description text" icon="sap-icon://picture" id="item0"/>
+					        </items>
+					    </List>
+					</content>
+				<headerContent>
+				    <Button xmlns="sap.m" id="filter_btn" activeIcon="sap-icon://filter" text="Filter"/>
+				</headerContent>
 				</Page>
 			</pages>
 		</App>
