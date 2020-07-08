@@ -6,7 +6,7 @@
 					<content>
 					    <List noDataText="Loading..." id="civ_list" items="{/}">
 					        <items>
-					            <StandardListItem type="Navigation" title="{Civilization}" description="{Adjustment}" icon="sap-icon://picture"/>
+					            <StandardListItem title="{Civilization}" description="{Adjustment}" icon="sap-icon://picture" type="Active"/>
 					        </items>
 					    </List>
 					</content>

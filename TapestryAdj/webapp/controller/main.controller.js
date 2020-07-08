@@ -25,7 +25,7 @@ sap.ui.define([
 			var iSourceLength = oSourceModel.getProperty("/feed/entry/length");
 			var iNumberOfRows = 0;			// number of data rows (header not included)
 
-			var aData = []
+			var aData = [];
 
 			// convert data from source to array
 			for (var i = 0; i < iSourceLength; i++) {
