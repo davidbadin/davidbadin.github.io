@@ -16,9 +16,9 @@
 				<footer>
 				    <Toolbar width="100%" id="toolbar1">
 				        <content>
-				            <CheckBox xmlns="sap.m" text="Adjusted only" selected="false" id="boxAdjusted"/>
-   				            <ToolbarSpacer id="spacer0"/>
-				            <CheckBox xmlns="sap.m" text="Automa compatible only" selected="false" id="boxAutoma"/>
+				            <ToolbarSpacer id="spacer0"/>
+							<CheckBox xmlns="sap.m" class="sapUiSmallMarginBeginEnd" text="Adjusted only" selected="false" id="boxAdjusted"/>
+				            <CheckBox xmlns="sap.m" class="sapUiSmallMarginBeginEnd" text="Automa compatible only" selected="false" id="boxAutoma"/>
 				        </content>
 				    </Toolbar>
 				</footer>
