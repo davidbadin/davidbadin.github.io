@@ -4,9 +4,9 @@
 			<pages>
 				<Page id="page" title="{i18n>title}">
 					<content>
-					    <List noDataText="Drop list items here" id="civ_list">
+					    <List noDataText="Loading..." id="civ_list" items="{/}">
 					        <items>
-					            <StandardListItem type="Navigation" title="List Item 1" description="Description text" icon="sap-icon://picture" id="item0"/>
+					            <StandardListItem type="Navigation" title="{Civilization}" description="{Adjustment}" icon="sap-icon://picture"/>
 					        </items>
 					    </List>
 					</content>

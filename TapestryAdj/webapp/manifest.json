@@ -65,6 +65,9 @@
 					"bundleName": "Project.TapestryAdj.i18n.i18n"
 				}
 			},
+			"": {
+				"type": "sap.ui.model.json.JSONModel"
+			},
 			"sheetSourceModel": {
 				"type": "sap.ui.model.json.JSONModel",
 				"dataSource": "sheetSource",
