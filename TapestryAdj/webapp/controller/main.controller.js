@@ -24,10 +24,10 @@ sap.ui.define([
 			var oView = this.getView();
 			var oModel = oView.getModel();
 			var oSourceModel = oView.getModel("sheetSourceModel");
-			// var oSourceData = oSourceModel.getData().feed.entry;
-			// var iSourceLength = oSourceModel.getProperty("/feed/entry/length");
+			var oSourceData = oSourceModel.getData().feed.entry;
+			var iSourceLength = oSourceModel.getProperty("/feed/entry/length");
 			
-			console.log(oSourceModel); // eslint-disable-line no-console
+			console.log(oSourceData); // eslint-disable-line no-console
 			console.log(oModel); // eslint-disable-line no-console
 		}
 		
