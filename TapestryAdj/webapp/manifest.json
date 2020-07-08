@@ -17,6 +17,10 @@
 			"sheetSource": {
 				"uri": "https://spreadsheets.google.com/feeds/cells/1uShgHUL_ca6TcOO7SbPNDnr4PWvERZpXIhY_SrByI3A/1/public/full?alt=json",
 				"type": "JSON"
+			},
+			"settingsSource": {
+				"uri": "./model/settings.json",
+				"type": "JSON"
 			}
 		}
 	},
@@ -71,6 +75,11 @@
 			"sheetSourceModel": {
 				"type": "sap.ui.model.json.JSONModel",
 				"dataSource": "sheetSource",
+				"preload": true
+			},
+			"settingsModel": {
+				"type": "sap.ui.model.json.JSONModel",
+				"dataSource": "settingsSource",
 				"preload": true
 			}
 		},
