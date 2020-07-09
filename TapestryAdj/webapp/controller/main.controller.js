@@ -1,7 +1,8 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
-	"sap/ui/model/json/JSONModel"
-], function (Controller, JSONModel) {
+	"sap/ui/model/json/JSONModel",
+	"sap/m/MessageToast"
+], function (Controller, JSONModel, MessageToast) {
 	"use strict";
 
 	return Controller.extend("Project.TapestryAdj.controller.main", {
@@ -60,7 +61,7 @@ sap.ui.define([
 			oModel.setData(oDataJson);
 			oSourceModel.detachRequestCompleted(this.afterDataLoaded, this);
 
-			// console.log(oModel); // eslint-disable-line no-console
+			console.log(oModel); // eslint-disable-line no-console
 
 		},
 
@@ -91,8 +92,8 @@ sap.ui.define([
 
 				oDialog.open();
 
-				console.log(sAdjustment);	// eslint-disable-line no-console
-
+			} else {
+				MessageToast.show("no change");
 			}
 		}
 
