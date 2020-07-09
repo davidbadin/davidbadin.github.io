@@ -25,8 +25,12 @@ sap.ui.define([
 			var oSourceData = oSourceModel.getData().feed.entry;
 			var iSourceLength = oSourceModel.getProperty("/feed/entry/length");
 			var iNumberOfRows = 0;			// number of data rows (header not included)
+			var sTitle;
 
 			var aData = [];
+			var aImages = [];
+
+			aImages = this.getImagesArray();
 
 			// convert data from source to array
 			for (var i = 0; i < iSourceLength; i++) {
@@ -69,15 +73,18 @@ sap.ui.define([
 						"Adjustment": aData[i][1],
 						"IsAdjusted": bIsAdjusted,
 						"Version": aData[i][3],
-						"IsAutomaComp": bIsAutomaComp
+						"IsAutomaComp": bIsAutomaComp,
+						"Picture": aImages[i]
 					});
+					if (!sTitle) {
+						sTitle = "Tapestry Adjustments (v" + aData[i][3] + ")";
+						oView.byId("page").setTitle(sTitle);
+					}
 				}
 			}
 
 			oModel.setData(oDataJson);
 			oSourceModel.detachRequestCompleted(this.afterDataLoaded, this);
-
-			console.log(oModel); // eslint-disable-line no-console
 
 		},
 
@@ -111,9 +118,41 @@ sap.ui.define([
 			} else {
 				MessageToast.show("no change");
 			}
+		},
+
+		onCheckboxAdjustedSelect: function (oEvent) {
+			var oSettingsModel = this.getOwnerComponent().getModel("settingsModel");
+			var bFilterAdjusted = oSettingsModel.getProperty("/filterAdjusted");
+			oSettingsModel.setProperty("/filterAdjusted", !bFilterAdjusted);
+		},
+
+		onCheckboxAutomaSelect: function (oEvent) {
+			var oSettingsModel = this.getOwnerComponent().getModel("settingsModel");
+			var bFilterAutoma = oSettingsModel.getProperty("/filterAutoma");
+			oSettingsModel.setProperty("/filterAutoma", !bFilterAutoma);
+		},
+
+		getImagesArray: function () {
+			var aImages = [
+				"webapp/image/00.png",
+				"webapp/image/01.png",
+				"webapp/image/02.png",
+				"webapp/image/03.png",
+				"webapp/image/04.png",
+				"webapp/image/05.png",
+				"webapp/image/06.png",
+				"webapp/image/07.png",
+				"webapp/image/08.png",
+				"webapp/image/09.png",
+				"webapp/image/10.png",
+				"webapp/image/11.png",
+				"webapp/image/12.png",
+				"webapp/image/13.png",
+				"webapp/image/14.png",
+				"webapp/image/15.png"
+			];
+			return aImages;			
 		}
-
-
 		
 	});
 });

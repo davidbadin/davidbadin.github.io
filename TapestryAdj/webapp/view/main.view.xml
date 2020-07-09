@@ -6,7 +6,7 @@
 					<content>
 					    <List noDataText="Loading..." id="civ_list" items="{/}">
 					        <items>
-					            <StandardListItem title="{Civilization}" description="{Adjustment}" icon="sap-icon://picture" 
+					            <StandardListItem title="{Civilization}" description="{Adjustment}" icon="{Picture}" 
 								type="Active" press=".onPressItem"
 								visible="{= ( ${IsAdjusted} || !${settingsModel>/filterAdjusted} ) &amp;&amp;	
 									( ${IsAutomaComp} || !${settingsModel>/filterAutoma} )
@@ -15,14 +15,13 @@
 					    </List>
 					</content>
 				<headerContent>
-				    <!-- <Button xmlns="sap.m" id="filter_btn" activeIcon="sap-icon://filter" text="Filter"/> -->
 				</headerContent>
 				<footer>
 				    <Toolbar width="100%" id="toolbar1">
 				        <content>
 				            <ToolbarSpacer id="spacer0"/>
-							<CheckBox xmlns="sap.m" class="sapUiSmallMarginBeginEnd" text="Adjusted only" selected="false" id="boxAdjusted"/>
-				            <CheckBox xmlns="sap.m" class="sapUiSmallMarginBeginEnd" text="Automa compatible only" selected="false" id="boxAutoma"/>
+							<CheckBox xmlns="sap.m" class="sapUiSmallMarginBeginEnd" text="Adjusted only" selected="false" id="boxAdjusted" select="onCheckboxAdjustedSelect"/>
+				            <CheckBox xmlns="sap.m" class="sapUiSmallMarginBeginEnd" text="Automa compatible only" selected="false" id="boxAutoma" select="onCheckboxAutomaSelect"/>
 				        </content>
 				    </Toolbar>
 				</footer>
