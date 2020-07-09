@@ -48,12 +48,28 @@ sap.ui.define([
 			var oDataJson = [];
 			for (var i = 0; i < iNumberOfRows; i++) {
 				if (aData[i]) {						// skip empty line
+					var bIsAdjusted;
+					var bIsAutomaComp;
+
+					// convert "1"/"0" into boolean t/f
+					if (aData[i][2] == "1") {
+						bIsAdjusted = true;
+					} else {
+						bIsAdjusted = false;
+					}
+
+					if (aData[i][4] == "1") {
+						bIsAutomaComp = true;
+					} else {
+						bIsAutomaComp = false;
+					}
+
 					oDataJson.push({
 						"Civilization": aData[i][0],
 						"Adjustment": aData[i][1],
-						"IsAdjusted": aData[i][2],
+						"IsAdjusted": bIsAdjusted,
 						"Version": aData[i][3],
-						"IsAutomaComp": aData[i][4]
+						"IsAutomaComp": bIsAutomaComp
 					});
 				}
 			}

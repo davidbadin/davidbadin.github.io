@@ -6,7 +6,11 @@
 					<content>
 					    <List noDataText="Loading..." id="civ_list" items="{/}">
 					        <items>
-					            <StandardListItem title="{Civilization}" description="{Adjustment}" icon="sap-icon://picture" type="Active" press=".onPressItem"/>
+					            <StandardListItem title="{Civilization}" description="{Adjustment}" icon="sap-icon://picture" 
+								type="Active" press=".onPressItem"
+								visible="{= ( ${IsAdjusted} || !${settingsModel>/filterAdjusted} ) &amp;&amp;	
+									( ${IsAutomaComp} || !${settingsModel>/filterAutoma} )
+									? true : false }"/>
 					        </items>
 					    </List>
 					</content>
