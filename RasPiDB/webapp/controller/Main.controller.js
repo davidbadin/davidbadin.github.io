@@ -9,9 +9,9 @@ sap.ui.define([
 			
 			var oView = this.getView();
 			var oModel = new JSONModel();
-			
+
 			$.ajax({                                      
-		      url: 'webapp/php/GetAllData.php',                  
+			  url: 'webapp/php/GetAllData.php',             
 		      async:false,        
 		      success: function(data)          //on recieve of reply
 		      {
