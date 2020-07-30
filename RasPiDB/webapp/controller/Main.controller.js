@@ -11,7 +11,7 @@ sap.ui.define([
 			var oModel = oView.getModel();
 
 			$.ajax({                                      
-			  url: 'http://192.168.0.101/sql/gettestdb.php',             
+			  url: "http://192.168.0.101/sql/gettestdb.php",
 		      async:false,        
 		      success: function(data)          //on recieve of reply
 		      {
