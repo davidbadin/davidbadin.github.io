@@ -15,8 +15,9 @@ sap.ui.define([
 		      async:false,        
 		      success: function(data)          //on recieve of reply
 		      {
-				oModel.setData(JSON.parse(data));
 				console.log("Success"); // eslint-disable-line no-console
+				oModel.setData(JSON.parse(data));
+				
 		      },
 		      error: function(err)
 		      {
@@ -24,7 +25,7 @@ sap.ui.define([
 		      }
 		    });
 			
-			console.log(oModel.getData()); // eslint-disable-line no-console
+			console.log(oModel); // eslint-disable-line no-console
 			
 			oView.setModel(oModel);
 
