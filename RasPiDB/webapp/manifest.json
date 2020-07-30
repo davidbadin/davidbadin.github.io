@@ -12,12 +12,6 @@
 		"sourceTemplate": {
 			"id": "ui5template.basicSAPUI5ApplicationProject",
 			"version": "1.40.12"
-		},
-		"dataSources": {
-			"phpSource": {
-				"uri": "http://192.168.0.101/sql/gettestdb.php",
-				"type": "JSON"
-			}
 		}
 	},
 

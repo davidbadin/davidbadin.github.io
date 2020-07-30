@@ -9,9 +9,10 @@ sap.ui.define([
 			
 			var oView = this.getView();
 			var oModel = oView.getModel();
+			var sUrl = "http://192.168.0.101/sql/gettestdb.php";
 
 			$.ajax({                                      
-			  url: "http://192.168.0.101/sql/gettestdb.php",
+			  url: sUrl,
 		      async:false,        
 		      success: function(data)          //on recieve of reply
 		      {
@@ -22,7 +23,23 @@ sap.ui.define([
 		      {
 		    	  console.log(err); // eslint-disable-line no-console
 		      }
-		    });
+			});
+			
+			// alternative solution: in manifest.json:
+			// "dataSources": {
+			// 	"phpSource": {
+			// 		"uri": "http://192.168.0.101/sql/gettestdb.php",
+			// 		"type": "JSON"
+			// 	}
+			// }
+			//	...
+			// "models": {
+			// 	"": {
+			// 		"type": "sap.ui.model.json.JSONModel",
+			// 		"dataSource": "phpSource",
+			// 		"preload": true
+			// 	}
+			// }
 			
 			console.log(oModel.getData()); // eslint-disable-line no-console
 			
