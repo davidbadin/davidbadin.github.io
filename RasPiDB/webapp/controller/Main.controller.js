@@ -26,13 +26,7 @@ sap.ui.define([
 			});
 			
 			// alternative solution: in manifest.json:
-			// "dataSources": {
-			// 	"phpSource": {
-			// 		"uri": "http://192.168.0.101/sql/gettestdb.php",
-			// 		"type": "JSON"
-			// 	}
-			// }
-			//	...
+			//
 			// "models": {
 			// 	"": {
 			// 		"type": "sap.ui.model.json.JSONModel",
