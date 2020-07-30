@@ -11,7 +11,7 @@ sap.ui.define([
 			var oModel = new JSONModel();
 
 			$.ajax({                                      
-			  url: 'webapp/php/GetAllData.php',             
+			  url: 'http://192.168.0.101/sql/gettestdb.php',             
 		      async:false,        
 		      success: function(data)          //on recieve of reply
 		      {
@@ -25,7 +25,7 @@ sap.ui.define([
 		      }
 		    });
 			
-			console.log(oModel); // eslint-disable-line no-console
+			console.log(oModel.getData()); // eslint-disable-line no-console
 			
 			oView.setModel(oModel);
 
