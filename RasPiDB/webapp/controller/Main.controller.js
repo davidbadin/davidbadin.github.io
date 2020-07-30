@@ -9,7 +9,7 @@ sap.ui.define([
 			
 			var oView = this.getView();
 			var oModel = oView.getModel();
-			var sUrl = "http://192.168.0.101/sql/gettestdb.php";
+			var sUrl = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.phpSource.uri;
 
 			$.ajax({                                      
 			  url: sUrl,
@@ -41,7 +41,7 @@ sap.ui.define([
 			// 	}
 			// }
 			
-			console.log(oModel.getData()); // eslint-disable-line no-console
+			console.log(oModel.getData().result); // eslint-disable-line no-console
 			
 			oView.setModel(oModel);
 
