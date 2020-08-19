@@ -1,0 +1,74 @@
+<mvc:View controllerName="Project.PD2020.controller.Main" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:unified="sap.ui.unified">
+	<Shell id="shell">
+		<App id="app">
+			<pages>
+				<Page id="page" title="{i18n>title}">
+					<content>
+						<VBox class="sapUiSmallMargin">
+							<PlanningCalendar
+								id="PC1"
+								stickyHeader="true"
+								viewKey="A"
+								startDate="{path: '/startDate'}"
+								rows="{path: '/events'}"
+								appointmentsVisualization="Filled"
+								appointmentSelect="handleAppointmentSelect"
+								showEmptyIntervalHeaders="false"
+								showWeekNumbers="false">
+								<toolbarContent>
+									<Title text="Harmonogram" titleStyle="H4"/>
+									<ToolbarSpacer/>
+									<Button id="day00" text="teraz" press="onDayPress" type="Emphasized"/>
+									<Button id="day01" text="štvrtok" press="onDayPress"/>
+									<Button id="day02" text="piatok" press="onDayPress"/>
+									<Button id="day03" text="sobota" press="onDayPress"/>
+								</toolbarContent>
+								<views>
+									<PlanningCalendarView
+										key="A"
+										intervalType="Hour"
+										description="hours view"
+										intervalsS="3"
+										intervalsM="4"
+										intervalsL="6"
+										showSubIntervals="true">
+									</PlanningCalendarView>
+								</views>
+								<rows>
+									<PlanningCalendarRow
+										
+										title="{stage}"
+										
+										appointments="{path : 'appointments', templateShareable: true}"
+										intervalHeaders="{path: 'headers', templateShareable: true}">
+										<!--<customData>-->
+										<!--	<core:CustomData key="emp-name" value="{name}" writeToDom="true"/>-->
+										<!--</customData>-->
+										<appointments>
+											<unified:CalendarAppointment
+												startDate="{start}"
+												endDate="{end}"
+												title="{band}"
+												text="{description}"
+												type="{type}"
+												tentative="false">
+											</unified:CalendarAppointment>
+										</appointments>
+										<intervalHeaders>
+											<unified:CalendarAppointment
+												startDate="{start}"
+												endDate="{end}"
+												title="{title}"
+												type="Type01">
+											</unified:CalendarAppointment>
+										</intervalHeaders>
+									</PlanningCalendarRow>
+								</rows>
+							</PlanningCalendar>
+						</VBox>
+					</content>
+				</Page>
+			</pages>
+		</App>
+	</Shell>
+</mvc:View>
