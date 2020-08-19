@@ -16,7 +16,7 @@
 								showEmptyIntervalHeaders="false"
 								showWeekNumbers="false">
 								<toolbarContent>
-									<Title text="Harmonogram" titleStyle="H4"/>
+									<Title text="Harmonogram" titleStyle="H4" visible="{= !${device>/system/phone} }"/>
 									<ToolbarSpacer/>
 									<Button id="day00" text="teraz" press="onDayPress" type="Emphasized"/>
 									<Button id="day01" text="štvrtok" press="onDayPress"/>

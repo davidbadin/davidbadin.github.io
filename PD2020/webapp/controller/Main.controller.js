@@ -9,7 +9,6 @@ sap.ui.define([
 		onInit: function () {
 			
 			var oView = this.getView();
-			var oModel = oView.getModel();
 			var oSourceModel = oView.getModel("sourceDataModel");
 			
 			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
@@ -24,14 +23,13 @@ sap.ui.define([
 			var oModel = oView.getModel();
 			var oSourceModel = oView.getModel("sourceDataModel");
 			var aData = [];
-			// var aDataSorted = [];
 			var aDataMain = [];
 			var aDataAcu = [];
 			var aDataCine = [];
 			var oStartFestDate = new Date("2020", "7", "27", "12", "00");
 			var oEndFestDate = new Date("2020", "7", "31", "00", "00");
 			
-			console.log(oSourceModel.getData().feed.entry[84].gs$cell); // eslint-disable-line no-console
+			// console.log(oSourceModel.getData().feed.entry[84].gs$cell); // eslint-disable-line no-console
 			
 			var oSourceData = oSourceModel.getData().feed.entry;
 			var iSourceLength = oSourceModel.getProperty("/feed/entry/length");
@@ -40,7 +38,6 @@ sap.ui.define([
 			for (var i = 0; i < iSourceLength; i++) {
 				var iRow = oSourceData[i].gs$cell.row;				
 				var iCol = oSourceData[i].gs$cell.col;				
-				// var sValue = oSourceData[i].gs$cell.inputValue;
 				var sValue = oSourceData[i].gs$cell.$t;
 
 				if (iRow !== "1" && iRow !== "2" && iRow !== "3" && iRow !== "4") { 							
@@ -118,7 +115,7 @@ sap.ui.define([
 					}
 				]
 			});
-			console.log(oModel.getData()); // eslint-disable-line no-console
+			// console.log(oModel.getData()); // eslint-disable-line no-console
 		
 			oSourceModel.detachRequestCompleted(this.afterDataLoaded, this);
 		},
