@@ -15,6 +15,11 @@ sap.ui.define([
 			
 			oSourceModel.loadData(sUri);
 			oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);
+
+			this.byId("PC1-Header-Title").setVisible(false);
+			this.byId("PC1-Header-Spacer").setVisible(false);
+			this.byId("PC1-Header-NavToolbar-TodayBtn").setVisible(false);
+			this.byId("PC1-Header-NavToolbar-PickerBtn").setVisible(false);
 			
 		},
 		
