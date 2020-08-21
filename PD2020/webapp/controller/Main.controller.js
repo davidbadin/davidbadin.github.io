@@ -232,10 +232,7 @@ sap.ui.define([
 
 		    var tmp = document.createElement("div"); // eslint-disable-line sap-no-element-creation
 		    tmp.innerHTML = sDescr;
-			
 			var sText = tmp.textContent || tmp.innerText;
-			
-			
 			
 			return sShortDescr + "\n" + "\n" + sText;
 		},
