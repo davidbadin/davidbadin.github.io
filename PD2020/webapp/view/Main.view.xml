@@ -4,33 +4,11 @@
 			<pages>
 				<Page id="page" title="{i18n>title}">
 					<content>
-						<!-- <VBox id="vboxheader" class="sapUiSmallMargin">
-
-							
-							
-
-						</VBox> -->
 						<HBox id="hbox0">
-							<!-- <VBox id="vbox0">
-								<SinglePlanningCalendar
-									id="PC0"
-									class="sapUiSmallMarginTop"
-									title= "Harmonogram"
-									startDate="{path: '/startDate'}"
-									enableAppointmentsDragAndDrop="false"
-									enableAppointmentsResize="false"
-									enableAppointmentsCreate="false"
-									stickyMode="All">
-									<views>
-										<SinglePlanningCalendarDayView key="DayView" title="Day" />
-									</views>
-								</SinglePlanningCalendar>
-							</VBox> -->
 							<VBox width="100%" id="vbox1">
 								<SinglePlanningCalendar
 									id="PC1"
 									class="sapUiTinyMarginBeginEnd"
-									
 									viewChange="handleViewChange"
 									appointmentSelect="handleAppointmentSelect"
 									headerDateSelect="handleHeaderDateSelect"
@@ -43,19 +21,16 @@
 									enableAppointmentsResize="false"
 									enableAppointmentsCreate="false"
 									stickyMode="All"
-									appointments="{path: '/events'}"
-									
-									
-								>
+									appointments="{path: '/events'}" >
 									<actions>
 										<Title text="Harmonogram" visible="{= !${device>/system/phone} }"/>
 										<ToolbarSpacer/>
-										<!-- <Button id="day00" text="dnes" press="onDayPress" type="Emphasized"/> -->
 										<Button id="day01" text="štvrtok" press="onDayPress"/>
 										<Button id="day02" text="piatok" press="onDayPress"/>
 										<Button id="day03" text="sobota" press="onDayPress"/>
 										<Button id="day04" text="nedeľa" press="onDayPress"/>
 										<ToolbarSpacer/>
+										<Button id="legendButton" icon="sap-icon://legend" press="handleOpenLegend"/>
 									</actions>
 									<views>
 										<SinglePlanningCalendarDayView key="DayView" title="Day" />
@@ -71,88 +46,6 @@
 									</appointments>
 								</SinglePlanningCalendar>
 							</VBox>
-							<!-- <VBox width="33%" id="vbox2">
-								<SinglePlanningCalendar
-									id="PC2"
-									class="sapUiSmallMarginTop"
-									title= "Harmonogram"
-									viewChange="handleViewChange"
-									appointmentSelect="handleAppointmentSelect"
-									headerDateSelect="handleHeaderDateSelect"
-									startDateChange="handleStartDateChange"
-									appointmentDrop="handleAppointmentDrop"
-									appointmentResize="handleAppointmentResize"
-									moreLinkPress="handleMoreLinkPress"
-									startDate="{path: '/startDate'}"
-									enableAppointmentsDragAndDrop="false"
-									enableAppointmentsResize="false"
-									enableAppointmentsCreate="false"
-									stickyMode="All"
-									appointments="{
-										path: '/events', 
-										filters: [
-											{
-												path: 'stage',
-												operator: 'EQ',
-												value1: 'Akustický stage'
-											}
-										]}"
-									>
-									<views>
-										<SinglePlanningCalendarDayView key="DayView" title="Day" />
-									</views>
-									<appointments>
-										<unified:CalendarAppointment
-											title= "{band}"
-											text= "{description}"
-											type= "{type}"
-											startDate= "{start}"
-											endDate= "{end}">
-										</unified:CalendarAppointment>
-									</appointments>
-								</SinglePlanningCalendar>
-							</VBox>
-							<VBox width="33%" id="vbox3">
-								<SinglePlanningCalendar
-									id="PC3"
-									class="sapUiSmallMarginTop"
-									title= "Harmonogram"
-									viewChange="handleViewChange"
-									appointmentSelect="handleAppointmentSelect"
-									headerDateSelect="handleHeaderDateSelect"
-									startDateChange="handleStartDateChange"
-									appointmentDrop="handleAppointmentDrop"
-									appointmentResize="handleAppointmentResize"
-									moreLinkPress="handleMoreLinkPress"
-									startDate="{path: '/startDate'}"
-									enableAppointmentsDragAndDrop="false"
-									enableAppointmentsResize="false"
-									enableAppointmentsCreate="false"
-									stickyMode="All"
-									appointments="{
-										path: '/events', 
-										filters: [
-											{
-												path: 'stage',
-												operator: 'EQ',
-												value1: 'Kinečko'
-											}
-										]}">
-									<views>
-										<SinglePlanningCalendarDayView key="DayView" title="Day" />
-									</views>
-									<appointments>
-										<unified:CalendarAppointment
-											title= "{band}"
-											text= "{description}"
-											type= "{type}"
-											
-											startDate= "{start}"
-											endDate= "{end}">
-										</unified:CalendarAppointment>
-									</appointments>
-								</SinglePlanningCalendar>
-							</VBox> -->
 						</HBox>
 					</content>
 				</Page>

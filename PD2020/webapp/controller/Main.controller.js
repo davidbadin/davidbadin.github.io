@@ -1,8 +1,10 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/model/json/JSONModel",
+	"sap/ui/core/Fragment",
+	"sap/ui/unified/library",
 	"sap/m/MessageBox"
-], function (Controller, JSONModel, MessageBox) {
+], function (Controller, JSONModel, Fragment, unifiedLibrary, MessageBox) {
 	"use strict";
 
 	return Controller.extend("Project.PD2020.controller.Main", {
@@ -13,26 +15,16 @@ sap.ui.define([
 			
 			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
 			
-			oSourceModel.loadData(sUri);
-			oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);
-
-			// this.byId("PC0-Header").setVisible(false);
 			// this.byId("PC1-Header").setVisible(false);
-			// this.byId("PC2-Header").setVisible(false);
-			// this.byId("PC3-Header").setVisible(false);
-
-			// this.byId("PC1-Header-Title").setVisible(false);
+			
 			this.byId("PC1-Header-Spacer").setVisible(false);
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
-			// this.byId("PC1-Header-NavToolbar-TodayBtn").setVisible(false);
-			// this.byId("PC1-Header-NavToolbar-PickerBtn").setVisible(false);
-			
-			
-			
+						
 			// $("div.sapMSinglePCRowHeaders").eq(2).remove();
 			// $("div.sapMSinglePCRowHeaders").eq(1).hide();
 
-			
+			oSourceModel.loadData(sUri);
+			oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);
 
 		},
 
@@ -40,13 +32,14 @@ sap.ui.define([
 			var oView = this.getView();
 			var oModel = oView.getModel();
 			var oSourceModel = oView.getModel("sourceDataModel");
+			var CalendarDayType = unifiedLibrary.CalendarDayType;
+
 			var aData = [];
 			var aDataEvents = [];
-			var oStartFestDate = new Date("2020", "7", "27", "12", "00");
+			var aStages = [];
+
+			var oStartFestDate;
 			var oToday = new Date();
-			// var oEndFestDate = new Date("2020", "7", "31", "00", "00");
-			
-			// console.log(oSourceModel.getData().feed.entry[84].gs$cell); // eslint-disable-line no-console
 			
 			var oSourceData = oSourceModel.getData().feed.entry;
 			var iSourceLength = oSourceModel.getProperty("/feed/entry/length");
@@ -111,8 +104,7 @@ sap.ui.define([
 					}
 				}
 			}
-			
-			
+					
 			if ( oToday.getMonth() === 7 && oToday.getDate() === 30 ) {
 				oStartFestDate = new Date("2020", "7", "30", "12", "00");
 				this.byId("day04").setType("Emphasized");
@@ -131,15 +123,31 @@ sap.ui.define([
 				}
 			}
 
+			
+
+			aStages = [
+				{
+					text: "Hlavný stage",
+					type: CalendarDayType.Type09
+				},
+				{
+					text: "Akustický stage",
+					type: CalendarDayType.Type10
+				},
+				{
+					text: "Kinečko",
+					type: CalendarDayType.Type01
+				}
+			]
+
 			// console.log(oToday); // eslint-disable-line no-console
 
 			oModel.setData({
 				"startDate": oStartFestDate,
+				"stages": aStages,
 				"events": aDataEvents
 			});
 
-			
-		
 			oSourceModel.detachRequestCompleted(this.afterDataLoaded, this);
 		},
 		
@@ -250,9 +258,6 @@ sap.ui.define([
 					}
 				}
 
-				// console.log( oAppointment  ); // eslint-disable-line no-console
-				// console.log( oData  ); // eslint-disable-line no-console
-
 				MessageBox.show(sDescr, {
 					title: oAppointment.getTitle()
 				});
@@ -263,16 +268,12 @@ sap.ui.define([
 			var sId = oEvent.getSource().getId().slice(-5);
 			var oModel = this.getOwnerComponent().getModel();
 			
-			// this.byId("day00").setType("Default");
 			this.byId("day01").setType("Default");
 			this.byId("day02").setType("Default");
 			this.byId("day03").setType("Default");
 			this.byId("day04").setType("Default");
 	
 			switch (sId) {
-				// case "day00":
-				// 	oModel.setProperty("/startDate", new Date());
-				// 	break;
 				case "day01":
 					oModel.setProperty("/startDate", new Date("2020", "7", "27", "12", "00"));
 					break;
@@ -288,7 +289,66 @@ sap.ui.define([
 			}
 			
 			this.byId(sId).setType("Emphasized");
+		},
+
+		handleOpenLegend: function (oEvent) {
+			var oSource = oEvent.getSource();
+
+			if (!this._oLegendPopover) {
+				Fragment.load({
+					id: "LegendFrag",
+					name: "Project.PD2020.view.fragment.Legend",
+					controller: this
+				}).then(function(oPopoverContent){
+					this._oLegendPopover = oPopoverContent;
+					this.getView().addDependent(this._oLegendPopover);
+					this._oLegendPopover.openBy(oSource);
+				}.bind(this));
+			} else if (this._oLegendPopover.isOpen()) {
+				this._oLegendPopover.close();
+			} else {
+				this._oLegendPopover.openBy(oSource);
+			}
+		
+
+			// var oView = this._oView;
+
+			// // create dialog lazily
+			// if (!oView.byId("addWordDialog")) {
+			// 	var oFragmentController = {
+					
+			// 		onCloseDialog: function () {
+			// 			oView.byId("addWordDialog").close();
+			// 		}
+			// 	};
+			// 	// load asynchronous XML fragment
+			// 	Fragment.load({
+			// 		id: oView.getId(),
+			// 		name: "Project.Decrypto.view.fragments.addWord",
+			// 		controller: oFragmentController
+			// 	}).then(function (oDialog) {
+			// 		// connect dialog to the root view of this component (models, lifecycle)
+			// 		oView.addDependent(oDialog);
+			// 		oDialog.open();
+			// 		jQuery.sap.delayedCall(500, this, function () {
+			// 			oView.byId("inputWord").focus();
+			// 		});
+			// 	});
+			// } else {
+			// 	oView.byId("addWordDialog").open();
+			// 	jQuery.sap.delayedCall(500, this, function () {
+			// 		oView.byId("inputWord").focus();
+			// 	});
+			// }
+
+			
+
+
+
+
+
 		}
+		
 
 
 

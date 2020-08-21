@@ -1,0 +1,18 @@
+<core:FragmentDefinition
+		xmlns="sap.m"
+		xmlns:core="sap.ui.core"
+		xmlns:u="sap.ui.unified">
+	<ResponsivePopover 
+			title="Legenda"
+			placement="Bottom"
+			showHeader="false">
+		<PlanningCalendarLegend appointmentItemsHeader="Legenda"
+                columnWidth="160px"
+                standardItems=""
+				appointmentItems="{path : '/stages', templateShareable: true}">
+			<appointmentItems>
+				<u:CalendarLegendItem text="{text}" type="{type}"/>
+			</appointmentItems>
+		</PlanningCalendarLegend>
+	</ResponsivePopover>
+</core:FragmentDefinition>
