@@ -335,8 +335,9 @@ sap.ui.define([
 				}
 
 				for (var j = 0; j < iNumberOfRows; j++) {
-
-					sInfo = sInfo + aData[j][0] + "\n" + "\n" + aData[j][1] + "\n" + "\n" + " ***** " + "\n" + "\n"
+					if ( aData[j] ) {
+						sInfo = sInfo + aData[j][0] + "\n" + "\n" + aData[j][1] + "\n" + "\n" + " ***** " + "\n" + "\n"
+					}
 				}
 
 				MessageBox.show(sInfo, {
