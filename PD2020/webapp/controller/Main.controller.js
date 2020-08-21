@@ -155,47 +155,9 @@ sap.ui.define([
 			var sYear, sMonth, sDay, sHour, sMinute;
 			
 			sYear = sDate.slice(6, 10);
-
-			switch (sDate.slice(3, 5)) {
-				case "01":
-					sMonth = "00";
-					break;
-				case "02":
-					sMonth = "01";
-					break;
-				case "03":
-					sMonth = "02";
-					break;
-				case "04":
-					sMonth = "03";
-					break;
-				case "05":
-					sMonth = "04";
-					break;
-				case "06":
-					sMonth = "05";
-					break;
-				case "07":
-					sMonth = "06";
-					break;
-				case "08":
-					sMonth = "07";
-					break;
-				case "09":
-					sMonth = "08";
-					break;
-				case "10":
-					sMonth = "09";
-					break;
-				case "11":
-					sMonth = "10";
-					break;
-				case "12":
-					sMonth = "11";
-			}
-
+			sMonth = parseInt(sDate.slice(3, 5)) - 1;
 			sDay = sDate.slice(0, 2);
-			
+
 			if ( sDate.slice(12, 13) === ":" ) {
 				sHour = "0" + sDate.slice(11, 12);	
 				sMinute = sDate.slice(13, 15);

@@ -21,7 +21,11 @@
 									enableAppointmentsResize="false"
 									enableAppointmentsCreate="false"
 									stickyMode="All"
-									appointments="{path: '/events'}" >
+									startHour="9"
+									endHour="29"
+									fullDay="false"
+									appointments="{path: '/events', templateShareable: true}" 
+									>
 									<actions>
 										<Title text="Harmonogram" visible="{= !${device>/system/phone} }"/>
 										<ToolbarSpacer/>
