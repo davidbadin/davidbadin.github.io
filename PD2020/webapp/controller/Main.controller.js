@@ -306,44 +306,46 @@ sap.ui.define([
 			} else {
 				this._oLegendPopover.openBy(oSource);
 			}
-		
+		},
 
-			// var oView = this._oView;
+		onInfoPress: function () {
+			var oView = this.getView();
+			var oInfoModel = oView.getModel("sourceInfoModel");
+			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetInfoSource.uri;
+			
+			var aData = [];
+			var sInfo = "";
 
-			// // create dialog lazily
-			// if (!oView.byId("addWordDialog")) {
-			// 	var oFragmentController = {
-					
-			// 		onCloseDialog: function () {
-			// 			oView.byId("addWordDialog").close();
-			// 		}
-			// 	};
-			// 	// load asynchronous XML fragment
-			// 	Fragment.load({
-			// 		id: oView.getId(),
-			// 		name: "Project.Decrypto.view.fragments.addWord",
-			// 		controller: oFragmentController
-			// 	}).then(function (oDialog) {
-			// 		// connect dialog to the root view of this component (models, lifecycle)
-			// 		oView.addDependent(oDialog);
-			// 		oDialog.open();
-			// 		jQuery.sap.delayedCall(500, this, function () {
-			// 			oView.byId("inputWord").focus();
-			// 		});
-			// 	});
-			// } else {
-			// 	oView.byId("addWordDialog").open();
-			// 	jQuery.sap.delayedCall(500, this, function () {
-			// 		oView.byId("inputWord").focus();
-			// 	});
-			// }
+			oInfoModel.loadData(sUri).then(function () {
+				var oInfoData = oInfoModel.getData().feed.entry;
+				var iLength = oInfoModel.getProperty("/feed/entry/length");
+				var iNumberOfRows = 0;	
+				
+				
+				for (var i = 0; i < iLength; i++) {
+					var iRow = oInfoData[i].gs$cell.row;				
+					var iCol = oInfoData[i].gs$cell.col;				
+					var sValue = oInfoData[i].gs$cell.$t;
 
+					if (!aData[iRow - 1]) {
+						aData[iRow - 1] = [];
+					}
+					aData[iRow - 1][iCol - 1] = sValue;
+					iNumberOfRows = iRow;
+				}
+
+				for (var j = 0; j < iNumberOfRows; j++) {
+
+					sInfo = sInfo + aData[j][0] + "\n" + "\n" + aData[j][1] + "\n" + "\n" + " ***** " + "\n" + "\n"
+				}
+
+				MessageBox.show(sInfo, {
+					title: "Informácie pre návštevníkov"
+				});
+			});
 			
 
-
-
-
-
+			
 		}
 		
 

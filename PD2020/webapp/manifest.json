@@ -17,7 +17,12 @@
 			"sheetSource": {
 				"uri": "https://spreadsheets.google.com/feeds/cells/1LTSPGOP_L8qWcnU3yV3SX-XcA_ishYfDm7br4o4H_UQ/1/public/full?alt=json",
 				"type": "JSON"
+			},
+			"sheetInfoSource": {
+				"uri": "https://spreadsheets.google.com/feeds/cells/1LTSPGOP_L8qWcnU3yV3SX-XcA_ishYfDm7br4o4H_UQ/2/public/full?alt=json",
+				"type": "JSON"
 			}
+
 		}
 	},
 
@@ -69,6 +74,11 @@
 			"sourceDataModel": {
 				"type": "sap.ui.model.json.JSONModel",
 				"dataSource": "sheetSource",
+				"preload": true
+			},
+			"sourceInfoModel": {
+				"type": "sap.ui.model.json.JSONModel",
+				"dataSource": "sheetInfoSource",
 				"preload": true
 			},
 			"": {
