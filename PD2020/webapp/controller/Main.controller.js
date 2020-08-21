@@ -19,6 +19,7 @@ sap.ui.define([
 			
 			this.byId("PC1-Header-Spacer").setVisible(false);
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
+			this.byId("PC2-Header-NavToolbar").setVisible(false);
 						
 			// $("div.sapMSinglePCRowHeaders").eq(2).remove();
 			// $("div.sapMSinglePCRowHeaders").eq(1).hide();
@@ -39,6 +40,7 @@ sap.ui.define([
 			var aStages = [];
 
 			var oStartFestDate;
+			var oStartFestDate2;
 			var oToday = new Date();
 			
 			var oSourceData = oSourceModel.getData().feed.entry;
@@ -105,25 +107,27 @@ sap.ui.define([
 				}
 			}
 					
-			if ( oToday.getMonth() === 7 && oToday.getDate() === 30 ) {
-				oStartFestDate = new Date("2020", "7", "30", "12", "00");
-				this.byId("day04").setType("Emphasized");
-			} else {
+			// if ( oToday.getMonth() === 7 && oToday.getDate() === 30 ) {
+			// 	oStartFestDate = new Date("2020", "7", "30", "12", "00");
+			// 	oStartFestDate2 = new Date("2020", "7", "31", "00", "00");
+			// 	this.byId("day04").setType("Emphasized");
+			// } else {
 				if ( oToday.getMonth() === 7 && oToday.getDate() === 29 ) {
 					oStartFestDate = new Date("2020", "7", "29", "12", "00");
+					oStartFestDate2 = new Date("2020", "7", "30", "00", "00");
 					this.byId("day03").setType("Emphasized");
 				} else {
 					if ( oToday.getMonth() === 7 && oToday.getDate() === 28 ) {
 						oStartFestDate = new Date("2020", "7", "28", "12", "00");
+						oStartFestDate2 = new Date("2020", "7", "29", "00", "00");
 						this.byId("day02").setType("Emphasized");
 					} else {
 						oStartFestDate = new Date("2020", "7", "27", "12", "00");
+						oStartFestDate2 = new Date("2020", "7", "28", "00", "00");
 						this.byId("day01").setType("Emphasized");
 					}
 				}
-			}
-
-			
+			// }
 
 			aStages = [
 				{
@@ -144,6 +148,7 @@ sap.ui.define([
 
 			oModel.setData({
 				"startDate": oStartFestDate,
+				"startDate2": oStartFestDate2,
 				"stages": aStages,
 				"events": aDataEvents
 			});
@@ -230,21 +235,25 @@ sap.ui.define([
 			this.byId("day01").setType("Default");
 			this.byId("day02").setType("Default");
 			this.byId("day03").setType("Default");
-			this.byId("day04").setType("Default");
+			// this.byId("day04").setType("Default");
 	
 			switch (sId) {
 				case "day01":
 					oModel.setProperty("/startDate", new Date("2020", "7", "27", "12", "00"));
+					oModel.setProperty("/startDate2", new Date("2020", "7", "28", "00", "00"));
 					break;
 				case "day02":
 					oModel.setProperty("/startDate", new Date("2020", "7", "28", "9", "00"));
+					oModel.setProperty("/startDate2", new Date("2020", "7", "29", "00", "00"));
 					break;
 				case "day03":
 					oModel.setProperty("/startDate", new Date("2020", "7", "29", "9", "00"));
+					oModel.setProperty("/startDate2", new Date("2020", "7", "30", "00", "00"));
 					break;
-				case "day04":
-					oModel.setProperty("/startDate", new Date("2020", "7", "30", "9", "00"));
-					break;
+				// case "day04":
+				// 	oModel.setProperty("/startDate", new Date("2020", "7", "30", "9", "00"));
+				// 	oModel.setProperty("/startDate2", new Date("2020", "7", "31", "00", "00"));
+				// 	break;
 			}
 			
 			this.byId(sId).setType("Emphasized");

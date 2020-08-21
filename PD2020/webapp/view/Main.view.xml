@@ -22,7 +22,6 @@
 									enableAppointmentsCreate="false"
 									stickyMode="All"
 									startHour="9"
-									endHour="29"
 									fullDay="false"
 									appointments="{path: '/events', templateShareable: true}" 
 									>
@@ -32,10 +31,42 @@
 										<Button id="day01" text="štvrtok" press="onDayPress"/>
 										<Button id="day02" text="piatok" press="onDayPress"/>
 										<Button id="day03" text="sobota" press="onDayPress"/>
-										<Button id="day04" text="nedeľa" press="onDayPress"/>
+										<!-- <Button id="day04" text="nedeľa" press="onDayPress"/> -->
 										<ToolbarSpacer/>
 										<Button id="legendButton" icon="sap-icon://legend" press="handleOpenLegend"/>
 									</actions>
+									<views>
+										<SinglePlanningCalendarDayView key="DayView" title="Day" />
+									</views>
+									<appointments>
+										<unified:CalendarAppointment
+											title= "{band}"
+											text= "{shortDescription}"
+											type= "{type}"
+											startDate= "{start}"
+											endDate= "{end}">
+										</unified:CalendarAppointment>
+									</appointments>
+								</SinglePlanningCalendar>
+								<SinglePlanningCalendar
+									id="PC2"
+									class="sapUiTinyMarginBeginEnd"
+									viewChange="handleViewChange"
+									appointmentSelect="handleAppointmentSelect"
+									headerDateSelect="handleHeaderDateSelect"
+									startDateChange="handleStartDateChange"
+									appointmentDrop="handleAppointmentDrop"
+									appointmentResize="handleAppointmentResize"
+									moreLinkPress="handleMoreLinkPress"
+									startDate="{path: '/startDate2'}"
+									enableAppointmentsDragAndDrop="false"
+									enableAppointmentsResize="false"
+									enableAppointmentsCreate="false"
+									stickyMode="All"
+									endHour="4"
+									fullDay="false"
+									appointments="{path: '/events', templateShareable: true}" 
+									>
 									<views>
 										<SinglePlanningCalendarDayView key="DayView" title="Day" />
 									</views>
