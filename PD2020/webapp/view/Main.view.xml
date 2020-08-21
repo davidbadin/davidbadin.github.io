@@ -48,6 +48,9 @@
 										</unified:CalendarAppointment>
 									</appointments>
 								</SinglePlanningCalendar>
+								<FlexBox class="sapUiTinyMarginBeginEnd">
+									<Image width="100%" src="webapp/img/banner.png"/>
+								</FlexBox>
 								<SinglePlanningCalendar
 									id="PC2"
 									class="sapUiTinyMarginBeginEnd"
