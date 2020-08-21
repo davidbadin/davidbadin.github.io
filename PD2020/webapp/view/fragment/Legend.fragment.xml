@@ -13,6 +13,8 @@
 			<appointmentItems>
 				<u:CalendarLegendItem text="{text}" type="{type}"/>
 			</appointmentItems>
+                        
+
 		</PlanningCalendarLegend>
 	</Popover>
 </core:FragmentDefinition>
