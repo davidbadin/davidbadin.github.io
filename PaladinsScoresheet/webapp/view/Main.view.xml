@@ -45,7 +45,7 @@
 								<Input id="inputPlayer02" placeholder="{i18n>player02}" visible="{settings>/player2}" width="{settings>/columnWidth}"/>
 								<Input id="inputPlayer03" placeholder="{i18n>player03}" visible="{settings>/player3}" width="{settings>/columnWidth}"/>
 								<Input id="inputPlayer04" placeholder="{i18n>player04}" visible="{settings>/player4}" width="{settings>/columnWidth}"/>
-								<Input id="inputPlayer00" placeholder="{i18n>player00}" visible="{settings>/player0}" width="{settings>/columnWidth}"/>
+								<Input id="inputPlayer00" value="{i18n>player00}" visible="{settings>/player0}" width="{settings>/columnWidth}" editable="false"/>
 							</l:Grid>
 							
 							<Toolbar width="100%" height="1px" class="sapUiSmallMarginBottom"/>
@@ -187,7 +187,7 @@
 			                    <ComboBox id="dpdDevelop04" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player4}" width="{settings>/columnWidth}">
 			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
 			                    </ComboBox>
-			                    <ComboBox id="dpdDevelop00" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player0}" width="{settings>/columnWidth}">
+			                    <ComboBox id="dpdDevelop00" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player0}" width="{settings>/columnWidth}" editable="false">
 			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
 			                    </ComboBox>
 							</l:Grid>
@@ -341,28 +341,40 @@
 							
 							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
 								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
-								<Label text="{i18n>silvProvMainLabel}" id="labelMainSilvProv" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+								<Label text="{i18n>silvProvLabel}" id="labelSilvProv" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
 									<layoutData><l:GridData span="{settings>/wideSpan}"/></layoutData>
 								</Label>
 							</l:Grid>
 
 							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
 								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
-								<Label text="{i18n>silvProvLabel}" id="labelSilvProv" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+								<Label text="{i18n>silverLabel}" id="labelSilver" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
 									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
 								</Label>
 			                	<Input id="inputSilver01" placeholder="0" type="Number" visible="{settings>/player1}" width="{settings>/columnWidth}"/>
 			                	<Input id="inputSilver02" placeholder="0" type="Number" visible="{settings>/player2}" width="{settings>/columnWidth}"/>
 			                	<Input id="inputSilver03" placeholder="0" type="Number" visible="{settings>/player3}" width="{settings>/columnWidth}"/>
 			                	<Input id="inputSilver04" placeholder="0" type="Number" visible="{settings>/player4}" width="{settings>/columnWidth}"/>
-			                	<Input id="inputSilver00" placeholder="0" type="Number" visible="{settings>/player0}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputSilver00" value="0" type="Number" visible="{settings>/player0}" width="{settings>/columnWidth}" editable="false"/>
+							</l:Grid>
+
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>provisionLabel}" id="labelProvision" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+			                	<Input id="inputProvision01" placeholder="0" type="Number" visible="{settings>/player1}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputProvision02" placeholder="0" type="Number" visible="{settings>/player2}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputProvision03" placeholder="0" type="Number" visible="{settings>/player3}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputProvision04" placeholder="0" type="Number" visible="{settings>/player4}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputProvision00" value="0" type="Number" visible="{settings>/player0}" width="{settings>/columnWidth}" editable="false"/>
 							</l:Grid>
 							
 							<Toolbar width="100%" height="1px" class="sapUiTinyMarginTopBottom"/>
 							
 							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
 								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
-			                	<Button text="{i18n>calculateBtnText}" id="btnCalculateL" class="sapUiSmallMarginBeginEnd" visible="{= !${device>/system/phone} }" 
+			                	<Button text="{i18n>calculateBtnText}" id="btnCalculateL" class="sapUiSmallMarginBeginEnd sapUiTinyMarginTop" visible="{= !${device>/system/phone} }" 
 								type="Emphasized" press="onCalculate">
 			                		<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
 			                	</Button>
