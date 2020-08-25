@@ -1,0 +1,22 @@
+{
+	"player1": true,
+	"player2": true,
+	"player3": true,
+	"player4": true,
+	"player0": false,
+	"numberOfPlayers": 4,
+	
+	"containerQuery": false,
+	"hSpacing": 1,
+	"vSpacing": 1,
+	"gridPosition": "Center",
+	"defaultSpan": "XL2 L2 M2 S3",
+	"labelSpan": "XL4 L4 M4 S12",
+	"buttonSpan": "XL12 L12 M12 S12",
+	"labelClass": "sapUiSmallMarginTop sapUiSmallMarginBeginEnd",
+	
+	
+	"labelWidth": "12rem",
+	"columnWidth": "6rem",
+	"checkBoxWidth": "6em"
+}

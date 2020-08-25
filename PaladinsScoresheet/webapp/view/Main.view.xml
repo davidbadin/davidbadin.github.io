@@ -1,0 +1,381 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" controllerName="Project.PaladinsScoresheet.controller.Main" displayBlock="true">
+	<Shell id="shell">
+		<App id="app">
+			<pages>
+				<Page id="page" title="{i18n>title}">
+
+					<customHeader>
+						<Bar>
+							<contentRight>
+								<Button text="{i18n>resetBtnText}" id="btnReset" class="sapUiTinyMarginTop sapUiSmallMarginBeginEnd" />	
+		                    	<Select id="selectPlayersNumber" selectedKey="{settings>/numberOfPlayers}" class="sapUiTinyMarginTop sapUiSmallMarginBeginEnd" change="onSelectedPlayersNumber">
+		                    		<items>
+			                    		<core:Item key="1" text="{i18n>players1}"/>
+			                            <core:Item key="2" text="{i18n>players2}"/>
+			                            <core:Item key="3" text="{i18n>players3}"/>
+			                            <core:Item key="4" text="{i18n>players4}"/>
+		                    		</items>
+		                    	</Select>
+							</contentRight>
+						</Bar>
+					</customHeader>
+
+					<content>
+
+						<l:VerticalLayout width="100%">
+
+							<Toolbar width="100%" height="1px" class="sapUiSmallMarginBottom"/>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd" visible="{= !${device>/system/phone} }">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+								<Input id="inputPlayer01" placeholder="{i18n>player01}" visible="{settings>/player1}" width="{settings>/columnWidth}"/>
+								<Input id="inputPlayer02" placeholder="{i18n>player02}" visible="{settings>/player2}" width="{settings>/columnWidth}"/>
+								<Input id="inputPlayer03" placeholder="{i18n>player03}" visible="{settings>/player3}" width="{settings>/columnWidth}"/>
+								<Input id="inputPlayer04" placeholder="{i18n>player04}" visible="{settings>/player4}" width="{settings>/columnWidth}"/>
+								<Input id="inputPlayer00" placeholder="{i18n>player00}" visible="{settings>/player0}" width="{settings>/columnWidth}"/>
+							</l:Grid>
+							
+							<Toolbar width="100%" height="1px" class="sapUiSmallMarginBottom"/>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>kingsOrderLabel}" id="labelKingsOrder" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+							</l:Grid>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>kingsOrder4VPLabel}" id="labelKings4VPOrder" vAlign="Middle" textAlign="End" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+								<CheckBox text="{i18n>vp4Label}" selected="false" id="vp4Box01" visible="{settings>/player1}" useEntireWidth="true"/>
+								<CheckBox text="{i18n>vp4Label}" selected="false" id="vp4Box02" visible="{settings>/player2}" useEntireWidth="true"/>
+								<CheckBox text="{i18n>vp4Label}" selected="false" id="vp4Box03" visible="{settings>/player3}" useEntireWidth="true"/>
+								<CheckBox text="{i18n>vp4Label}" selected="false" id="vp4Box04" visible="{settings>/player4}" useEntireWidth="true"/>
+								<CheckBox text="{i18n>vp4Label}" selected="false" id="vp4Box00" visible="{settings>/player0}" useEntireWidth="true"/>
+							</l:Grid>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>kingsOrder6VPLabel}" id="labelKings6VPOrder" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+			                	<CheckBox text="{i18n>vp6Label}" selected="false" id="vp6Box01" visible="{settings>/player1}" useEntireWidth="true"/>
+			                	<CheckBox text="{i18n>vp6Label}" selected="false" id="vp6Box02" visible="{settings>/player2}" useEntireWidth="true"/>
+			                	<CheckBox text="{i18n>vp6Label}" selected="false" id="vp6Box03" visible="{settings>/player3}" useEntireWidth="true"/>
+			                	<CheckBox text="{i18n>vp6Label}" selected="false" id="vp6Box04" visible="{settings>/player4}" useEntireWidth="true"/>
+			                	<CheckBox text="{i18n>vp6Label}" selected="false" id="vp6Box00" visible="{settings>/player0}" useEntireWidth="true"/>
+							</l:Grid>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>kingsOrder8VPLabel}" id="labelKings8VPOrder" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+			                	<CheckBox text="{i18n>vp8Label}" selected="false" id="vp8Box01" visible="{settings>/player1}" useEntireWidth="true"/>
+			                	<CheckBox text="{i18n>vp8Label}" selected="false" id="vp8Box02" visible="{settings>/player2}" useEntireWidth="true"/>
+			                	<CheckBox text="{i18n>vp8Label}" selected="false" id="vp8Box03" visible="{settings>/player3}" useEntireWidth="true"/>
+			                	<CheckBox text="{i18n>vp8Label}" selected="false" id="vp8Box04" visible="{settings>/player4}" useEntireWidth="true"/>
+			                	<CheckBox text="{i18n>vp8Label}" selected="false" id="vp8Box00" visible="{settings>/player0}" useEntireWidth="true"/>
+							</l:Grid>
+							
+							<Toolbar width="100%" height="1px" class="sapUiSmallMarginBottom"/>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>attributeLabel}" id="attributeLabel" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+							</l:Grid>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>strengthLabel}" id="labelStrength" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+				                <ComboBox id="dpdStrength01" items="{dropdownValues>/dpdAttr}" selectedKey="0" visible="{settings>/player1}" width="{settings>/columnWidth}">
+		                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+		                    	</ComboBox>
+		                    	<ComboBox id="dpdStrength02" items="{dropdownValues>/dpdAttr}" selectedKey="0" visible="{settings>/player2}" width="{settings>/columnWidth}">
+		                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+		                    	</ComboBox>
+		                    	<ComboBox id="dpdStrength03" items="{dropdownValues>/dpdAttr}" selectedKey="0" visible="{settings>/player3}" width="{settings>/columnWidth}">
+		                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+		                    	</ComboBox>
+		                    	<ComboBox id="dpdStrength04" items="{dropdownValues>/dpdAttr}" selectedKey="0" visible="{settings>/player4}" width="{settings>/columnWidth}">
+		                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+		                    	</ComboBox>
+		                    	<ComboBox id="dpdStrength00" items="{dropdownValues>/dpdAttr}" selectedKey="0" visible="{settings>/player0}" width="{settings>/columnWidth}">
+		                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+		                    	</ComboBox>
+							</l:Grid>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>faithLabel}" id="labelFaith" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+				                <ComboBox id="dpdFaith01" items="{dropdownValues>/dpdAttr}" selectedKey="0" visible="{settings>/player1}" width="{settings>/columnWidth}">
+		                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+		                    	</ComboBox>
+		                    	<ComboBox id="dpdFaith02" items="{dropdownValues>/dpdAttr}" selectedKey="0" visible="{settings>/player2}" width="{settings>/columnWidth}">
+		                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+		                    	</ComboBox>
+		                    	<ComboBox id="dpdFaith03" items="{dropdownValues>/dpdAttr}" selectedKey="0" visible="{settings>/player3}" width="{settings>/columnWidth}">
+		                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+		                    	</ComboBox>
+		                    	<ComboBox id="dpdFaith04" items="{dropdownValues>/dpdAttr}" selectedKey="0" visible="{settings>/player4}" width="{settings>/columnWidth}">
+		                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+		                    	</ComboBox>
+		                    	<ComboBox id="dpdFaith00" items="{dropdownValues>/dpdAttr}" selectedKey="0" visible="{settings>/player0}" width="{settings>/columnWidth}">
+		                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+		                    	</ComboBox>
+							</l:Grid>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>influenceLabel}" id="labelInfluence" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+				                <ComboBox id="dpdInfluence01" items="{dropdownValues>/dpdAttr}" selectedKey="0" visible="{settings>/player1}" width="{settings>/columnWidth}">
+		                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+		                    	</ComboBox>
+		                    	<ComboBox id="dpdInfluence02" items="{dropdownValues>/dpdAttr}" selectedKey="0" visible="{settings>/player2}" width="{settings>/columnWidth}">
+		                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+		                    	</ComboBox>
+		                    	<ComboBox id="dpdInfluence03" items="{dropdownValues>/dpdAttr}" selectedKey="0" visible="{settings>/player3}" width="{settings>/columnWidth}">
+		                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+		                    	</ComboBox>
+		                    	<ComboBox id="dpdInfluence04" items="{dropdownValues>/dpdAttr}" selectedKey="0" visible="{settings>/player4}" width="{settings>/columnWidth}">
+		                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+		                    	</ComboBox>
+		                    	<ComboBox id="dpdInfluence00" items="{dropdownValues>/dpdAttr}" selectedKey="0" visible="{settings>/player0}" width="{settings>/columnWidth}">
+		                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+		                    	</ComboBox>
+							</l:Grid>
+							
+							<Toolbar width="100%" height="1px" class="sapUiSmallMarginBottom"/>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>developLabel}" id="labelDevelop" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+			                    <ComboBox id="dpdDevelop01" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player1}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdDevelop02" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player2}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdDevelop03" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player3}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdDevelop04" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player4}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdDevelop00" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player0}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+							</l:Grid>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>fortifyLabel}" id="labelFortify" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+			                    <ComboBox id="dpdFortify01" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player1}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdFortify02" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player2}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdFortify03" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player3}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdFortify04" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player4}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdFortify00" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player0}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+							</l:Grid>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>fortifyExtraLabel}" id="labelFortifyExtra" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+			                	<Input id="inputFortifyExtra01" placeholder="0" type="Number" visible="{settings>/player1}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputFortifyExtra02" placeholder="0" type="Number" visible="{settings>/player2}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputFortifyExtra03" placeholder="0" type="Number" visible="{settings>/player3}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputFortifyExtra04" placeholder="0" type="Number" visible="{settings>/player4}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputFortifyExtra00" placeholder="0" type="Number" visible="{settings>/player0}" width="{settings>/columnWidth}"/>
+							</l:Grid>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>commissionLabel}" id="labelCommision" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+			                    <ComboBox id="dpdCommission01" items="{dropdownValues>/dpd259}" selectedKey="0" visible="{settings>/player1}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdCommission02" items="{dropdownValues>/dpd259}" selectedKey="0" visible="{settings>/player2}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdCommission03" items="{dropdownValues>/dpd259}" selectedKey="0" visible="{settings>/player3}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdCommission04" items="{dropdownValues>/dpd259}" selectedKey="0" visible="{settings>/player4}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdCommission00" items="{dropdownValues>/dpd259}" selectedKey="0" visible="{settings>/player0}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+							</l:Grid>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>garrisonLabel}" id="labelGarrison" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+			                    <ComboBox id="dpdGarrison01" items="{dropdownValues>/dpd259}" selectedKey="0" visible="{settings>/player1}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdGarrison02" items="{dropdownValues>/dpd259}" selectedKey="0" visible="{settings>/player2}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdGarrison03" items="{dropdownValues>/dpd259}" selectedKey="0" visible="{settings>/player3}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdGarrison04" items="{dropdownValues>/dpd259}" selectedKey="0" visible="{settings>/player4}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdGarrison00" items="{dropdownValues>/dpd259}" selectedKey="0" visible="{settings>/player0}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+							</l:Grid>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>absolveLabel}" id="labelAbsolve" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+			                    <ComboBox id="dpdAbsolve01" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player1}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdAbsolve02" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player2}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdAbsolve03" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player3}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdAbsolve04" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player4}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+			                    <ComboBox id="dpdAbsolve00" items="{dropdownValues>/dpd136}" selectedKey="0" visible="{settings>/player0}" width="{settings>/columnWidth}">
+			                            <core:Item key="{dropdownValues>key}" text="{dropdownValues>key}"/>
+			                    </ComboBox>
+							</l:Grid>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>convertLabel}" id="labelConvert" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+			                	<Input id="inputConvert01" placeholder="0" type="Number" visible="{settings>/player1}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputConvert02" placeholder="0" type="Number" visible="{settings>/player2}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputConvert03" placeholder="0" type="Number" visible="{settings>/player3}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputConvert04" placeholder="0" type="Number" visible="{settings>/player4}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputConvert00" placeholder="0" type="Number" visible="{settings>/player0}" width="{settings>/columnWidth}"/>
+							</l:Grid>
+							
+							<Toolbar width="100%" height="1px" class="sapUiTinyMarginTopBottom"/>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>debtLabel}" id="labelDebt" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+							</l:Grid>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>debtUnpaidLabel}" id="labelDebtUnpaid" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+			                	<Input id="inputDebtUnpaid01" placeholder="0" type="Number" visible="{settings>/player1}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputDebtUnpaid02" placeholder="0" type="Number" visible="{settings>/player2}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputDebtUnpaid03" placeholder="0" type="Number" visible="{settings>/player3}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputDebtUnpaid04" placeholder="0" type="Number" visible="{settings>/player4}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputDebtUnpaid00" placeholder="0" type="Number" visible="{settings>/player0}" width="{settings>/columnWidth}"/>
+							</l:Grid>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>debtPaidLabel}" id="labelDebtPaid" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+			                	<Input id="inputDebtPaid01" placeholder="0" type="Number" visible="{settings>/player1}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputDebtPaid02" placeholder="0" type="Number" visible="{settings>/player2}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputDebtPaid03" placeholder="0" type="Number" visible="{settings>/player3}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputDebtPaid04" placeholder="0" type="Number" visible="{settings>/player4}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputDebtPaid00" placeholder="0" type="Number" visible="{settings>/player0}" width="{settings>/columnWidth}"/>
+							</l:Grid>
+							
+							<Toolbar width="100%" height="1px" class="sapUiTinyMarginTopBottom"/>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>silverLabel}" id="labelSilver" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+			                	<Input id="inputSilver01" placeholder="0" type="Number" visible="{settings>/player1}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputSilver02" placeholder="0" type="Number" visible="{settings>/player2}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputSilver03" placeholder="0" type="Number" visible="{settings>/player3}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputSilver04" placeholder="0" type="Number" visible="{settings>/player4}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputSilver00" placeholder="0" type="Number" visible="{settings>/player0}" width="{settings>/columnWidth}"/>
+							</l:Grid>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>provisionLabel}" id="labelProvision" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
+									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+								</Label>
+			                	<Input id="inputProvision01" placeholder="0" type="Number" visible="{settings>/player1}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputProvision02" placeholder="0" type="Number" visible="{settings>/player2}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputProvision03" placeholder="0" type="Number" visible="{settings>/player3}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputProvision04" placeholder="0" type="Number" visible="{settings>/player4}" width="{settings>/columnWidth}"/>
+			                	<Input id="inputProvision00" placeholder="0" type="Number" visible="{settings>/player0}" width="{settings>/columnWidth}"/>
+							</l:Grid>
+							
+							<Toolbar width="100%" height="1px" class="sapUiTinyMarginTopBottom"/>
+							
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+			                	<Button text="{i18n>calculateBtnText}" id="btnCalculateL" class="sapUiSmallMarginBeginEnd" visible="{= !${device>/system/phone} }" type="Emphasized">
+			                		<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
+			                	</Button>
+			                	<Text id="textScore01" visible="{settings>/player1}" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd" width="{settings>/columnWidth}" text="0"/>
+			                	<Text id="textScore02" visible="{settings>/player2}" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd" width="{settings>/columnWidth}" text="0"/>
+			                	<Text id="textScore03" visible="{settings>/player3}" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd" width="{settings>/columnWidth}" text="0"/>
+			                	<Text id="textScore04" visible="{settings>/player4}" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd" width="{settings>/columnWidth}" text="0"/>
+			                	<Text id="textScore00" visible="{settings>/player0}" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd" width="{settings>/columnWidth}" text="0"/>
+							</l:Grid>
+							
+							<l:VerticalLayout width="100%">
+									<Button text="{i18n>calculateBtnText}" id="btnCalculateS" class="sapUiSmallMarginBeginEnd" visible="{device>/system/phone}" type="Emphasized"/>	
+							</l:VerticalLayout>
+	
+						</l:VerticalLayout>
+
+					</content>
+				</Page>
+			</pages>
+		</App>
+	</Shell>
+</mvc:View>
