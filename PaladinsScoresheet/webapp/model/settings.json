@@ -12,7 +12,7 @@
 	"gridPosition": "Center",
 	"defaultSpan": "XL2 L2 M2 S3",
 	"labelSpan": "XL4 L4 M4 S12",
-	"buttonSpan": "XL12 L12 M12 S12",
+	"wideSpan": "XL12 L12 M12 S12",
 	"labelClass": "sapUiSmallMarginTop sapUiSmallMarginBeginEnd",
 	
 	
