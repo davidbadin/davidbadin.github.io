@@ -6,8 +6,12 @@
 
 					<customHeader>
 						<Bar>
+							<contentLeft>
+								<Title text="{i18n>title}" class="sapUiTinyMarginTop sapUiSmallMarginBeginEnd"/>
+							</contentLeft>
 							<contentRight>
-								<Button text="{i18n>resetBtnText}" id="btnReset" class="sapUiTinyMarginTop sapUiSmallMarginBeginEnd" press="onReset"/>	
+								<Button text="{i18n>resetBtnText}" id="btnResetHeader" class="sapUiTinyMarginTop sapUiSmallMarginBeginEnd" 
+								press="onReset" visible="{= !${device>/system/phone} }"/>	
 		                    	<Select id="selectPlayersNumber" selectedKey="{settings>/numberOfPlayers}" class="sapUiTinyMarginTop sapUiSmallMarginBeginEnd" change="onSelectedPlayersNumber">
 		                    		<items>
 			                    		<core:Item key="1" text="{i18n>players1}"/>
@@ -22,13 +26,19 @@
 
 					<content>
 
-						<l:VerticalLayout width="100%">
+						<l:VerticalLayout width="100%" class="sapUiLargeMarginEnd">
 
 							<Toolbar width="100%" height="1px" class="sapUiSmallMarginBottom"/>
-							
 							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
 								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
-								<Label text="" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd" visible="{= !${device>/system/phone} }">
+								<Button text="{i18n>resetBtnText}" width="100%" id="btnResetGrid" press="onReset" visible="{device>/system/phone}" >
+									<layoutData><l:GridData span="{settings>/wideSpan}"/></layoutData>
+								</Button>
+							</l:Grid>
+
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								class="sapUiSmallMarginEnd" position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Label text="{i18n>scoresheet}" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd" visible="{= !${device>/system/phone} }">
 									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
 								</Label>
 								<Input id="inputPlayer01" placeholder="{i18n>player01}" visible="{settings>/player1}" width="{settings>/columnWidth}"/>
@@ -348,18 +358,6 @@
 			                	<Input id="inputSilver00" placeholder="0" type="Number" visible="{settings>/player0}" width="{settings>/columnWidth}"/>
 							</l:Grid>
 							
-							<!-- <l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
-								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
-								<Label text="{i18n>provisionLabel}" id="labelProvision" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd">
-									<layoutData><l:GridData span="{settings>/labelSpan}"/></layoutData>
-								</Label>
-			                	<Input id="inputProvision01" placeholder="0" type="Number" visible="{settings>/player1}" width="{settings>/columnWidth}"/>
-			                	<Input id="inputProvision02" placeholder="0" type="Number" visible="{settings>/player2}" width="{settings>/columnWidth}"/>
-			                	<Input id="inputProvision03" placeholder="0" type="Number" visible="{settings>/player3}" width="{settings>/columnWidth}"/>
-			                	<Input id="inputProvision04" placeholder="0" type="Number" visible="{settings>/player4}" width="{settings>/columnWidth}"/>
-			                	<Input id="inputProvision00" placeholder="0" type="Number" visible="{settings>/player0}" width="{settings>/columnWidth}"/>
-							</l:Grid> -->
-							
 							<Toolbar width="100%" height="1px" class="sapUiTinyMarginTopBottom"/>
 							
 							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
@@ -374,11 +372,15 @@
 			                	<Text id="textScore04" visible="{settings>/player4}" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd" width="{settings>/columnWidth}" text="0"/>
 			                	<Text id="textScore00" visible="{settings>/player0}" class="sapUiSmallMarginTop sapUiSmallMarginBeginEnd" width="{settings>/columnWidth}" text="0"/>
 							</l:Grid>
-							
-							<l:VerticalLayout width="100%">
-									<Button text="{i18n>calculateBtnText}" id="btnCalculateS" class="sapUiSmallMarginBeginEnd" visible="{device>/system/phone}" 
-									type="Emphasized" press="onCalculate"/>	
-							</l:VerticalLayout>
+
+							<l:Grid containerQuery="{settings>/containerQuery}" hSpacing="{settings>/hSpacing}" vSpacing="{settings>/vSpacing}" 
+								position="{settings>/gridPosition}" defaultSpan="{settings>/defaultSpan}">
+								<Button text="{i18n>calculateBtnText}" width="100%" id="btnCalculateS" press="onCalculate" type="Emphasized" visible="{device>/system/phone}" >
+									<layoutData><l:GridData span="{settings>/wideSpan}"/></layoutData>
+								</Button>
+							</l:Grid>
+
+
 	
 						</l:VerticalLayout>
 
