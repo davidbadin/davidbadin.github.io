@@ -1,1 +1,126 @@
 /* Enter your custom styles here */
+
+:root {
+    --color-white: white;
+    --color-darkgrey: rgb(53, 52, 52);
+    --color-lightgrey: rgb(230, 230, 230);
+    --color-typeA: #007176;
+    --color-typeB: #d5014d;
+    --color-typeC: #e7b755;
+}
+
+/* GENERAL */
+.sapUiRootBackground, .sapMShellGlobalOuterBackground {
+    background: linear-gradient(to bottom, var(--color-darkgrey),  black);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+.sapMHBox { background-color: black; }
+.sapMHBox.popupBox { background-color: #fff; }
+.sapMVBox { background-color: black; }
+
+/* TITLE BAR SECTION */
+.sapMBarPH {
+    background-color: black;
+}
+.sapMIBar-CTX .sapMTitle {
+    color: var(--color-typeB);
+    text-shadow: none;
+} 
+.sapMShellBrandingBar {
+    height: 0px;
+    background-color: black;
+}
+
+
+/* HEADER SECTION */
+.sapMPCHead .sapMPCHeadActionsToolbar { background-color: black; } 
+.sapMTitle { color: var(--color-white); }
+
+/* Buttons */
+.myButtonDef .sapMBtnInner { 
+    color: var(--color-white);
+    background: var(--color-typeA);
+    text-shadow: none;
+}
+
+span.sapMBtnInner.sapMBtnEmphasized  { 
+    color: var(--color-white);
+    background-color: var(--color-typeB);
+    border-color: var(--color-typeB);
+    text-shadow: none;
+}
+
+.sapMBtnIcon {
+    color: var(--color-white);
+    text-shadow: none;
+}
+
+
+/* CALENDAR SECTION */
+.sapMSinglePCRow { background-color: black}
+.sapMSinglePCBlockersColumn { background-color: black; }
+.sapMSinglePCRowHeaders  { 
+    color: var(--color-white);
+    background-color: black; 
+}
+.sapMSinglePCBlockersRow { background-color: black; }
+.sapMSinglePCRowHeaderHidden { background-color: black; }
+
+.sapMSinglePCRow { border-color: var(--color-darkgrey);}
+.sapMSinglePCRow .sapMSinglePCBlockersColumn { border-color: black;}
+.sapMSinglePCBlockersColumn{ border-color: black;}
+
+
+/* CALENDAR APPOINTMENTS */
+.sapMSinglePC .sapUiCalendarAppCont {
+    border-width: 0px;
+}
+.sapUiCalendarAppTitle {
+    color: var(--color-white);
+}
+.sapUiCalendarAppText {
+    color: var(--color-lightgrey);
+}
+.sapUiCalendarAppArrowIcon, .sapUiCalendarRow .sapUiCalendarAppArrowIconLeft, .sapUiCalendarRow .sapUiCalendarAppArrowIconRight {
+    color: var(--color-white);
+}
+
+
+/* Main stage - type09=>typeA */
+.sapMSinglePCAppointments .sapUiCalendarAppType09.sapMSinglePCAppointmentWrap, 
+.sapMSinglePCBlockers .sapUiCalendarAppType09.sapMSinglePCAppointmentWrap {
+    border-left-color: var(--color-typeA);
+}
+.sapMSinglePCAppointments.sapUiCalendarRowVisFilled>.sapUiCalendarAppType09.sapUiCalendarRowApps>.sapUiCalendarApp:not(.sapUiCalendarAppSel)>.sapUiCalendarAppCont {
+    background-color: var(--color-typeA);
+}
+.sapUiCalLegDayType09>.sapUiUnifiedLegendSquare>.sapUiUnifiedLegendSquareColor {
+    background: var(--color-typeA);
+}
+
+/* Acustic stage - type10=>typeB */
+.sapMSinglePCAppointments .sapUiCalendarAppType10.sapMSinglePCAppointmentWrap, 
+.sapMSinglePCBlockers .sapUiCalendarAppType09.sapMSinglePCAppointmentWrap {
+    border-left-color: var(--color-typeB);
+}
+.sapMSinglePCAppointments.sapUiCalendarRowVisFilled>.sapUiCalendarAppType10.sapUiCalendarRowApps>.sapUiCalendarApp:not(.sapUiCalendarAppSel)>.sapUiCalendarAppCont {
+    background-color: var(--color-typeB);
+}
+.sapUiCalLegDayType10>.sapUiUnifiedLegendSquare>.sapUiUnifiedLegendSquareColor {
+    background: var(--color-typeB);
+}
+
+/* Kinecko - type01=>typeC */
+.sapMSinglePCAppointments .sapUiCalendarAppType01.sapMSinglePCAppointmentWrap, 
+.sapMSinglePCBlockers .sapUiCalendarAppType09.sapMSinglePCAppointmentWrap {
+    border-left-color: var(--color-typeC);
+}
+.sapMSinglePCAppointments.sapUiCalendarRowVisFilled>.sapUiCalendarAppType01.sapUiCalendarRowApps>.sapUiCalendarApp:not(.sapUiCalendarAppSel)>.sapUiCalendarAppCont {
+    background-color: var(--color-typeC);
+}
+.sapUiCalLegDayType01>.sapUiUnifiedLegendSquare>.sapUiUnifiedLegendSquareColor {
+    background: var(--color-typeC);
+}
+

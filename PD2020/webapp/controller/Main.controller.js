@@ -27,7 +27,14 @@ sap.ui.define([
 			oSourceModel.loadData(sUri);
 			oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);
 
+			// console.log( $(".sapMSinglePCRowHeaders").eq(1).hide() ); // eslint-disable-line no-console
+
 		},
+
+		// onAfterRendering: function () {
+		// 	console.log( $("div.sapMTitle").eq(0) ); // eslint-disable-line no-console
+		// 	$("div.sapMTitle").eq(1).addClass("title");
+		// },
 
 		afterDataLoaded: function () {
 			var oView = this.getView();

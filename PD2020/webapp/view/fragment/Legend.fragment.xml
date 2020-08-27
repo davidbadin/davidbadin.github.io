@@ -14,8 +14,8 @@
 				<u:CalendarLegendItem text="{text}" type="{type}"/>
 			</appointmentItems>
 		</PlanningCalendarLegend>
-        <FlexBox justifyContent="Center" class="sapUiTinyMargin">
-            <Button icon="sap-icon://information" id="info" text="Informácie" press="onInfoPress"/>
+        <FlexBox justifyContent="Center" class="sapUiTinyMargin popupBox">
+            <Button icon="sap-icon://information" id="info" text="Informácie" press="onInfoPress" class="myButtonDef"/>
         </FlexBox>
 	</Popover>
 </core:FragmentDefinition>

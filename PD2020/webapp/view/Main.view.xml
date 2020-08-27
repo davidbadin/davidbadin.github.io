@@ -28,12 +28,11 @@
 									<actions>
 										<Title text="Harmonogram" visible="{= !${device>/system/phone} }"/>
 										<ToolbarSpacer/>
-										<Button id="day01" text="štvrtok" press="onDayPress"/>
-										<Button id="day02" text="piatok" press="onDayPress"/>
-										<Button id="day03" text="sobota" press="onDayPress"/>
-										<!-- <Button id="day04" text="nedeľa" press="onDayPress"/> -->
+										<Button id="day01" text="štvrtok" press="onDayPress" class="myButtonDef"/>
+										<Button id="day02" text="piatok" press="onDayPress" class="myButtonDef"/>
+										<Button id="day03" text="sobota" press="onDayPress" class="myButtonDef"/>
 										<ToolbarSpacer/>
-										<Button id="legendButton" icon="sap-icon://legend" press="handleOpenLegend"/>
+										<Button id="legendButton" icon="sap-icon://legend" press="handleOpenLegend" />
 									</actions>
 									<views>
 										<SinglePlanningCalendarDayView key="DayView" title="Day" />
@@ -49,7 +48,7 @@
 									</appointments>
 								</SinglePlanningCalendar>
 								<FlexBox class="sapUiTinyMarginBeginEnd">
-									<Image width="100%" src="webapp/img/banner.png"/>
+									<Image width="100%" src="webapp/img/pd2020banner.png"/>
 								</FlexBox>
 								<SinglePlanningCalendar
 									id="PC2"
