@@ -14,27 +14,15 @@ sap.ui.define([
 			var oSourceModel = oView.getModel("sourceDataModel");
 			
 			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
-			
-			// this.byId("PC1-Header").setVisible(false);
-			
+				
 			this.byId("PC1-Header-Spacer").setVisible(false);
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
-						
-			// $("div.sapMSinglePCRowHeaders").eq(2).remove();
-			// $("div.sapMSinglePCRowHeaders").eq(1).hide();
 
 			oSourceModel.loadData(sUri);
 			oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);
 
-			// console.log( $(".sapMSinglePCRowHeaders").eq(1).hide() ); // eslint-disable-line no-console
-
 		},
-
-		// onAfterRendering: function () {
-		// 	console.log( $("div.sapMTitle").eq(0) ); // eslint-disable-line no-console
-		// 	$("div.sapMTitle").eq(1).addClass("title");
-		// },
 
 		afterDataLoaded: function () {
 			var oView = this.getView();
@@ -113,28 +101,22 @@ sap.ui.define([
 					}
 				}
 			}
-					
-			// if ( oToday.getMonth() === 7 && oToday.getDate() === 30 ) {
-			// 	oStartFestDate = new Date("2020", "7", "30", "12", "00");
-			// 	oStartFestDate2 = new Date("2020", "7", "31", "00", "00");
-			// 	this.byId("day04").setType("Emphasized");
-			// } else {
-				if ( oToday.getMonth() === 7 && oToday.getDate() === 29 ) {
-					oStartFestDate = new Date("2020", "7", "29", "12", "00");
-					oStartFestDate2 = new Date("2020", "7", "30", "00", "00");
-					this.byId("day03").setType("Emphasized");
+
+			if ( oToday.getMonth() === 7 && oToday.getDate() === 29 ) {
+				oStartFestDate = new Date("2020", "7", "29", "12", "00");
+				oStartFestDate2 = new Date("2020", "7", "30", "00", "00");
+				this.byId("day03").setType("Emphasized");
+			} else {
+				if ( oToday.getMonth() === 7 && oToday.getDate() === 28 ) {
+					oStartFestDate = new Date("2020", "7", "28", "12", "00");
+					oStartFestDate2 = new Date("2020", "7", "29", "00", "00");
+					this.byId("day02").setType("Emphasized");
 				} else {
-					if ( oToday.getMonth() === 7 && oToday.getDate() === 28 ) {
-						oStartFestDate = new Date("2020", "7", "28", "12", "00");
-						oStartFestDate2 = new Date("2020", "7", "29", "00", "00");
-						this.byId("day02").setType("Emphasized");
-					} else {
-						oStartFestDate = new Date("2020", "7", "27", "12", "00");
-						oStartFestDate2 = new Date("2020", "7", "28", "00", "00");
-						this.byId("day01").setType("Emphasized");
-					}
+					oStartFestDate = new Date("2020", "7", "27", "12", "00");
+					oStartFestDate2 = new Date("2020", "7", "28", "00", "00");
+					this.byId("day01").setType("Emphasized");
 				}
-			// }
+			}
 
 			aStages = [
 				{
@@ -150,8 +132,6 @@ sap.ui.define([
 					type: CalendarDayType.Type01
 				}
 			]
-
-			// console.log(oToday); // eslint-disable-line no-console
 
 			oModel.setData({
 				"startDate": oStartFestDate,
@@ -214,7 +194,6 @@ sap.ui.define([
 		handleAppointmentSelect: function (oEvent) {
 			var oView = this.getView();
 			var oAppointment = oEvent.getParameter("appointment");
-			// console.log(oAppointment); // eslint-disable-line no-console
 
 			if (oAppointment) {
 				oAppointment.setSelected(false);
@@ -242,7 +221,6 @@ sap.ui.define([
 			this.byId("day01").setType("Default");
 			this.byId("day02").setType("Default");
 			this.byId("day03").setType("Default");
-			// this.byId("day04").setType("Default");
 	
 			switch (sId) {
 				case "day01":
@@ -257,10 +235,6 @@ sap.ui.define([
 					oModel.setProperty("/startDate", new Date("2020", "7", "29", "9", "00"));
 					oModel.setProperty("/startDate2", new Date("2020", "7", "30", "00", "00"));
 					break;
-				// case "day04":
-				// 	oModel.setProperty("/startDate", new Date("2020", "7", "30", "9", "00"));
-				// 	oModel.setProperty("/startDate2", new Date("2020", "7", "31", "00", "00"));
-				// 	break;
 			}
 			
 			this.byId(sId).setType("Emphasized");
@@ -322,14 +296,7 @@ sap.ui.define([
 					title: "Informácie pre návštevníkov"
 				});
 			});
-			
-
-			
 		}
-		
-
-
-
 
 	});
 });
