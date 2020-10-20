@@ -1,1 +1,111 @@
 /* Enter your custom styles here */
+
+:root {
+    --color-white: white;
+    --color-darkgrey: rgb(20, 20, 20);
+    --color-lightgrey: rgb(170, 170, 170);
+    --color-typeA: #6100a1;
+    --color-typeB: #9871d6;
+    --color-typeC: #e7b755;
+}
+
+/* Fiori background */
+.sapUiRootBackground, .sapMShellGlobalOuterBackground {
+    background: linear-gradient(to bottom, var(--color-darkgrey),  black);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.sapMPage {
+    background-color: var(--color-darkgrey);
+}
+
+.sapMText {
+    color: var(--color-lightgrey);
+}
+
+.sapMInputBaseInner {
+    color: var(--color-lightgrey);
+    background-color: #000;
+}
+
+.sapMPanelContent:not(.sapMPanelBGTransparent) {
+    border-bottom: none;
+}
+
+/* TITLE BAR SECTION */
+.sapMBarPH {
+    background-color: black;
+}
+.sapMIBar-CTX .sapMTitle {
+    color: var(--color-typeB);
+    text-shadow: none;
+} 
+.sapMShellBrandingBar {
+    height: 0px;
+    background-color: black;
+}
+
+/* Dialog */
+.sapMDialog>.sapMDialogSection {
+    background-color: var(--color-darkgrey);
+    color: var(--color-darkgrey);
+}
+
+.sapMDialog>header.sapMDialogTitle .sapMTitle {
+    color: var(--color-typeB);
+}
+
+html.sap-desktop .sapMIBar.sapMFooter-CTX {
+    background-color: var(--color-darkgrey);
+    border-top: 1px solid #000;
+}
+
+.sapMBtnInner {
+    color: var(--color-typeB);
+    text-shadow: none;
+}
+
+
+
+
+/* Buttons */
+
+
+.myButtonOk .sapMBtnInner { 
+    color: var(--color-white);
+    background-color: var(--color-typeA);
+    border-color: var(--color-typeA);
+    text-shadow: none;
+}
+
+.myButtonOk.sapMBtn:hover>.sapMBtnHoverable {
+    background-color: black;
+}
+
+.myButtonInd .sapMBtnInner { 
+    color: var(--color-white);
+    background-color: var(--color-typeB);
+    border-color: var(--color-typeB);
+    text-shadow: none;
+}
+
+.myButtonInd.sapMBtn:hover>.sapMBtnHoverable {
+    background-color: var(--color-darkgrey);
+}
+
+:not(.sapMBtnDisabled)>.sapMBtnInner.sapMBtnActive{
+    background-color: var(--color-darkgrey);
+    border-color: black;
+}
+
+.sapMIBar-CTX.sapMFooter-CTX {
+    color: #333;
+    text-shadow: none;
+    background-color: var(--color-darkgrey);
+    background-image: none;
+    border-top: 1px solid black;
+    box-shadow: none;
+}
+

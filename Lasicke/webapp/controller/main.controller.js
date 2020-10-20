@@ -6,7 +6,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 		onInit: function () {
 			// window.oThis = this;
 			this.setButtonsVisible(this);
-			setInterval(this.setButtonsVisible, 5000, this);
+			setInterval(this.setButtonsVisible, 60000, this);
 		},
 		
 		setButtonsVisible: function (that) {

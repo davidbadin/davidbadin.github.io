@@ -17,7 +17,7 @@
 											<FlexItemData minWidth="75%"/>
 										</layoutData>
 									</Input>
-						            <Button text="OK" id="btnOk" width="100%" type="Emphasized" class="sapUiTinyMargin" 
+						            <Button text="OK" id="btnOk" width="100%" class="sapUiTinyMargin myButtonOk" 
 						            	press="onPressOk">
 						            	<layoutData>
 											<FlexItemData minWidth="50%"/>
@@ -53,28 +53,28 @@
 									<!--	</layoutData>-->
 									<!--</Button>-->
 									
-									<Button text="Prvá indícia" id="btnInd1" width="100%" class="sapUiTinyMargin" 
+									<Button text="Prvá indícia" id="btnInd1" width="100%" class="sapUiTinyMargin  myButtonInd" 
 										press="onPressInd( ${settingsModel>/indTitle1}, ${settingsModel>/indText1} )"
 										 >
 						            	<layoutData>
 											<FlexItemData minWidth="50%"/>
 										</layoutData>
 									</Button>
-									<Button text="Druhá indícia" id="btnInd2" width="100%" class="sapUiTinyMargin" 
+									<Button text="Druhá indícia" id="btnInd2" width="100%" class="sapUiTinyMargin  myButtonInd" 
 										press="onPressInd( ${settingsModel>/indTitle2}, ${settingsModel>/indText2} )"
 										>
 						            	<layoutData>
 											<FlexItemData minWidth="50%"/>
 										</layoutData>
 									</Button>
-									<Button text="Tretia indícia" id="btnInd3" width="100%" class="sapUiTinyMargin" 
+									<Button text="Tretia indícia" id="btnInd3" width="100%" class="sapUiTinyMargin  myButtonInd" 
 										press="onPressInd( ${settingsModel>/indTitle3}, ${settingsModel>/indText3} )"
 										>
 						            	<layoutData>
 											<FlexItemData minWidth="50%"/>
 										</layoutData>
 									</Button>
-									<Button text="Posledná indícia" id="btnInd4" width="100%" class="sapUiTinyMargin" 
+									<Button text="Posledná indícia" id="btnInd4" width="100%" class="sapUiTinyMargin  myButtonInd" 
 										press="onPressInd( ${settingsModel>/indTitle4}, ${settingsModel>/indText4} )"
 										>
 						            	<layoutData>
