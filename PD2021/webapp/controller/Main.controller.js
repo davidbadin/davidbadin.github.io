@@ -7,7 +7,7 @@ sap.ui.define([
 ], function (Controller, JSONModel, Fragment, unifiedLibrary, MessageBox) {
 	"use strict";
 
-	return Controller.extend("Project.PD2020.controller.Main", {
+	return Controller.extend("Project.PD2021.controller.Main", {
 		onInit: function () {
 			
 			var oView = this.getView();
@@ -75,7 +75,7 @@ sap.ui.define([
 								"type": "Type09"
 							});		
 							break;
-						case "Akustický stage":
+						case "Curious Trenčín 2026 stage":
 							aDataEvents.push({
 								"band": aData[j][2],
 								"start": oStartDate,
@@ -86,35 +86,30 @@ sap.ui.define([
 								"type": "Type10"
 							});		
 							break;
-						case "Kinečko":
-							aDataEvents.push({
-								"band": aData[j][2],
-								"start": oStartDate,
-								"end": oEndDate,
-								"stage": aData[j][5],
-								"shortDescription": sShortDescr,
-								"description": sDescr,
-								"type": "Type01"
-							});		
-							break;
 						default:
 					}
 				}
 			}
 
-			if ( oToday.getMonth() === 7 && oToday.getDate() === 29 ) {
-				oStartFestDate = new Date("2020", "7", "29", "12", "00");
-				oStartFestDate2 = new Date("2020", "7", "30", "00", "00");
-				this.byId("day03").setType("Emphasized");
+			if ( oToday.getMonth() === 7 && oToday.getDate() === 28 ) {
+				oStartFestDate = new Date("2020", "7", "28", "9", "00");
+				oStartFestDate2 = new Date("2020", "7", "29", "00", "00");
+				this.byId("day04").setType("Emphasized");
 			} else {
-				if ( oToday.getMonth() === 7 && oToday.getDate() === 28 ) {
-					oStartFestDate = new Date("2020", "7", "28", "12", "00");
-					oStartFestDate2 = new Date("2020", "7", "29", "00", "00");
-					this.byId("day02").setType("Emphasized");
-				} else {
-					oStartFestDate = new Date("2020", "7", "27", "12", "00");
+				if ( oToday.getMonth() === 7 && oToday.getDate() === 27 ) {
+					oStartFestDate = new Date("2020", "7", "27", "9", "00");
 					oStartFestDate2 = new Date("2020", "7", "28", "00", "00");
-					this.byId("day01").setType("Emphasized");
+					this.byId("day03").setType("Emphasized");
+				} else {
+					if ( oToday.getMonth() === 7 && oToday.getDate() === 26 ) {
+						oStartFestDate = new Date("2020", "7", "26", "9", "00");
+						oStartFestDate2 = new Date("2020", "7", "27", "00", "00");
+						this.byId("day02").setType("Emphasized");
+					} else {
+						oStartFestDate = new Date("2020", "7", "25", "12", "00");
+						oStartFestDate2 = new Date("2020", "7", "26", "00", "00");
+						this.byId("day01").setType("Emphasized");
+					}
 				}
 			}
 
@@ -124,12 +119,8 @@ sap.ui.define([
 					type: CalendarDayType.Type09
 				},
 				{
-					text: "Akustický stage",
+					text: "Curious Trenčín 2026 stage",
 					type: CalendarDayType.Type10
-				},
-				{
-					text: "Kinečko",
-					type: CalendarDayType.Type01
 				}
 			]
 
@@ -224,16 +215,20 @@ sap.ui.define([
 	
 			switch (sId) {
 				case "day01":
-					oModel.setProperty("/startDate", new Date("2020", "7", "27", "12", "00"));
-					oModel.setProperty("/startDate2", new Date("2020", "7", "28", "00", "00"));
+					oModel.setProperty("/startDate", new Date("2020", "7", "25", "12", "00"));
+					oModel.setProperty("/startDate2", new Date("2020", "7", "26", "00", "00"));
 					break;
 				case "day02":
-					oModel.setProperty("/startDate", new Date("2020", "7", "28", "9", "00"));
-					oModel.setProperty("/startDate2", new Date("2020", "7", "29", "00", "00"));
+					oModel.setProperty("/startDate", new Date("2020", "7", "26", "9", "00"));
+					oModel.setProperty("/startDate2", new Date("2020", "7", "27", "00", "00"));
 					break;
 				case "day03":
-					oModel.setProperty("/startDate", new Date("2020", "7", "29", "9", "00"));
-					oModel.setProperty("/startDate2", new Date("2020", "7", "30", "00", "00"));
+					oModel.setProperty("/startDate", new Date("2020", "7", "27", "9", "00"));
+					oModel.setProperty("/startDate2", new Date("2020", "7", "28", "00", "00"));
+					break;
+				case "day04":
+					oModel.setProperty("/startDate", new Date("2020", "7", "28", "9", "00"));
+					oModel.setProperty("/startDate2", new Date("2020", "7", "29", "00", "00"));
 					break;
 			}
 			
@@ -246,7 +241,7 @@ sap.ui.define([
 			if (!this._oLegendPopover) {
 				Fragment.load({
 					id: "LegendFrag",
-					name: "Project.PD2020.view.fragment.Legend",
+					name: "Project.PD2021.view.fragment.Legend",
 					controller: this
 				}).then(function(oPopoverContent){
 					this._oLegendPopover = oPopoverContent;

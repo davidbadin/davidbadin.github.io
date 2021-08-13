@@ -1,4 +1,4 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:unified="sap.ui.unified" controllerName="Project.PD2020.controller.Main" displayBlock="true">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:unified="sap.ui.unified" controllerName="Project.PD2021.controller.Main" displayBlock="true">
 	<Shell id="shell">
 		<App id="app">
 			<pages>
@@ -28,9 +28,10 @@
 									<actions>
 										<Title text="Harmonogram" visible="{= !${device>/system/phone} }"/>
 										<ToolbarSpacer/>
-										<Button id="day01" text="štvrtok" press="onDayPress" class="myButtonDef"/>
-										<Button id="day02" text="piatok" press="onDayPress" class="myButtonDef"/>
-										<Button id="day03" text="sobota" press="onDayPress" class="myButtonDef"/>
+										<Button id="day01" text="streda" press="onDayPress" class="myButtonDef"/>
+										<Button id="day02" text="štvrtok" press="onDayPress" class="myButtonDef"/>
+										<Button id="day03" text="piatok" press="onDayPress" class="myButtonDef"/>
+										<Button id="day04" text="sobota" press="onDayPress" class="myButtonDef"/>
 										<ToolbarSpacer/>
 										<Button id="legendButton" icon="sap-icon://legend" press="handleOpenLegend" />
 									</actions>
