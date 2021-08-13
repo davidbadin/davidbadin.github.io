@@ -75,7 +75,7 @@ sap.ui.define([
 								"type": "Type09"
 							});		
 							break;
-						case "Curious Trenčín 2026 stage":
+						case "Akustický stage":
 							aDataEvents.push({
 								"band": aData[j][2],
 								"start": oStartDate,
@@ -92,22 +92,22 @@ sap.ui.define([
 			}
 
 			if ( oToday.getMonth() === 7 && oToday.getDate() === 28 ) {
-				oStartFestDate = new Date("2020", "7", "28", "9", "00");
-				oStartFestDate2 = new Date("2020", "7", "29", "00", "00");
+				oStartFestDate = new Date("2021", "7", "28", "9", "00");
+				oStartFestDate2 = new Date("2021", "7", "29", "00", "00");
 				this.byId("day04").setType("Emphasized");
 			} else {
 				if ( oToday.getMonth() === 7 && oToday.getDate() === 27 ) {
-					oStartFestDate = new Date("2020", "7", "27", "9", "00");
-					oStartFestDate2 = new Date("2020", "7", "28", "00", "00");
+					oStartFestDate = new Date("2021", "7", "27", "9", "00");
+					oStartFestDate2 = new Date("2021", "7", "28", "00", "00");
 					this.byId("day03").setType("Emphasized");
 				} else {
 					if ( oToday.getMonth() === 7 && oToday.getDate() === 26 ) {
-						oStartFestDate = new Date("2020", "7", "26", "9", "00");
-						oStartFestDate2 = new Date("2020", "7", "27", "00", "00");
+						oStartFestDate = new Date("2021", "7", "26", "9", "00");
+						oStartFestDate2 = new Date("2021", "7", "27", "00", "00");
 						this.byId("day02").setType("Emphasized");
 					} else {
-						oStartFestDate = new Date("2020", "7", "25", "12", "00");
-						oStartFestDate2 = new Date("2020", "7", "26", "00", "00");
+						oStartFestDate = new Date("2021", "7", "25", "12", "00");
+						oStartFestDate2 = new Date("2021", "7", "26", "00", "00");
 						this.byId("day01").setType("Emphasized");
 					}
 				}
@@ -212,23 +212,24 @@ sap.ui.define([
 			this.byId("day01").setType("Default");
 			this.byId("day02").setType("Default");
 			this.byId("day03").setType("Default");
+			this.byId("day04").setType("Default");
 	
 			switch (sId) {
 				case "day01":
-					oModel.setProperty("/startDate", new Date("2020", "7", "25", "12", "00"));
-					oModel.setProperty("/startDate2", new Date("2020", "7", "26", "00", "00"));
+					oModel.setProperty("/startDate", new Date("2021", "7", "25", "12", "00"));
+					oModel.setProperty("/startDate2", new Date("2021", "7", "26", "00", "00"));
 					break;
 				case "day02":
-					oModel.setProperty("/startDate", new Date("2020", "7", "26", "9", "00"));
-					oModel.setProperty("/startDate2", new Date("2020", "7", "27", "00", "00"));
+					oModel.setProperty("/startDate", new Date("2021", "7", "26", "9", "00"));
+					oModel.setProperty("/startDate2", new Date("2021", "7", "27", "00", "00"));
 					break;
 				case "day03":
-					oModel.setProperty("/startDate", new Date("2020", "7", "27", "9", "00"));
-					oModel.setProperty("/startDate2", new Date("2020", "7", "28", "00", "00"));
+					oModel.setProperty("/startDate", new Date("2021", "7", "27", "9", "00"));
+					oModel.setProperty("/startDate2", new Date("2021", "7", "28", "00", "00"));
 					break;
 				case "day04":
-					oModel.setProperty("/startDate", new Date("2020", "7", "28", "9", "00"));
-					oModel.setProperty("/startDate2", new Date("2020", "7", "29", "00", "00"));
+					oModel.setProperty("/startDate", new Date("2021", "7", "28", "9", "00"));
+					oModel.setProperty("/startDate2", new Date("2021", "7", "29", "00", "00"));
 					break;
 			}
 			

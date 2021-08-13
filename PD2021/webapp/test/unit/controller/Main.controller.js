@@ -1,7 +1,7 @@
 /*global QUnit*/
 
 sap.ui.define([
-	"Project/PD2020/controller/Main.controller"
+	"Project/PD2021/controller/Main.controller"
 ], function (Controller) {
 	"use strict";
 

@@ -5,7 +5,7 @@ sap.ui.getCore().attachInit(function () {
 	"use strict";
 
 	sap.ui.require([
-		"Project/PD2020/test/integration/AllJourneys"
+		"Project/PD2021/test/integration/AllJourneys"
 	], function () {
 		QUnit.start();
 	});
