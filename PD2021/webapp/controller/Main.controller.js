@@ -30,16 +30,6 @@ sap.ui.define([
 			var oView = this.getView();
 			var oModel = oView.getModel();
 			var oSourceModel = oView.getModel("sourceDataModel");
-
-			console.log("TEST2");
-			
-			oSourceModel.detachRequestCompleted(this.afterDataLoaded, this);
-		},
-
-		afterDataLoaded2: function () {
-			var oView = this.getView();
-			var oModel = oView.getModel();
-			var oSourceModel = oView.getModel("sourceDataModel");
 			var CalendarDayType = unifiedLibrary.CalendarDayType;
 
 			var aData = [];
