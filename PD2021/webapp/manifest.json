@@ -1,7 +1,7 @@
 {
 	"_version": "1.12.0",
 	"sap.app": {
-		"id": "Project.PD2020",
+		"id": "Project.PD2021",
 		"type": "application",
 		"i18n": "i18n/i18n.properties",
 		"applicationVersion": {
@@ -46,7 +46,7 @@
 	"sap.ui5": {
 		"flexEnabled": false,
 		"rootView": {
-			"viewName": "Project.PD2020.view.Main",
+			"viewName": "Project.PD2021.view.Main",
 			"type": "XML",
 			"async": true,
 			"id": "Main"
@@ -68,7 +68,7 @@
 			"i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
 				"settings": {
-					"bundleName": "Project.PD2020.i18n.i18n"
+					"bundleName": "Project.PD2021.i18n.i18n"
 				}
 			},
 			"sourceDataModel": {
@@ -96,7 +96,7 @@
 				"routerClass": "sap.m.routing.Router",
 				"viewType": "XML",
 				"async": true,
-				"viewPath": "Project.PD2020.view",
+				"viewPath": "Project.PD2021.view",
 				"controlAggregation": "pages",
 				"controlId": "app",
 				"clearControlAggregation": false
