@@ -18,7 +18,8 @@ sap.ui.define([
 			this.byId("PC1-Header-Spacer").setVisible(false);
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
-
+			
+			console.log(oSourceModel);
 			console.log("TEST1");
 
 			oSourceModel.loadData(sUri);
@@ -132,6 +133,8 @@ sap.ui.define([
 				"stages": aStages,
 				"events": aDataEvents
 			});
+
+			console.log(oSourceModel);
 
 			oSourceModel.detachRequestCompleted(this.afterDataLoaded, this);
 		},
