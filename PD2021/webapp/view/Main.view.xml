@@ -1,0 +1,92 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:unified="sap.ui.unified" controllerName="Project.PD2020.controller.Main" displayBlock="true">
+	<Shell id="shell">
+		<App id="app">
+			<pages>
+				<Page id="page" title="{i18n>title}">
+					<content>
+						<HBox id="hbox0">
+							<VBox width="100%" id="vbox1">
+								<SinglePlanningCalendar
+									id="PC1"
+									class="sapUiTinyMarginBeginEnd"
+									viewChange="handleViewChange"
+									appointmentSelect="handleAppointmentSelect"
+									headerDateSelect="handleHeaderDateSelect"
+									startDateChange="handleStartDateChange"
+									appointmentDrop="handleAppointmentDrop"
+									appointmentResize="handleAppointmentResize"
+									moreLinkPress="handleMoreLinkPress"
+									startDate="{path: '/startDate'}"
+									enableAppointmentsDragAndDrop="false"
+									enableAppointmentsResize="false"
+									enableAppointmentsCreate="false"
+									stickyMode="All"
+									startHour="9"
+									fullDay="false"
+									appointments="{path: '/events', templateShareable: true}" 
+									>
+									<actions>
+										<Title text="Harmonogram" visible="{= !${device>/system/phone} }"/>
+										<ToolbarSpacer/>
+										<Button id="day01" text="štvrtok" press="onDayPress" class="myButtonDef"/>
+										<Button id="day02" text="piatok" press="onDayPress" class="myButtonDef"/>
+										<Button id="day03" text="sobota" press="onDayPress" class="myButtonDef"/>
+										<ToolbarSpacer/>
+										<Button id="legendButton" icon="sap-icon://legend" press="handleOpenLegend" />
+									</actions>
+									<views>
+										<SinglePlanningCalendarDayView key="DayView" title="Day" />
+									</views>
+									<appointments>
+										<unified:CalendarAppointment
+											title= "{band}"
+											text= "{shortDescription}"
+											type= "{type}"
+											startDate= "{start}"
+											endDate= "{end}">
+										</unified:CalendarAppointment>
+									</appointments>
+								</SinglePlanningCalendar>
+								<FlexBox class="sapUiTinyMarginBeginEnd">
+									<Image width="100%" src="webapp/img/pd2020banner.png"/>
+								</FlexBox>
+								<SinglePlanningCalendar
+									id="PC2"
+									class="sapUiTinyMarginBeginEnd"
+									viewChange="handleViewChange"
+									appointmentSelect="handleAppointmentSelect"
+									headerDateSelect="handleHeaderDateSelect"
+									startDateChange="handleStartDateChange"
+									appointmentDrop="handleAppointmentDrop"
+									appointmentResize="handleAppointmentResize"
+									moreLinkPress="handleMoreLinkPress"
+									startDate="{path: '/startDate2'}"
+									enableAppointmentsDragAndDrop="false"
+									enableAppointmentsResize="false"
+									enableAppointmentsCreate="false"
+									stickyMode="All"
+									endHour="4"
+									fullDay="false"
+									appointments="{path: '/events', templateShareable: true}" 
+									>
+									<views>
+										<SinglePlanningCalendarDayView key="DayView" title="Day" />
+									</views>
+									<appointments>
+										<unified:CalendarAppointment
+											title= "{band}"
+											text= "{shortDescription}"
+											type= "{type}"
+											startDate= "{start}"
+											endDate= "{end}">
+										</unified:CalendarAppointment>
+									</appointments>
+								</SinglePlanningCalendar>
+							</VBox>
+						</HBox>
+					</content>
+				</Page>
+			</pages>
+		</App>
+	</Shell>
+</mvc:View>
