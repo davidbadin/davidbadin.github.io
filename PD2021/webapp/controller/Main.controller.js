@@ -20,10 +20,10 @@ sap.ui.define([
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
 			
 			console.log(oSourceModel);
-			console.log("TEST1");
+			console.log("TEST2");
 
-			oSourceModel.loadData(sUri);
-			oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);
+			// oSourceModel.loadData(sUri);
+			// oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);
 
 		},
 
