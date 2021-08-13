@@ -19,15 +19,15 @@ sap.ui.define([
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
 			
-			console.log( oSourceModel.getData() );
-			console.log( oSourceModel.getProperty("/feed/entry/length") );
-			console.log("TEST6");
+			// console.log( oSourceModel.getData() );
+			// console.log( oSourceModel.getProperty("/feed/entry/length") );
+			// console.log("TEST6");
 
-			if ( oSourceModel.getProperty("/feed/entry/length") ) {
-				console.log( oSourceModel.getProperty("/feed/entry/length") );
-			} else {
-				console.log("no data1");
-			}
+			// if ( oSourceModel.getProperty("/feed/entry/length") ) {
+			// 	console.log( oSourceModel.getProperty("/feed/entry/length") );
+			// } else {
+			// 	console.log("no data1");
+			// }
 
 			oSourceModel.loadData(sUri);
 			oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);
@@ -39,17 +39,6 @@ sap.ui.define([
 			var oModel = oView.getModel();
 			var oSourceModel = oView.getModel("sourceDataModel");
 			var CalendarDayType = unifiedLibrary.CalendarDayType;
-
-
-			if ( oSourceModel.getProperty("/feed/entry/length") ) {
-				console.log( oSourceModel.getProperty("/feed/entry/length") );
-			} else {
-				console.log("no data2");
-			}
-
-
-
-
 
 			var aData = [];
 			var aDataEvents = [];
