@@ -20,8 +20,8 @@ sap.ui.define([
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
 			
 			console.log( oSourceModel.getData() );
-			console.log( oSourceModel.getProperty("/feed/entry/length") );
-			console.log("TEST3");
+			console.log( oSourceModel.getProperty("length") );
+			console.log("TEST4");
 
 			// oSourceModel.loadData(sUri);
 			// oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);
