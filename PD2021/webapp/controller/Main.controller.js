@@ -19,6 +19,8 @@ sap.ui.define([
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
 
+			console.log("TEST1");
+
 			oSourceModel.loadData(sUri);
 			oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);
 
@@ -29,7 +31,9 @@ sap.ui.define([
 			var oModel = oView.getModel();
 			var oSourceModel = oView.getModel("sourceDataModel");
 
-			console.log("TEST");
+			console.log("TEST2");
+			
+			oSourceModel.detachRequestCompleted(this.afterDataLoaded, this);
 		},
 
 		afterDataLoaded2: function () {
@@ -83,7 +87,7 @@ sap.ui.define([
 								"type": "Type09"
 							});		
 							break;
-						case "Akustický stage":
+						case "Curious Trenčín 2026 stage":
 							aDataEvents.push({
 								"band": aData[j][2],
 								"start": oStartDate,
