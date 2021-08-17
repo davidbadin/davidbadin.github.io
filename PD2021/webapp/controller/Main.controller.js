@@ -29,15 +29,33 @@ sap.ui.define([
 			// oSourceInfoModel.attachRequestCompleted(this.afterInfoLoaded, this);	
 			// oSourceInfoModel.loadData(sUriInfo);		
 
-			gapi.client.sheets.spreadsheets.values.get({
-				spreadsheetId: "1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs",
-				range: "A5:F8"
-			  }).then((response) => {
-				var result = response.result;
-				var numRows = result.values ? result.values.length : 0;
-				console.log(result);
-				console.log(numRows);
-			  });
+			// gapi.client.sheets.spreadsheets.values.get({
+			// 	spreadsheetId: "1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs",
+			// 	range: "A5:F8"
+			//   }).then((response) => {
+			// 	var result = response.result;
+			// 	var numRows = result.values ? result.values.length : 0;
+			// 	console.log(result);
+			// 	console.log(numRows);
+			//   });
+
+			var HttpClient = function() {
+				this.get = function(aUrl, aCallback) {
+					var anHttpRequest = new XMLHttpRequest();
+					anHttpRequest.onreadystatechange = function() { 
+						if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
+							aCallback(anHttpRequest.responseText);
+					}
+			
+					anHttpRequest.open( "GET", aUrl, true );            
+					anHttpRequest.send( null );
+				}
+			}
+
+			var client = new HttpClient();
+			client.get("https://sheets.googleapis.com/v4/spreadsheets/1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs/values/A5:F7", function(response) {
+				console.log( response ); 
+			});
 
 		},
 
