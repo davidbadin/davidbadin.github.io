@@ -296,7 +296,6 @@ sap.ui.define([
 			var oView = this.getView();
 			var oSourceInfoModel = oView.getModel("sourceInfoModel");
 			var oInfoModel = oView.getModel("infoModel");
-			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetInfoSource.uri;
 			
 			var aData = [];
 			var sInfo = "";
@@ -304,8 +303,6 @@ sap.ui.define([
 			var oInfoData;
 			var iLength;
 			var iNumberOfRows = 0;	
-
-			// oSourceInfoModel.loadData(sUri).then(function () {
 
 			console.log( oSourceInfoModel.getData() );
 			if ( oSourceInfoModel.getProperty("/version") ) {
@@ -337,7 +334,6 @@ sap.ui.define([
 			} else {
 				console.log( "Info NOT Loaded");
 			}		
-			// });
 
 			oSourceInfoModel.detachRequestCompleted(this.afterInfoLoaded, this);
 
