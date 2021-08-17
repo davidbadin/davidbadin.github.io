@@ -328,6 +328,8 @@ sap.ui.define([
 			]
 
 			oModel.setProperty("stages", aStages);
+
+			console.log( aStages )
 			
 		},
 
@@ -360,6 +362,8 @@ sap.ui.define([
 
 			oModel.setProperty("/startDate", oStartFestDate);
 			oModel.setProperty("startDate2", oStartFestDate2);
+
+			console.log( oStartFestDate );
 		}
 
 
