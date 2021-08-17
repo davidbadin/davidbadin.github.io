@@ -16,12 +16,13 @@ sap.ui.define([
 			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
 			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
 			
-			
+
 			this.byId("PC1-Header-Spacer").setVisible(false);
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
 
 			this.setStages(oModel);
+			this.setStartDate(oModel);
 			
 			// console.log( oSourceModel.getData() );
 			// console.log( oSourceModel.getProperty("/feed/entry/length") );
@@ -51,17 +52,14 @@ sap.ui.define([
 			var oView = this.getView();
 			var oModel = oView.getModel();
 			var oSourceModel = oView.getModel("sourceDataModel");
-			var CalendarDayType = unifiedLibrary.CalendarDayType;
 			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
 
 			var aData = [];
 			var aDataEvents = [];
-			var aStages = [];
 
 			var oStartFestDate;
 			var oStartFestDate2;
-			var oToday = new Date();
-			
+						
 			console.log( oSourceModel.getData() );
 
 			var oSourceData = oSourceModel.getData().feed.entry;
@@ -117,33 +115,35 @@ sap.ui.define([
 				}
 			}
 
-			if ( oToday.getMonth() === 7 && oToday.getDate() === 28 ) {
-				oStartFestDate = new Date("2021", "7", "28", "9", "00");
-				oStartFestDate2 = new Date("2021", "7", "29", "00", "00");
-				this.byId("day04").setType("Emphasized");
-			} else {
-				if ( oToday.getMonth() === 7 && oToday.getDate() === 27 ) {
-					oStartFestDate = new Date("2021", "7", "27", "9", "00");
-					oStartFestDate2 = new Date("2021", "7", "28", "00", "00");
-					this.byId("day03").setType("Emphasized");
-				} else {
-					if ( oToday.getMonth() === 7 && oToday.getDate() === 26 ) {
-						oStartFestDate = new Date("2021", "7", "26", "9", "00");
-						oStartFestDate2 = new Date("2021", "7", "27", "00", "00");
-						this.byId("day02").setType("Emphasized");
-					} else {
-						oStartFestDate = new Date("2021", "7", "25", "12", "00");
-						oStartFestDate2 = new Date("2021", "7", "26", "00", "00");
-						this.byId("day01").setType("Emphasized");
-					}
-				}
-			}
+			// var oToday = new Date();
 
-			oModel.setData({
-				"startDate": oStartFestDate,
-				"startDate2": oStartFestDate2,
-				"events": aDataEvents
-			});
+			// if ( oToday.getMonth() === 7 && oToday.getDate() === 28 ) {
+			// 	oStartFestDate = new Date("2021", "7", "28", "9", "00");
+			// 	oStartFestDate2 = new Date("2021", "7", "29", "00", "00");
+			// 	this.byId("day04").setType("Emphasized");
+			// } else {
+			// 	if ( oToday.getMonth() === 7 && oToday.getDate() === 27 ) {
+			// 		oStartFestDate = new Date("2021", "7", "27", "9", "00");
+			// 		oStartFestDate2 = new Date("2021", "7", "28", "00", "00");
+			// 		this.byId("day03").setType("Emphasized");
+			// 	} else {
+			// 		if ( oToday.getMonth() === 7 && oToday.getDate() === 26 ) {
+			// 			oStartFestDate = new Date("2021", "7", "26", "9", "00");
+			// 			oStartFestDate2 = new Date("2021", "7", "27", "00", "00");
+			// 			this.byId("day02").setType("Emphasized");
+			// 		} else {
+			// 			oStartFestDate = new Date("2021", "7", "25", "12", "00");
+			// 			oStartFestDate2 = new Date("2021", "7", "26", "00", "00");
+			// 			this.byId("day01").setType("Emphasized");
+			// 		}
+			// 	}
+			// }
+
+			// oModel.setData({
+			// 	// "startDate": oStartFestDate,
+			// 	// "startDate2": oStartFestDate2,
+			// 	"events": aDataEvents
+			// });
 
 			oSourceModel.detachRequestCompleted(this.afterDataLoaded, this);
 		},
@@ -331,7 +331,42 @@ sap.ui.define([
 				"stages": aStages,
 			});
 			
+		},
+
+		setStartDate: function (oModel) {
+			var oStartFestDate;
+			var oStartFestDate2;
+			var oToday = new Date();
+
+			if ( oToday.getMonth() === 7 && oToday.getDate() === 28 ) {
+				oStartFestDate = new Date("2021", "7", "28", "9", "00");
+				oStartFestDate2 = new Date("2021", "7", "29", "00", "00");
+				this.byId("day04").setType("Emphasized");
+			} else {
+				if ( oToday.getMonth() === 7 && oToday.getDate() === 27 ) {
+					oStartFestDate = new Date("2021", "7", "27", "9", "00");
+					oStartFestDate2 = new Date("2021", "7", "28", "00", "00");
+					this.byId("day03").setType("Emphasized");
+				} else {
+					if ( oToday.getMonth() === 7 && oToday.getDate() === 26 ) {
+						oStartFestDate = new Date("2021", "7", "26", "9", "00");
+						oStartFestDate2 = new Date("2021", "7", "27", "00", "00");
+						this.byId("day02").setType("Emphasized");
+					} else {
+						oStartFestDate = new Date("2021", "7", "25", "12", "00");
+						oStartFestDate2 = new Date("2021", "7", "26", "00", "00");
+						this.byId("day01").setType("Emphasized");
+					}
+				}
+			}
+
+			oModel.setData({
+				"startDate": oStartFestDate,
+				"startDate2": oStartFestDate2,
+				"events": aDataEvents
+			});
 		}
+
 
 	});
 });
