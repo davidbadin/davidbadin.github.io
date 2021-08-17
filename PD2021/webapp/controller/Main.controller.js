@@ -295,7 +295,7 @@ sap.ui.define([
 		afterInfoLoaded: function () {
 			var oView = this.getView();
 			var oSourceInfoModel = oView.getModel("sourceInfoModel");
-			var oInfoModel = oView.getModel("sourceInfoModel");
+			var oInfoModel = oView.getModel("infoModel");
 			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetInfoSource.uri;
 			
 			var aData = [];
