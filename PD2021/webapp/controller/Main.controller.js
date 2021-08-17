@@ -330,6 +330,7 @@ sap.ui.define([
 		onRefresh: function () {
 			var oView = this.getView();
 			var oSourceModel = oView.getModel("sourceDataModel");
+			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
 
 			oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);	
 			oSourceModel.loadData(sUri);
