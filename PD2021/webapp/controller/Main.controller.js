@@ -3,8 +3,9 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/Fragment",
 	"sap/ui/unified/library",
-	"sap/m/MessageBox"
-], function (Controller, JSONModel, Fragment, unifiedLibrary, MessageBox) {
+	"sap/m/MessageBox",
+	"sap/m/MessageToast"
+], function (Controller, JSONModel, Fragment, unifiedLibrary, MessageBox, MessageToast) {
 	"use strict";
 
 	return Controller.extend("Project.PD2021.controller.Main", {
@@ -60,66 +61,76 @@ sap.ui.define([
 			var aData = [];
 			var aDataEvents = [];
 
+			var oSourceData;
+			var iSourceLength;
+			var iNumberOfRows = 0;							// number of data rows in spreadsheet without header, empty rows (if any) included
+
+
 			console.log( oSourceModel.getData() );
-			console.log( oSourceModel.getProperty("/version") );
 			if ( oSourceModel.getProperty("/version") ) {
 				console.log( "Data Loaded");
+
+				oSourceData = oSourceModel.getData().feed.entry;
+				iSourceLength = oSourceModel.getProperty("/feed/entry/length");
+
+				for (var i = 0; i < iSourceLength; i++) {
+					var iRow = oSourceData[i].gs$cell.row;				
+					var iCol = oSourceData[i].gs$cell.col;				
+					var sValue = oSourceData[i].gs$cell.$t;
+	
+					if (iRow !== "1" && iRow !== "2" && iRow !== "3" && iRow !== "4") { 							
+						if (!aData[iRow - 5]) {
+							aData[iRow - 5] = [];
+						}
+						aData[iRow - 5][iCol - 1] = sValue;
+					}
+					iNumberOfRows = iRow - 4;
+				}
+				
+				for (var j = 0; j < iNumberOfRows; j++) {
+					if (aData[j]) { 									// skip if empty row
+						var oStartDate = this.formatDate( aData[j][0] );
+						var oEndDate = this.formatDate( aData[j][1] );
+						var sShortDescr = this.formatShortDescr( aData[j][5], oStartDate, oEndDate ); 
+						var sDescr = this.formatDescr( sShortDescr, aData[j][4]	);
+	
+						switch ( aData[j][5] ) {
+							case "Hlavný stage":
+								aDataEvents.push({
+									"band": aData[j][2],
+									"start": oStartDate,
+									"end": oEndDate,
+									"stage": aData[j][5],
+									"shortDescription": sShortDescr,
+									"description": sDescr,
+									"type": "Type09"
+								});		
+								break;
+							case "Curious Trenčín 2026 stage":
+								aDataEvents.push({
+									"band": aData[j][2],
+									"start": oStartDate,
+									"end": oEndDate,
+									"stage": aData[j][5],
+									"shortDescription": sShortDescr,
+									"description": sDescr,
+									"type": "Type10"
+								});		
+								break;
+							default:
+						}
+					}
+				}
+
+				MessageToast.show("Data updated", {duration: 1000});
+
 			} else {
 				console.log( "Data NOT Loaded");
 			}
 						
-			var oSourceData = oSourceModel.getData().feed.entry;
-			var iSourceLength = oSourceModel.getProperty("/feed/entry/length");
-			var iNumberOfRows = 0;							// number of data rows in spreadsheet without header, empty rows (if any) included
 			
-			for (var i = 0; i < iSourceLength; i++) {
-				var iRow = oSourceData[i].gs$cell.row;				
-				var iCol = oSourceData[i].gs$cell.col;				
-				var sValue = oSourceData[i].gs$cell.$t;
-
-				if (iRow !== "1" && iRow !== "2" && iRow !== "3" && iRow !== "4") { 							
-					if (!aData[iRow - 5]) {
-						aData[iRow - 5] = [];
-					}
-					aData[iRow - 5][iCol - 1] = sValue;
-				}
-				iNumberOfRows = iRow - 4;
-			}
 			
-			for (var j = 0; j < iNumberOfRows; j++) {
-				if (aData[j]) { 									// skip if empty row
-					var oStartDate = this.formatDate( aData[j][0] );
-					var oEndDate = this.formatDate( aData[j][1] );
-					var sShortDescr = this.formatShortDescr( aData[j][5], oStartDate, oEndDate ); 
-					var sDescr = this.formatDescr( sShortDescr, aData[j][4]	);
-
-					switch ( aData[j][5] ) {
-						case "Hlavný stage":
-							aDataEvents.push({
-								"band": aData[j][2],
-								"start": oStartDate,
-								"end": oEndDate,
-								"stage": aData[j][5],
-								"shortDescription": sShortDescr,
-								"description": sDescr,
-								"type": "Type09"
-							});		
-							break;
-						case "Curious Trenčín 2026 stage":
-							aDataEvents.push({
-								"band": aData[j][2],
-								"start": oStartDate,
-								"end": oEndDate,
-								"stage": aData[j][5],
-								"shortDescription": sShortDescr,
-								"description": sDescr,
-								"type": "Type10"
-							});		
-							break;
-						default:
-					}
-				}
-			}
+			
 
 			var oToday = new Date();
 
