@@ -60,7 +60,7 @@ sap.ui.define([
 			var aData = [];
 			var aDataEvents = [];
 
-			if ( oSourceData.getData() ) {
+			if ( oSourceModel.getData() ) {
 				console.log( "Data Loaded");
 			} else {
 				console.log( "Data NOT Loaded");
