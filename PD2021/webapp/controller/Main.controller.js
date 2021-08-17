@@ -348,7 +348,7 @@ sap.ui.define([
 
 		onInfoPress: function () {
 			var oView = this.getView();
-			var oInfoModel = oView.getModel("sourceInfoModel");
+			var oInfoModel = oView.getModel("infoModel");
 			var sInfo = oInfoModel.getProperty("/info");
 			
 			// var oView = this.getView();
