@@ -50,8 +50,8 @@ sap.ui.define([
 			// for (var i = 0; i < 120; i++) {
 			// 	console.log( i );
 
-			// oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);	
-			// oSourceModel.loadData(sUri);
+			oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);	
+			oSourceModel.loadData(sUri);
 				
 			// 	if ( isLoaded ) {
 			// 		break;
