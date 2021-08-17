@@ -23,21 +23,21 @@ sap.ui.define([
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
 		
-			// console.log( oSourceModel.getData() );
-			// console.log( oSourceModel.getProperty("/feed/entry/length") );
-			// console.log("TEST6");
+			// oSourceDataModel.attachRequestCompleted(this.afterDataLoaded, this);	
+			// oSourceDataModel.loadData(sUriData);
 
-			// if ( oSourceModel.getProperty("/feed/entry/length") ) {
-			// 	console.log( oSourceModel.getProperty("/feed/entry/length") );
-			// } else {
-			// 	console.log("no data1");
-			// }
+			// oSourceInfoModel.attachRequestCompleted(this.afterInfoLoaded, this);	
+			// oSourceInfoModel.loadData(sUriInfo);		
 
-			oSourceDataModel.attachRequestCompleted(this.afterDataLoaded, this);	
-			oSourceDataModel.loadData(sUriData);
-
-			oSourceInfoModel.attachRequestCompleted(this.afterInfoLoaded, this);	
-			oSourceInfoModel.loadData(sUriInfo);		
+			gapi.client.sheets.spreadsheets.values.get({
+				spreadsheetId: "1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs",
+				range: "A5:F8"
+			  }).then((response) => {
+				var result = response.result;
+				var numRows = result.values ? result.values.length : 0;
+				console.log(result);
+				console.log(numRows);
+			  });
 
 		},
 
