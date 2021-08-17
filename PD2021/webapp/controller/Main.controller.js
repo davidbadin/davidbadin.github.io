@@ -327,9 +327,7 @@ sap.ui.define([
 				}
 			]
 
-			oModel.setData({	
-				"stages": aStages,
-			});
+			oModel.setProperty("stages", aStages);
 			
 		},
 
@@ -360,10 +358,8 @@ sap.ui.define([
 				}
 			}
 
-			oModel.setData({
-				"startDate": oStartFestDate,
-				"startDate2": oStartFestDate2,
-			});
+			oModel.setProperty("/startDate", oStartFestDate);
+			oModel.setProperty("startDate2", oStartFestDate2);
 		}
 
 
