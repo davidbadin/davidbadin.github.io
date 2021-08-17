@@ -22,9 +22,9 @@ sap.ui.define([
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
 
 			console.log( oModel.getData() );
-			this.setStartDate(oModel);
-			console.log( oModel.getData() );
 			this.setStages(oModel);
+			console.log( oModel.getData() );
+			this.setStartDate(oModel);
 			console.log( oModel.getData() );
 			
 			
@@ -364,7 +364,7 @@ sap.ui.define([
 			}
 
 			oModel.setProperty("/startDate", oStartFestDate);
-			oModel.setProperty("startDate2", oStartFestDate2);
+			oModel.setProperty("/startDate2", oStartFestDate2);
 		}
 
 
