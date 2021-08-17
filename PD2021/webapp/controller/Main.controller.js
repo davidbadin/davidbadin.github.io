@@ -21,8 +21,11 @@ sap.ui.define([
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
 
+			console.log( oSourceModel.getData() );
 			this.setStartDate(oModel);
+			console.log( oSourceModel.getData() );
 			this.setStages(oModel);
+			console.log( oSourceModel.getData() );
 			
 			
 			// console.log( oSourceModel.getData() );
@@ -328,8 +331,9 @@ sap.ui.define([
 				}
 			]
 
-			oModel.setProperty("stages", aStages);
-
+			oModel.setData(
+				{"stages": aStages}
+				);
 			console.log( aStages )
 			
 		},
