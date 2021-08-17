@@ -11,7 +11,6 @@ sap.ui.define([
 		onInit: function () {
 			
 			var oView = this.getView();
-			var oModel = oView.getModel();
 			var oSourceModel = oView.getModel("sourceDataModel");
 			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
 			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
@@ -61,11 +60,11 @@ sap.ui.define([
 			var aData = [];
 			var aDataEvents = [];
 
-			// if ( oSourceData.getData() ) {
-			// 	console.log( "Data Loaded");
-			// } else {
-			// 	console.log( "Data NOT Loaded");
-			// }
+			if ( oSourceData.getData() ) {
+				console.log( "Data Loaded");
+			} else {
+				console.log( "Data NOT Loaded");
+			}
 						
 			var oSourceData = oSourceModel.getData().feed.entry;
 			var iSourceLength = oSourceModel.getProperty("/feed/entry/length");
@@ -328,7 +327,11 @@ sap.ui.define([
 		},
 
 		onRefresh: function () {
+			var oView = this.getView();
+			var oSourceModel = oView.getModel("sourceDataModel");
 
+			oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);	
+			oSourceModel.loadData(sUri);
 		}
 
 	});
