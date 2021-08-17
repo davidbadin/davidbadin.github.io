@@ -13,7 +13,6 @@ sap.ui.define([
 			var oView = this.getView();
 			var oSourceModel = oView.getModel("sourceDataModel");
 			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
-			var isLoaded = false;
 				
 			this.byId("PC1-Header-Spacer").setVisible(false);
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
@@ -31,8 +30,9 @@ sap.ui.define([
 
 			// for (var i = 0; i < 120; i++) {
 			// 	console.log( i );
-				oSourceModel.loadData(sUri);
-				oSourceModel.attachRequestCompleted(this.afterDataLoaded(), this);
+			oSourceModel.attachRequestCompleted(this.afterDataLoaded(), this);	
+			oSourceModel.loadData(sUri);
+				
 			// 	if ( isLoaded ) {
 			// 		break;
 			// 	}
@@ -55,6 +55,8 @@ sap.ui.define([
 			var oStartFestDate2;
 			var oToday = new Date();
 			
+			console.log( oSourceModel.getData() );
+
 			var oSourceData = oSourceModel.getData().feed.entry;
 			var iSourceLength = oSourceModel.getProperty("/feed/entry/length");
 			var iNumberOfRows = 0;							// number of data rows in spreadsheet without header, empty rows (if any) included
