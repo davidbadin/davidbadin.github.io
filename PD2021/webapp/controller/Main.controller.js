@@ -23,11 +23,11 @@ sap.ui.define([
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
 		
-			// oSourceDataModel.attachRequestCompleted(this.afterDataLoaded, this);	
-			// oSourceDataModel.loadData(sUriData);
+			oSourceDataModel.attachRequestCompleted(this.afterDataLoaded, this);	
+			oSourceDataModel.loadData(sUriData);
 
-			// oSourceInfoModel.attachRequestCompleted(this.afterInfoLoaded, this);	
-			// oSourceInfoModel.loadData(sUriInfo);		
+			oSourceInfoModel.attachRequestCompleted(this.afterInfoLoaded, this);	
+			oSourceInfoModel.loadData(sUriInfo);		
 
 			// gapi.client.sheets.spreadsheets.values.get({
 			// 	spreadsheetId: "1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs",
@@ -39,23 +39,23 @@ sap.ui.define([
 			// 	console.log(numRows);
 			//   });
 
-			var HttpClient = function() {
-				this.get = function(aUrl, aCallback) {
-					var anHttpRequest = new XMLHttpRequest();
-					anHttpRequest.onreadystatechange = function() { 
-						if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
-							aCallback(anHttpRequest.responseText);
-					}
+			// var HttpClient = function() {
+			// 	this.get = function(aUrl, aCallback) {
+			// 		var anHttpRequest = new XMLHttpRequest();
+			// 		anHttpRequest.onreadystatechange = function() { 
+			// 			if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
+			// 				aCallback(anHttpRequest.responseText);
+			// 		}
 			
-					anHttpRequest.open( "GET", aUrl, true );            
-					anHttpRequest.send( null );
-				}
-			}
+			// 		anHttpRequest.open( "GET", aUrl, true );            
+			// 		anHttpRequest.send( null );
+			// 	}
+			// }
 
-			var client = new HttpClient();
-			client.get("https://sheets.googleapis.com/v4/spreadsheets/1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs/values/A5F7", function(response) {
-				console.log( response ); 
-			});
+			// var client = new HttpClient();
+			// client.get("https://sheets.googleapis.com/v4/spreadsheets/1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs/values/A5F7", function(response) {
+			// 	console.log( response ); 
+			// });
 
 		},
 
