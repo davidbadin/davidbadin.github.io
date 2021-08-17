@@ -15,7 +15,9 @@ sap.ui.define([
 			var oSourceModel = oView.getModel("sourceDataModel");
 			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
 			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
-				
+			
+			var aStages = [];
+
 			this.byId("PC1-Header-Spacer").setVisible(false);
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
