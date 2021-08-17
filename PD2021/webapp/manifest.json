@@ -74,12 +74,12 @@
 			"sourceDataModel": {
 				"type": "sap.ui.model.json.JSONModel",
 				"dataSource": "sheetSource",
-				"preload": true
+				"preload": false
 			},
 			"sourceInfoModel": {
 				"type": "sap.ui.model.json.JSONModel",
 				"dataSource": "sheetInfoSource",
-				"preload": true
+				"preload": false
 			},
 			"": {
 				"type": "sap.ui.model.json.JSONModel",
