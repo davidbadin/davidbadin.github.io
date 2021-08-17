@@ -16,29 +16,12 @@ sap.ui.define([
 			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
 			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
 			
-			var CalendarDayType = unifiedLibrary.CalendarDayType;
-			var aStages = [];
-
+			
 			this.byId("PC1-Header-Spacer").setVisible(false);
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
 
-			aStages = [
-				{
-					text: "Hlavný stage",
-					type: CalendarDayType.Type09
-				},
-				{
-					text: "Curious Trenčín 2026 stage",
-					type: CalendarDayType.Type10
-				}
-			]
-
-			oModel.setData({	
-				"stages": aStages,
-			});
-
-
+			this.setStages(oModel);
 			
 			// console.log( oSourceModel.getData() );
 			// console.log( oSourceModel.getProperty("/feed/entry/length") );
@@ -156,21 +139,9 @@ sap.ui.define([
 				}
 			}
 
-			// aStages = [
-			// 	{
-			// 		text: "Hlavný stage",
-			// 		type: CalendarDayType.Type09
-			// 	},
-			// 	{
-			// 		text: "Curious Trenčín 2026 stage",
-			// 		type: CalendarDayType.Type10
-			// 	}
-			// ]
-
 			oModel.setData({
 				"startDate": oStartFestDate,
 				"startDate2": oStartFestDate2,
-				// "stages": aStages,
 				"events": aDataEvents
 			});
 
@@ -339,6 +310,27 @@ sap.ui.define([
 
 		onRefresh: function () {
 
+		},
+
+		setStages: function (oModel) {
+			var CalendarDayType = unifiedLibrary.CalendarDayType;
+			var aStages = [];
+
+			aStages = [
+				{
+					text: "Hlavný stage",
+					type: CalendarDayType.Type09
+				},
+				{
+					text: "Curious Trenčín 2026 stage",
+					type: CalendarDayType.Type10
+				}
+			]
+
+			oModel.setData({	
+				"stages": aStages,
+			});
+			
 		}
 
 	});
