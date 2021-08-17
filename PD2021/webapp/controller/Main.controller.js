@@ -304,6 +304,10 @@ sap.ui.define([
 					title: "Informácie pre návštevníkov"
 				});
 			});
+		},
+
+		onRefresh: function () {
+			
 		}
 
 	});

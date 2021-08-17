@@ -33,6 +33,7 @@
 										<Button id="day03" text="piatok" press="onDayPress" class="myButtonDef"/>
 										<Button id="day04" text="sobota" press="onDayPress" class="myButtonDef"/>
 										<ToolbarSpacer/>
+										<Button id="refreshButton" icon="sap-icon://refresh" press="onRefresh" />
 										<Button id="legendButton" icon="sap-icon://legend" press="handleOpenLegend" />
 									</actions>
 									<views>
