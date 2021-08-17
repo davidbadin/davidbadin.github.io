@@ -382,6 +382,8 @@ sap.ui.define([
 			// 		}
 			// 	}
 			
+			console.log(oInfoModel);
+			console.log(oInfoModel.getData());
 			console.log(sInfo);
 
 			MessageBox.show(sInfo, {title: "Informácie pre návštevníkov"});
