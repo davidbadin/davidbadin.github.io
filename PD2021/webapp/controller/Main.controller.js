@@ -61,11 +61,11 @@ sap.ui.define([
 			var aData = [];
 			var aDataEvents = [];
 
-			if ( oSourceData.getData() ) {
-				console.log( "Data Loaded");
-			} else {
-				console.log( "Data NOT Loaded");
-			}
+			// if ( oSourceData.getData() ) {
+			// 	console.log( "Data Loaded");
+			// } else {
+			// 	console.log( "Data NOT Loaded");
+			// }
 						
 			var oSourceData = oSourceModel.getData().feed.entry;
 			var iSourceLength = oSourceModel.getProperty("/feed/entry/length");
