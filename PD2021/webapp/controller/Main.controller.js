@@ -332,13 +332,12 @@ sap.ui.define([
 						}
 					}
 
+					oInfoModel.setProperty("/info", sInfo);
+
 				} else {
 					console.log( "Info NOT Loaded");
 				}		
 			});
-
-			
-			oInfoModel.setProperty("/info", sInfo);
 
 			oSourceInfoModel.detachRequestCompleted(this.afterInfoLoaded, this);
 
