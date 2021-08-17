@@ -33,9 +33,8 @@ sap.ui.define([
 
 			console.log( oSourceModel.getData() );
 
-			oSourceModel.loadData(sUri);
 			oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);	
-			
+			oSourceModel.loadData(sUri);
 				
 			// 	if ( isLoaded ) {
 			// 		break;
