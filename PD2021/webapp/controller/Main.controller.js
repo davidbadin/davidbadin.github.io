@@ -338,9 +338,7 @@ sap.ui.define([
 			});
 
 			
-			oInfoModel.setData({
-				"info": sInfo
-			});
+			oInfoModel.setProperty("/info", sInfo);
 
 			oSourceInfoModel.detachRequestCompleted(this.afterInfoLoaded, this);
 
