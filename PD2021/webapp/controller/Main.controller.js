@@ -12,8 +12,8 @@ sap.ui.define([
 			
 			var oView = this.getView();
 			var oSourceModel = oView.getModel("sourceDataModel");
-			
 			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
+			var bLoaded = false;
 				
 			this.byId("PC1-Header-Spacer").setVisible(false);
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
@@ -29,12 +29,19 @@ sap.ui.define([
 			// 	console.log("no data1");
 			// }
 
-			oSourceModel.loadData(sUri);
-			oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);
+			for (var i = 0; i < 120; i++) {
+				console.log( i );
+				oSourceModel.loadData(sUri);
+				oSourceModel.attachRequestCompleted(this.afterDataLoaded(bLodaded), this);
+				if ( bLoaded ) {
+					break;
+				}
+			}
+			
 
 		},
 
-		afterDataLoaded: function () {
+		afterDataLoaded: function (bLoaded) {
 			var oView = this.getView();
 			var oModel = oView.getModel();
 			var oSourceModel = oView.getModel("sourceDataModel");
@@ -142,6 +149,8 @@ sap.ui.define([
 			});
 
 			console.log(oSourceModel);
+
+			bLoaded = true;
 
 			oSourceModel.detachRequestCompleted(this.afterDataLoaded, this);
 		},
@@ -307,7 +316,7 @@ sap.ui.define([
 		},
 
 		onRefresh: function () {
-			
+
 		}
 
 	});
