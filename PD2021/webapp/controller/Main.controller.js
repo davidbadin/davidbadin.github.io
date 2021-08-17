@@ -60,12 +60,7 @@ sap.ui.define([
 
 			var aData = [];
 			var aDataEvents = [];
-
-			var oStartFestDate;
-			var oStartFestDate2;
 						
-			console.log( oSourceModel.getData() );
-
 			var oSourceData = oSourceModel.getData().feed.entry;
 			var iSourceLength = oSourceModel.getProperty("/feed/entry/length");
 			var iNumberOfRows = 0;							// number of data rows in spreadsheet without header, empty rows (if any) included
@@ -143,11 +138,11 @@ sap.ui.define([
 			// 	}
 			// }
 
-			// oModel.setData({
-			// 	// "startDate": oStartFestDate,
-			// 	// "startDate2": oStartFestDate2,
-			// 	"events": aDataEvents
-			// });
+			oModel.setData({
+				"events": aDataEvents
+			});
+
+			console.log( oModel.getData() );
 
 			oSourceModel.detachRequestCompleted(this.afterDataLoaded, this);
 		},
