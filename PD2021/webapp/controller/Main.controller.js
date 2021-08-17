@@ -29,14 +29,14 @@ sap.ui.define([
 			// 	console.log("no data1");
 			// }
 
-			for (var i = 0; i < 120; i++) {
-				console.log( i );
+			// for (var i = 0; i < 120; i++) {
+			// 	console.log( i );
 				oSourceModel.loadData(sUri);
 				oSourceModel.attachRequestCompleted(this.afterDataLoaded(), this);
-				if ( isLoaded ) {
-					break;
-				}
-			}
+			// 	if ( isLoaded ) {
+			// 		break;
+			// 	}
+			// }
 			
 
 		},
