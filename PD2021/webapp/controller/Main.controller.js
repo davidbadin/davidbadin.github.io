@@ -53,7 +53,7 @@ sap.ui.define([
 			}
 
 			var client = new HttpClient();
-			client.get("https://sheets.googleapis.com/v4/spreadsheets/1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs/values/A5:F7", function(response) {
+			client.get("https://sheets.googleapis.com/v4/spreadsheets/1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs/values/A5F7", function(response) {
 				console.log( response ); 
 			});
 
