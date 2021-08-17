@@ -16,6 +16,7 @@ sap.ui.define([
 			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
 			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
 			
+			var CalendarDayType = unifiedLibrary.CalendarDayType;
 			var aStages = [];
 
 			this.byId("PC1-Header-Spacer").setVisible(false);
