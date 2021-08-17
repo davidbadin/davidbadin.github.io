@@ -347,53 +347,25 @@ sap.ui.define([
 			var oView = this.getView();
 			var oInfoModel = oView.getModel("infoModel");
 			var sInfo = oInfoModel.getProperty("/info");
-			
-			// var oView = this.getView();
-			// var oInfoModel = oView.getModel("sourceInfoModel");
-			// var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetInfoSource.uri;
-			
-			// var aData = [];
-			// var sInfo = "";
-
-			// oInfoModel.loadData(sUri).then(function () {
-			// 	var oInfoData = oInfoModel.getData().feed.entry;
-			// 	var iLength = oInfoModel.getProperty("/feed/entry/length");
-			// 	var iNumberOfRows = 0;	
-				
-				
-			// 	for (var i = 0; i < iLength; i++) {
-			// 		var iRow = oInfoData[i].gs$cell.row;				
-			// 		var iCol = oInfoData[i].gs$cell.col;				
-			// 		var sValue = oInfoData[i].gs$cell.$t;
-
-			// 		if (!aData[iRow - 1]) {
-			// 			aData[iRow - 1] = [];
-			// 		}
-			// 		aData[iRow - 1][iCol - 1] = sValue;
-			// 		iNumberOfRows = iRow;
-			// 	}
-
-			// 	for (var j = 0; j < iNumberOfRows; j++) {
-			// 		if ( aData[j] ) {
-			// 			sInfo = sInfo + aData[j][0] + "\n" + "\n" + aData[j][1] + "\n" + "\n" + " ***** " + "\n" + "\n"
-			// 		}
-			// 	}
-			
-			console.log(oInfoModel);
-			console.log(oInfoModel.getData());
-			console.log(sInfo);
-
+					
 			MessageBox.show(sInfo, {title: "Informácie pre návštevníkov"});
-			// });
 		},
 
 		onRefresh: function () {
 			var oView = this.getView();
+			
 			var oSourceModel = oView.getModel("sourceDataModel");
-			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
+			var sUriData = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
+
+			var oSourceInfoModel = oView.getModel("sourceInfoModel");
+			var sUriInfo = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetInfoSource.uri;
+			
 
 			oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);	
-			oSourceModel.loadData(sUri);
+			oSourceModel.loadData(sUriData);
+
+			oSourceInfoModel.attachRequestCompleted(this.afterInfoLoaded, this);	
+			oSourceInfoModel.loadData(sUriInfo);
 		}
 
 	});
