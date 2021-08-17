@@ -30,7 +30,9 @@ sap.ui.define([
 
 			// for (var i = 0; i < 120; i++) {
 			// 	console.log( i );
-			
+
+			console.log( oSourceModel.getData() );
+
 			oSourceModel.loadData(sUri);
 			oSourceModel.attachRequestCompleted(this.afterDataLoaded(), this);	
 			
@@ -151,8 +153,6 @@ sap.ui.define([
 				"stages": aStages,
 				"events": aDataEvents
 			});
-
-			console.log(oSourceModel);
 
 			oSourceModel.detachRequestCompleted(this.afterDataLoaded, this);
 		},
