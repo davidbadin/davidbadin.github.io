@@ -12,8 +12,10 @@ sap.ui.define([
 		onInit: function () {
 			
 			var oView = this.getView();
-			var oSourceModel = oView.getModel("sourceDataModel");
-			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
+			var oSourceDataModel = oView.getModel("sourceDataModel");
+			var oSourceInfoModel = oView.getModel("sourceInfoModel");
+			var sUriData = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
+			var sUriInfo = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetInfoSource.uri;
 			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
 			
 
@@ -31,17 +33,11 @@ sap.ui.define([
 			// 	console.log("no data1");
 			// }
 
-			// for (var i = 0; i < 120; i++) {
-			// 	console.log( i );
+			oSourceDataModel.attachRequestCompleted(this.afterDataLoaded, this);	
+			oSourceDataModel.loadData(sUriData);
 
-			oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);	
-			oSourceModel.loadData(sUri);
-				
-			// 	if ( isLoaded ) {
-			// 		break;
-			// 	}
-			// }
-			
+			oSourceInfoModel.attachRequestCompleted(this.afterInfoLoaded, this);	
+			oSourceInfoModel.loadData(sUriInfo);		
 
 		},
 
@@ -127,10 +123,7 @@ sap.ui.define([
 			} else {
 				console.log( "Data NOT Loaded");
 			}
-						
-			
-			
-			
+									
 
 			var oToday = new Date();
 
@@ -299,42 +292,100 @@ sap.ui.define([
 			}
 		},
 
-		onInfoPress: function () {
+		afterInfoLoaded: function () {
 			var oView = this.getView();
+			var oSourceInfoModel = oView.getModel("sourceInfoModel");
 			var oInfoModel = oView.getModel("sourceInfoModel");
 			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetInfoSource.uri;
 			
 			var aData = [];
 			var sInfo = "";
+			
+			var oInfoData;
+			var iLength;
+			var iNumberOfRows = 0;	
 
-			oInfoModel.loadData(sUri).then(function () {
-				var oInfoData = oInfoModel.getData().feed.entry;
-				var iLength = oInfoModel.getProperty("/feed/entry/length");
-				var iNumberOfRows = 0;	
-				
-				
-				for (var i = 0; i < iLength; i++) {
-					var iRow = oInfoData[i].gs$cell.row;				
-					var iCol = oInfoData[i].gs$cell.col;				
-					var sValue = oInfoData[i].gs$cell.$t;
+			oSourceInfoModel.loadData(sUri).then(function () {
 
-					if (!aData[iRow - 1]) {
-						aData[iRow - 1] = [];
+				console.log( oSourceInfoModel.getData() );
+				if ( oSourceInfoModel.getProperty("/version") ) {
+					console.log( "Info Loaded");
+
+					oInfoData = oSourceInfoModel.getData().feed.entry;
+					iLength = oSourceInfoModel.getProperty("/feed/entry/length");		
+					
+					for (var i = 0; i < iLength; i++) {
+						var iRow = oInfoData[i].gs$cell.row;				
+						var iCol = oInfoData[i].gs$cell.col;				
+						var sValue = oInfoData[i].gs$cell.$t;
+
+						if (!aData[iRow - 1]) {
+							aData[iRow - 1] = [];
+						}
+						aData[iRow - 1][iCol - 1] = sValue;
+						iNumberOfRows = iRow;
 					}
-					aData[iRow - 1][iCol - 1] = sValue;
-					iNumberOfRows = iRow;
-				}
 
-				for (var j = 0; j < iNumberOfRows; j++) {
-					if ( aData[j] ) {
-						sInfo = sInfo + aData[j][0] + "\n" + "\n" + aData[j][1] + "\n" + "\n" + " ***** " + "\n" + "\n"
+					for (var j = 0; j < iNumberOfRows; j++) {
+						if ( aData[j] ) {
+							sInfo = sInfo + aData[j][0] + "\n" + "\n" + aData[j][1] + "\n" + "\n" + " ***** " + "\n" + "\n"
+						}
 					}
-				}
 
-				MessageBox.show(sInfo, {
-					title: "Informácie pre návštevníkov"
-				});
+				} else {
+					console.log( "Info NOT Loaded");
+				}		
 			});
+
+			
+			oInfoModel.setData({
+				"info": sInfo
+			});
+
+			oSourceInfoModel.detachRequestCompleted(this.afterInfoLoaded, this);
+
+		},
+
+		onInfoPress: function () {
+			var oView = this.getView();
+			var oInfoModel = oView.getModel("sourceInfoModel");
+			var sInfo = oInfoModel.getProperty("info");
+			
+			// var oView = this.getView();
+			// var oInfoModel = oView.getModel("sourceInfoModel");
+			// var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetInfoSource.uri;
+			
+			// var aData = [];
+			// var sInfo = "";
+
+			// oInfoModel.loadData(sUri).then(function () {
+			// 	var oInfoData = oInfoModel.getData().feed.entry;
+			// 	var iLength = oInfoModel.getProperty("/feed/entry/length");
+			// 	var iNumberOfRows = 0;	
+				
+				
+			// 	for (var i = 0; i < iLength; i++) {
+			// 		var iRow = oInfoData[i].gs$cell.row;				
+			// 		var iCol = oInfoData[i].gs$cell.col;				
+			// 		var sValue = oInfoData[i].gs$cell.$t;
+
+			// 		if (!aData[iRow - 1]) {
+			// 			aData[iRow - 1] = [];
+			// 		}
+			// 		aData[iRow - 1][iCol - 1] = sValue;
+			// 		iNumberOfRows = iRow;
+			// 	}
+
+			// 	for (var j = 0; j < iNumberOfRows; j++) {
+			// 		if ( aData[j] ) {
+			// 			sInfo = sInfo + aData[j][0] + "\n" + "\n" + aData[j][1] + "\n" + "\n" + " ***** " + "\n" + "\n"
+			// 		}
+			// 	}
+			
+			console.log(sInfo);
+
+			MessageBox.show(sInfo, {title: "Informácie pre návštevníkov"});
+			// });
 		},
 
 		onRefresh: function () {
