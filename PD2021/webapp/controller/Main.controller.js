@@ -11,12 +11,31 @@ sap.ui.define([
 		onInit: function () {
 			
 			var oView = this.getView();
+			var oModel = oView.getModel();
 			var oSourceModel = oView.getModel("sourceDataModel");
 			var sUri = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
+			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
 				
 			this.byId("PC1-Header-Spacer").setVisible(false);
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
+
+			aStages = [
+				{
+					text: "Hlavný stage",
+					type: CalendarDayType.Type09
+				},
+				{
+					text: "Curious Trenčín 2026 stage",
+					type: CalendarDayType.Type10
+				}
+			]
+
+			oModel.setData({	
+				"stages": aStages,
+			});
+
+
 			
 			// console.log( oSourceModel.getData() );
 			// console.log( oSourceModel.getProperty("/feed/entry/length") );
@@ -31,10 +50,8 @@ sap.ui.define([
 			// for (var i = 0; i < 120; i++) {
 			// 	console.log( i );
 
-			console.log( oSourceModel.getData() );
-
-			oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);	
-			oSourceModel.loadData(sUri);
+			// oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);	
+			// oSourceModel.loadData(sUri);
 				
 			// 	if ( isLoaded ) {
 			// 		break;
@@ -49,6 +66,7 @@ sap.ui.define([
 			var oModel = oView.getModel();
 			var oSourceModel = oView.getModel("sourceDataModel");
 			var CalendarDayType = unifiedLibrary.CalendarDayType;
+			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
 
 			var aData = [];
 			var aDataEvents = [];
@@ -135,21 +153,21 @@ sap.ui.define([
 				}
 			}
 
-			aStages = [
-				{
-					text: "Hlavný stage",
-					type: CalendarDayType.Type09
-				},
-				{
-					text: "Curious Trenčín 2026 stage",
-					type: CalendarDayType.Type10
-				}
-			]
+			// aStages = [
+			// 	{
+			// 		text: "Hlavný stage",
+			// 		type: CalendarDayType.Type09
+			// 	},
+			// 	{
+			// 		text: "Curious Trenčín 2026 stage",
+			// 		type: CalendarDayType.Type10
+			// 	}
+			// ]
 
 			oModel.setData({
 				"startDate": oStartFestDate,
 				"startDate2": oStartFestDate2,
-				"stages": aStages,
+				// "stages": aStages,
 				"events": aDataEvents
 			});
 
