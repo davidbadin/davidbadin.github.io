@@ -61,7 +61,7 @@ sap.ui.define([
 			var aDataEvents = [];
 
 			console.log( oSourceModel.getData() );
-			console.log( oSourceModel.getProperty("Version") );
+			console.log( oSourceModel.getProperty("/Version") );
 			if ( oSourceModel.getData() ) {
 				console.log( "Data Loaded");
 			} else {
