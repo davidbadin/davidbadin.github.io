@@ -62,6 +62,8 @@ sap.ui.define([
 			var aOutputData = [];
 			var iSourceLength = aSourceData.length;
 			
+			console.log( aSourceData.length );
+
 			for ( var i = 0; i < iSourceLength; i++ ) {
 				if (aSourceData[i]) { 									// skip if empty row
 					var oStartDate = that.formatDate( aSourceData[i][0] );
@@ -69,7 +71,7 @@ sap.ui.define([
 					var sShortDescr = that.formatShortDescr( aSourceData[i][4], oStartDate, oEndDate ); 
 					var sDescr = that.formatDescr( sShortDescr, aSourceData[i][3]	);
 
-					switch ( aSourceData[i][5] ) {
+					switch ( aSourceData[i][4] ) {
 						case "Hlavný stage":
 							aOutputData.push({
 								"band": aSourceData[i][2],
@@ -96,10 +98,10 @@ sap.ui.define([
 					}
 				}
 			}
-
+			console.log( "aSourceData:" );
 			console.log( aSourceData );
+			console.log( "aOutputData:" );
 			console.log( aOutputData );
-
 		},
 
 		afterDataLoaded: function () {
