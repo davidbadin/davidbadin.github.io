@@ -63,11 +63,11 @@ span.sapMBtnInner.sapMBtnEmphasized  {
 .sapMBarPH { background-color: var(--color-darkgrey); }
 html.sap-desktop .sapMIBar.sapMFooter-CTX {
     background-color: var(--color-darkgrey);
-    border-top: 1px solid var(--color-typeB);
+    border-top: 1px solid var(--color-darkgrey);
 }
 .sapMIBar-CTX.sapMFooter-CTX {
     background-color: var(--color-darkgrey);
-    border-top: 1px solid var(--color-typeB);
+    border-top: 1px solid var(--color-darkgrey);
 }
 .sapMDialog>header.sapMDialogTitle .sapMTitle { color: var(--color-white); }
 .sapMText { color: var(--color-lightgrey); }

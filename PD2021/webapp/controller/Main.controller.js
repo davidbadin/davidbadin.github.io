@@ -38,9 +38,12 @@ sap.ui.define([
 			this.loadData (sUriData, this.prepareData, this, true);	// true = isAtStart (to defer start and refresh)
 			this.loadData (sUriInfo, this.prepareInfo, this, true);
 
+			console.log(this);
+
 		},
 
 		loadData: function (theUrl, callback, that, isAtStart) {
+			console.log(that);
 			var xmlHttp = new XMLHttpRequest();
 			xmlHttp.onreadystatechange = function() { 
 				if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
