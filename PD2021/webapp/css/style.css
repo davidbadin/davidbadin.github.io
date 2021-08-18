@@ -65,6 +65,9 @@ span.sapMBtnInner.sapMBtnEmphasized  {
 .sapMBarPH {
     background-color: var(--color-darkgrey);
 }
+.sapMText {
+    color: var(--color-lightgrey);
+}
 
 
 /* CALENDAR SECTION */
