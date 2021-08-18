@@ -102,6 +102,10 @@ sap.ui.define([
 			}
 			
 			// set higlighted date (if not during festival, the first day will be higlighted)
+			that.byId("day01").setType("Default");
+			that.byId("day02").setType("Default");
+			that.byId("day03").setType("Default");
+			that.byId("day04").setType("Default");
 			if ( oToday.getMonth() === 7 && oToday.getDate() === 28 ) {
 				oStartFestDate = new Date("2021", "7", "28", "9", "00");
 				oStartFestDate2 = new Date("2021", "7", "29", "00", "00");
