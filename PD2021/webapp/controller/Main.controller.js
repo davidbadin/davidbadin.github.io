@@ -309,8 +309,8 @@ sap.ui.define([
 			var sUriData = oUriModel.getProperty("/uriData");
 			var sUriInfo = oUriModel.getProperty("/uriInfo");
 
-			this.loadData (sUriData, this.prepareData, false);
-			this.loadData (sUriInfo, this.prepareInfo, false);
+			this.loadData (sUriData, this.prepareData, this, false);
+			this.loadData (sUriInfo, this.prepareInfo, this, false);
 		}
 
 	});
