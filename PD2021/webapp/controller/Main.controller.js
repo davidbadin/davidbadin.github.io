@@ -58,7 +58,7 @@ sap.ui.define([
 			// });
 
 			var sUriTest = "https://sheets.googleapis.com/v4/spreadsheets/1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs/values/A5:F7?key=AIzaSyBIHleeVgn137sWxmlCGvFQjewrv-ueXMI";
-			this.httpGetAsync (sUriTest, displayText);
+			this.httpGetAsync (sUriTest, this.displayText);
 
 
 		},
