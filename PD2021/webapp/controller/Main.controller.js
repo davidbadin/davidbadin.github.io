@@ -285,53 +285,6 @@ sap.ui.define([
 			}
 		},
 
-		afterInfoLoaded: function () {
-			var oView = this.getView();
-			var oSourceInfoModel = oView.getModel("sourceInfoModel");
-			var oInfoModel = oView.getModel("infoModel");
-			
-			var aData = [];
-			var sInfo = "";
-			
-			var oInfoData;
-			var iLength;
-			var iNumberOfRows = 0;	
-
-			console.log( oSourceInfoModel.getData() );
-			if ( oSourceInfoModel.getProperty("/version") ) {
-				console.log( "Info Loaded");
-
-				oInfoData = oSourceInfoModel.getData().feed.entry;
-				iLength = oSourceInfoModel.getProperty("/feed/entry/length");		
-				
-				for (var i = 0; i < iLength; i++) {
-					var iRow = oInfoData[i].gs$cell.row;				
-					var iCol = oInfoData[i].gs$cell.col;				
-					var sValue = oInfoData[i].gs$cell.$t;
-
-					if (!aData[iRow - 1]) {
-						aData[iRow - 1] = [];
-					}
-					aData[iRow - 1][iCol - 1] = sValue;
-					iNumberOfRows = iRow;
-				}
-
-				for (var j = 0; j < iNumberOfRows; j++) {
-					if ( aData[j] ) {
-						sInfo = sInfo + aData[j][0] + "\n" + "\n" + aData[j][1] + "\n" + "\n" + " ***** " + "\n" + "\n"
-					}
-				}
-
-				oInfoModel.setProperty("/info", sInfo);
-
-			} else {
-				console.log( "Info NOT Loaded");
-			}		
-
-			oSourceInfoModel.detachRequestCompleted(this.afterInfoLoaded, this);
-
-		},
-
 		onInfoPress: function () {
 			var oView = this.getView();
 			var oInfoModel = oView.getModel("infoModel");
