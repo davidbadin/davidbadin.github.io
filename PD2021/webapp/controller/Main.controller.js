@@ -18,9 +18,9 @@ sap.ui.define([
 			var sUriInfo;
 
 			var sSheetIdData = "1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs";
-			var sSheetRangeData = "A2:F100";
+			var sSheetRangeData = "'PD2021'!A2:F100";
 			var sSheetIdInfo = "";
-			var sSheetRangeInfo = "A1:B100";
+			var sSheetRangeInfo = "'PD2021_info'!A1:B100";
 			var sApiKey = "AIzaSyBIHleeVgn137sWxmlCGvFQjewrv-ueXMI";
 			
 			sUriData = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetIdData + "/values/" + sSheetRangeData + "?key=" + sApiKey;
