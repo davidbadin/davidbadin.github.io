@@ -220,12 +220,13 @@ sap.ui.define([
 			if (oAppointment) {
 				oAppointment.setSelected(false);
 				var sBand = oEvent.getParameter("appointment").getProperty("title");
-				var dStartDate = oEvent.getParameter("appointment").getProperty("startDate");
+				// var dStartDate = oEvent.getParameter("appointment").getProperty("startDate");
 				var oData = oView.getModel().getData().events;
 				var sDescr;
 
 				for (var i = 0; i < oData.length; i++ ) {
-					if ( oData[i].band === sBand && oData[i].start === dStartDate) {
+					// if ( oData[i].band === sBand && oData[i].start === dStartDate) {		// unknown issue: oData[i].start NOT EQUAL dStartDate after "onRefresh"
+					if ( oData[i].band === sBand ) {
 						sDescr = oData[i].description;
 					}
 				}
