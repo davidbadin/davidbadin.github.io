@@ -57,10 +57,20 @@ sap.ui.define([
 		prepareData: function (response, that) {
 			console.log( response );
 
+			var oView = that.getView();
+			var oModel = oView.getModel();
+
 			var obj = JSON.parse( response );
 			var aSourceData = obj.values;
-			var aOutputData = [];
 			var iSourceLength = aSourceData.length;
+			var aOutputData = [];
+
+			var oStartFestDate;
+			var oStartFestDate2;
+			var oToday = new Date();
+
+			var CalendarDayType = unifiedLibrary.CalendarDayType;
+			var aStages = [];
 			
 			console.log( aSourceData.length );
 
@@ -98,10 +108,48 @@ sap.ui.define([
 					}
 				}
 			}
-			console.log( "aSourceData:" );
-			console.log( aSourceData );
-			console.log( "aOutputData:" );
-			console.log( aOutputData );
+			
+			if ( oToday.getMonth() === 7 && oToday.getDate() === 28 ) {
+				oStartFestDate = new Date("2021", "7", "28", "9", "00");
+				oStartFestDate2 = new Date("2021", "7", "29", "00", "00");
+				that.byId("day04").setType("Emphasized");
+			} else {
+				if ( oToday.getMonth() === 7 && oToday.getDate() === 27 ) {
+					oStartFestDate = new Date("2021", "7", "27", "9", "00");
+					oStartFestDate2 = new Date("2021", "7", "28", "00", "00");
+					that.byId("day03").setType("Emphasized");
+				} else {
+					if ( oToday.getMonth() === 7 && oToday.getDate() === 26 ) {
+						oStartFestDate = new Date("2021", "7", "26", "9", "00");
+						oStartFestDate2 = new Date("2021", "7", "27", "00", "00");
+						that.byId("day02").setType("Emphasized");
+					} else {
+						oStartFestDate = new Date("2021", "7", "25", "12", "00");
+						oStartFestDate2 = new Date("2021", "7", "26", "00", "00");
+						that.byId("day01").setType("Emphasized");
+					}
+				}
+			}
+
+			aStages = [
+				{
+					text: "Hlavný stage",
+					type: CalendarDayType.Type09
+				},
+				{
+					text: "Curious Trenčín 2026 stage",
+					type: CalendarDayType.Type10
+				}
+			]
+
+			oModel.setData({
+				"startDate": oStartFestDate,
+				"startDate2": oStartFestDate2,
+				"stages": aStages,
+				"events": aOutputData
+			});
+
+
 		},
 
 		afterDataLoaded: function () {
