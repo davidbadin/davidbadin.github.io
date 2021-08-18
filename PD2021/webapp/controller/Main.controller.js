@@ -39,22 +39,22 @@ sap.ui.define([
 			// var sUriTest = "https://sheets.googleapis.com/v4/spreadsheets/1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs/values/A5:F7?key=AIzaSyBIHleeVgn137sWxmlCGvFQjewrv-ueXMI";
 
 
-			this.loadData (sUriData, this.prepareData);
+			this.loadData (sUriData, this.prepareData, this);
 
 
 		},
 
-		loadData: function (theUrl, callback) {
+		loadData: function (theUrl, callback, that) {
 			var xmlHttp = new XMLHttpRequest();
 			xmlHttp.onreadystatechange = function() { 
 				if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-					callback(xmlHttp.responseText);
+					callback(xmlHttp.responseText, that);
 			}
 			xmlHttp.open("GET", theUrl, true); // true for asynchronous 
 			xmlHttp.send(null);
 		},
 
-		prepareData: function (response) {
+		prepareData: function (response, that) {
 			console.log( response );
 
 			var obj = JSON.parse( response );
@@ -64,10 +64,10 @@ sap.ui.define([
 			
 			for ( var i = 0; i < iSourceLength; i++ ) {
 				if (aSourceData[i]) { 									// skip if empty row
-					var oStartDate = this.formatDate( aData[i][0] );
-					var oEndDate = this.formatDate( aData[i][1] );
-					var sShortDescr = this.formatShortDescr( aData[i][4], oStartDate, oEndDate ); 
-					var sDescr = this.formatDescr( sShortDescr, aData[i][3]	);
+					var oStartDate = that.formatDate( aData[i][0] );
+					var oEndDate = that.formatDate( aData[i][1] );
+					var sShortDescr = that.formatShortDescr( aData[i][4], oStartDate, oEndDate ); 
+					var sDescr = that.formatDescr( sShortDescr, aData[i][3]	);
 
 					switch ( aData[i][5] ) {
 						case "Hlavný stage":
