@@ -57,7 +57,7 @@ sap.ui.define([
 
 			var obj = JSON.parse( response );
 
-			console.log( obj );
+			console.log( obj.values );
 
 			// var oSourceData = 
 
