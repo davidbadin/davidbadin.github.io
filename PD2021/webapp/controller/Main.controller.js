@@ -56,10 +56,16 @@ sap.ui.define([
 			console.log( response );
 
 			var obj = JSON.parse( response );
+			var aSourceData = obj.values;
+			var aData = [];
 
-			console.log( obj.values );
 
-			// var oSourceData = 
+
+
+
+			console.log( aSourceData[1][1] );
+
+
 
 
 
