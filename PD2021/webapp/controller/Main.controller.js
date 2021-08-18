@@ -67,8 +67,8 @@ sap.ui.define([
 				if (aSourceData[i]) { 									// skip if empty row
 					var oStartDate = this.formatDate( aData[i][0] );
 					var oEndDate = this.formatDate( aData[i][1] );
-					var sShortDescr = this.formatShortDescr( aData[i][5], oStartDate, oEndDate ); 
-					var sDescr = this.formatDescr( sShortDescr, aData[i][4]	);
+					var sShortDescr = this.formatShortDescr( aData[i][4], oStartDate, oEndDate ); 
+					var sDescr = this.formatDescr( sShortDescr, aData[i][3]	);
 
 					switch ( aData[i][5] ) {
 						case "Hlavný stage":
@@ -76,7 +76,7 @@ sap.ui.define([
 								"band": aData[i][2],
 								"start": oStartDate,
 								"end": oEndDate,
-								"stage": aData[i][5],
+								"stage": aData[i][4],
 								"shortDescription": sShortDescr,
 								"description": sDescr,
 								"type": "Type09"
@@ -87,7 +87,7 @@ sap.ui.define([
 								"band": aData[i][2],
 								"start": oStartDate,
 								"end": oEndDate,
-								"stage": aData[i][5],
+								"stage": aData[i][4],
 								"shortDescription": sShortDescr,
 								"description": sDescr,
 								"type": "Type10"
