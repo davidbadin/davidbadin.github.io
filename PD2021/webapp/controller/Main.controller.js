@@ -124,7 +124,7 @@ sap.ui.define([
 						oStartFestDate2 = new Date("2021", "7", "27", "00", "00");
 						that.byId("day02").setType("Emphasized");
 					} else {
-						oStartFestDate = new Date("2021", "7", "25", "12", "00");
+						oStartFestDate = new Date("2021", "7", "25", "9", "00");
 						oStartFestDate2 = new Date("2021", "7", "26", "00", "00");
 						that.byId("day01").setType("Emphasized");
 					}
@@ -152,135 +152,6 @@ sap.ui.define([
 
 		},
 
-		afterDataLoaded: function () {
-			var oView = this.getView();
-			var oModel = oView.getModel();
-			var oSourceModel = oView.getModel("sourceDataModel");
-			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
-			
-			var CalendarDayType = unifiedLibrary.CalendarDayType;
-			var aStages = [];
-
-			var oStartFestDate;
-			var oStartFestDate2;
-			var oToday = new Date();
-
-			var aData = [];
-			var aDataEvents = [];
-
-			var oSourceData;
-			var iSourceLength;
-			var iNumberOfRows = 0;							// number of data rows in spreadsheet without header, empty rows (if any) included
-
-
-			console.log( oSourceModel.getData() );
-			if ( oSourceModel.getProperty("/version") ) {
-				console.log( "Data Loaded");
-
-				oSourceData = oSourceModel.getData().feed.entry;
-				iSourceLength = oSourceModel.getProperty("/feed/entry/length");
-
-				for (var i = 0; i < iSourceLength; i++) {
-					var iRow = oSourceData[i].gs$cell.row;				
-					var iCol = oSourceData[i].gs$cell.col;				
-					var sValue = oSourceData[i].gs$cell.$t;
-	
-					if (iRow !== "1" && iRow !== "2" && iRow !== "3" && iRow !== "4") { 							
-						if (!aData[iRow - 5]) {
-							aData[iRow - 5] = [];
-						}
-						aData[iRow - 5][iCol - 1] = sValue;
-					}
-					iNumberOfRows = iRow - 4;
-				}
-				
-				for (var j = 0; j < iNumberOfRows; j++) {
-					if (aData[j]) { 									// skip if empty row
-						var oStartDate = this.formatDate( aData[j][0] );
-						var oEndDate = this.formatDate( aData[j][1] );
-						var sShortDescr = this.formatShortDescr( aData[j][5], oStartDate, oEndDate ); 
-						var sDescr = this.formatDescr( sShortDescr, aData[j][4]	);
-	
-						switch ( aData[j][5] ) {
-							case "Hlavný stage":
-								aDataEvents.push({
-									"band": aData[j][2],
-									"start": oStartDate,
-									"end": oEndDate,
-									"stage": aData[j][5],
-									"shortDescription": sShortDescr,
-									"description": sDescr,
-									"type": "Type09"
-								});		
-								break;
-							case "Curious Trenčín 2026 stage":
-								aDataEvents.push({
-									"band": aData[j][2],
-									"start": oStartDate,
-									"end": oEndDate,
-									"stage": aData[j][5],
-									"shortDescription": sShortDescr,
-									"description": sDescr,
-									"type": "Type10"
-								});		
-								break;
-							default:
-						}
-					}
-				}
-
-				MessageToast.show("Data updated", {duration: 1000});
-
-			} else {
-				console.log( "Data NOT Loaded");
-			}
-									
-
-			var oToday = new Date();
-
-			if ( oToday.getMonth() === 7 && oToday.getDate() === 28 ) {
-				oStartFestDate = new Date("2021", "7", "28", "9", "00");
-				oStartFestDate2 = new Date("2021", "7", "29", "00", "00");
-				this.byId("day04").setType("Emphasized");
-			} else {
-				if ( oToday.getMonth() === 7 && oToday.getDate() === 27 ) {
-					oStartFestDate = new Date("2021", "7", "27", "9", "00");
-					oStartFestDate2 = new Date("2021", "7", "28", "00", "00");
-					this.byId("day03").setType("Emphasized");
-				} else {
-					if ( oToday.getMonth() === 7 && oToday.getDate() === 26 ) {
-						oStartFestDate = new Date("2021", "7", "26", "9", "00");
-						oStartFestDate2 = new Date("2021", "7", "27", "00", "00");
-						this.byId("day02").setType("Emphasized");
-					} else {
-						oStartFestDate = new Date("2021", "7", "25", "12", "00");
-						oStartFestDate2 = new Date("2021", "7", "26", "00", "00");
-						this.byId("day01").setType("Emphasized");
-					}
-				}
-			}
-
-			aStages = [
-				{
-					text: "Hlavný stage",
-					type: CalendarDayType.Type09
-				},
-				{
-					text: "Curious Trenčín 2026 stage",
-					type: CalendarDayType.Type10
-				}
-			]
-
-			oModel.setData({
-				"startDate": oStartFestDate,
-				"startDate2": oStartFestDate2,
-				"stages": aStages,
-				"events": aDataEvents
-			});
-
-			oSourceModel.detachRequestCompleted(this.afterDataLoaded, this);
-		},
-		
 		formatDate: function (sDate) {
 			var sYear, sMonth, sDay, sHour, sMinute;
 			
@@ -363,7 +234,7 @@ sap.ui.define([
 	
 			switch (sId) {
 				case "day01":
-					oModel.setProperty("/startDate", new Date("2021", "7", "25", "12", "00"));
+					oModel.setProperty("/startDate", new Date("2021", "7", "25", "9", "00"));
 					oModel.setProperty("/startDate2", new Date("2021", "7", "26", "00", "00"));
 					break;
 				case "day02":
@@ -459,20 +330,7 @@ sap.ui.define([
 		},
 
 		onRefresh: function () {
-			var oView = this.getView();
-			
-			var oSourceModel = oView.getModel("sourceDataModel");
-			var sUriData = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
-
-			var oSourceInfoModel = oView.getModel("sourceInfoModel");
-			var sUriInfo = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetInfoSource.uri;
-			
-
-			oSourceModel.attachRequestCompleted(this.afterDataLoaded, this);	
-			oSourceModel.loadData(sUriData);
-
-			oSourceInfoModel.attachRequestCompleted(this.afterInfoLoaded, this);	
-			oSourceInfoModel.loadData(sUriInfo);
+			this.loadData (sUriData, this.prepareData, this);
 		}
 
 	});
