@@ -24,7 +24,7 @@ sap.ui.define([
 			var sApiKey = "AIzaSyBIHleeVgn137sWxmlCGvFQjewrv-ueXMI";
 			
 			sUriData = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetIdData + "/values/" + sSheetRangeData + "?key=" + sApiKey;
-			sUriData = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetIdInfo + "/values/" + sSheetRangeInfo + "?key=" + sApiKey;
+			sUriInfo = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetIdInfo + "/values/" + sSheetRangeInfo + "?key=" + sApiKey;
 
 			this.byId("PC1-Header-Spacer").setVisible(false);
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
@@ -44,8 +44,7 @@ sap.ui.define([
 
 		},
 
-		loadData: function (theUrl, callback)
-		{
+		loadData: function (theUrl, callback) {
 			var xmlHttp = new XMLHttpRequest();
 			xmlHttp.onreadystatechange = function() { 
 				if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
