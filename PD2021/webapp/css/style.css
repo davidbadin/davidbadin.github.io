@@ -58,20 +58,18 @@ span.sapMBtnInner.sapMBtnEmphasized  {
 }
 
 /* POPUP SECTION */
-.sapMDialog>header.sapMDialogTitle .sapMTitle { color: var(--color-white); }
-.sapMDialog>.sapMDialogSection {
-    background: var(--color-darkgrey);
-}
-.sapMBarPH {
-    background-color: var(--color-darkgrey);
-}
-.sapMText {
-    color: var(--color-lightgrey);
-}
+.sapMDialog>.sapMDialogSection { background: var(--color-darkgrey); }
+.sapMBarPH { background-color: var(--color-darkgrey); }
 html.sap-desktop .sapMIBar.sapMFooter-CTX {
     background-color: var(--color-darkgrey);
     border-top: 1px solid var(--color-typeB);
 }
+.sapMIBar-CTX.sapMFooter-CTX {
+    background-color: var(--color-darkgrey);
+    border-top: 1px solid var(--color-typeB);
+}
+.sapMDialog>header.sapMDialogTitle .sapMTitle { color: var(--color-white); }
+.sapMText { color: var(--color-lightgrey); }
 
 
 /* CALENDAR SECTION */
