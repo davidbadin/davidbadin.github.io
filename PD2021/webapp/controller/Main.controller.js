@@ -12,6 +12,7 @@ sap.ui.define([
 		onInit: function () {
 			
 			var oView = this.getView();
+			var oUriModel = oView.getModel("uriModel");
 			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
 			
 			var sUriData;
@@ -29,7 +30,10 @@ sap.ui.define([
 		
 			sUriData = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetId + "/values/" + sSheetRangeData + "?key=" + sApiKey;
 			sUriInfo = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetId + "/values/" + sSheetRangeInfo + "?key=" + sApiKey;
-			
+
+			oUriModel.setProperty("/uriData", sUriData);
+			oUriModel.setProperty("/uriInfo", sUriInfo);
+
 			this.loadData (sUriData, this.prepareData, this);
 			this.loadData (sUriInfo, this.prepareInfo, this);
 
@@ -60,8 +64,6 @@ sap.ui.define([
 
 			var CalendarDayType = unifiedLibrary.CalendarDayType;
 			var aStages = [];
-			
-			console.log( aSourceData.length );
 
 			for ( var i = 0; i < iSourceLength; i++ ) {
 				if (aSourceData[i]) { 									// skip if empty row
@@ -336,7 +338,13 @@ sap.ui.define([
 		},
 
 		onRefresh: function () {
+			var oView = this.getView();
+			var oUriModel = oView.getModel("uriModel");
+			var sUriData = oUriModel.getProperty("/uriData");
+			var sUriInfo = oUriModel.getProperty("/uriInfo");
+
 			this.loadData (sUriData, this.prepareData, this);
+			this.loadData (sUriInfo, this.prepareInfo, this);
 		}
 
 	});

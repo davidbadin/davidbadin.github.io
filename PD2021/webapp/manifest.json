@@ -67,6 +67,10 @@
 			"infoModel": {
 				"type": "sap.ui.model.json.JSONModel",
 				"preload": true
+			},
+			"uriModel": {
+				"type": "sap.ui.model.json.JSONModel",
+				"preload": true
 			}
 		},
 		"resources": {
