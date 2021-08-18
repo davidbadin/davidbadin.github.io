@@ -88,14 +88,14 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
 
 /* GRID */
 
-.sapMSinglePCRow, .sapMSinglePCBlockersColumn {
+/* .sapMSinglePCRow, .sapMSinglePCBlockersColumn {
     box-sizing: border-box;
     border: 0.0625rem solid;
     border-top-width: 0;
     height: 8.625rem;
     position: relative;
     outline: none;
-}
+} */
 
 
 /* CALENDAR APPOINTMENTS */
