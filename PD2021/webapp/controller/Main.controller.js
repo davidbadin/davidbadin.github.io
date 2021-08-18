@@ -35,22 +35,22 @@ sap.ui.define([
 			oUriModel.setProperty("/uriData", sUriData);
 			oUriModel.setProperty("/uriInfo", sUriInfo);
 
-			this.loadData (sUriData, this.prepareData, this);
-			this.loadData (sUriInfo, this.prepareInfo, this);
+			this.loadData (sUriData, this.prepareData, this, true);	// true = isAtStart (to defer start and refresh)
+			this.loadData (sUriInfo, this.prepareInfo, this, true);
 
 		},
 
-		loadData: function (theUrl, callback, that) {
+		loadData: function (theUrl, callback, that, isAtStart) {
 			var xmlHttp = new XMLHttpRequest();
 			xmlHttp.onreadystatechange = function() { 
 				if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-					callback(xmlHttp.responseText, that);
+					callback(xmlHttp.responseText, that, isAtStart);
 			}
 			xmlHttp.open("GET", theUrl, true); // true for asynchronous 
 			xmlHttp.send(null);
 		},
 
-		prepareData: function (response, that) {
+		prepareData: function (response, that, isAtStart) {
 			var oView = that.getView();
 			var oModel = oView.getModel();
 
@@ -148,7 +148,7 @@ sap.ui.define([
 			});
 		},
 
-		prepareInfo: function (response, that) {
+		prepareInfo: function (response, that, isAtStart) {
 			var oView = that.getView();
 			var oInfoModel = oView.getModel("infoModel");
 
@@ -306,8 +306,8 @@ sap.ui.define([
 			var sUriData = oUriModel.getProperty("/uriData");
 			var sUriInfo = oUriModel.getProperty("/uriInfo");
 
-			this.loadData (sUriData, this.prepareData, this);
-			this.loadData (sUriInfo, this.prepareInfo, this);
+			this.loadData (sUriData, this.prepareData, false);
+			this.loadData (sUriInfo, this.prepareInfo, false);
 		}
 
 	});
