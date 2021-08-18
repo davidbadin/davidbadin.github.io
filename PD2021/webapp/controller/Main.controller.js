@@ -73,9 +73,6 @@ sap.ui.define([
 					var sShortDescr = that.formatShortDescr( aSourceData[i][4], oStartDate, oEndDate ); 
 					var sDescr = that.formatDescr( sShortDescr, aSourceData[i][3] );
 
-					console.log(sShortDescr);
-					console.log(sDescr);
-
 					switch ( aSourceData[i][4] ) {
 						case "Hlavný stage":
 							aOutputData.push({
