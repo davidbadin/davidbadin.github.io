@@ -86,6 +86,17 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
 .sapMSinglePCRow .sapMSinglePCBlockersColumn { border-color: var(--color-black);}
 .sapMSinglePCBlockersColumn{ border-color: var(--color-black);}
 
+/* GRID */
+
+.sapMSinglePCRow, .sapMSinglePCBlockersColumn {
+    box-sizing: border-box;
+    border: 0.0625rem solid;
+    border-top-width: 0;
+    height: 8.625rem;
+    position: relative;
+    outline: none;
+}
+
 
 /* CALENDAR APPOINTMENTS */
 .sapMSinglePC .sapUiCalendarAppCont {
