@@ -12,16 +12,19 @@ sap.ui.define([
 		onInit: function () {
 			
 			var oView = this.getView();
-			var oSourceDataModel = oView.getModel("sourceDataModel");
-			var oSourceInfoModel = oView.getModel("sourceInfoModel");
+			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
+			
 			var sUriData;
 			var sUriInfo;
-			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
 
+			var sSheetIdData = "1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs";
+			var sSheetRangeData = "A2:F100";
+			var sSheetIdInfo = "";
+			var sSheetRangeInfo = "A1:B100";
 			var sApiKey = "AIzaSyBIHleeVgn137sWxmlCGvFQjewrv-ueXMI";
 			
-			sUriData = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri + "?key=" + sApiKey;
-			// sUriInfo = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetInfoSource.uri + "?key=" + sApiKey;
+			sUriData = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetIdData + "/values/" + sSheetRangeData + "?key=" + sApiKey;
+			sUriData = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetIdInfo + "/values/" + sSheetRangeInfo + "?key=" + sApiKey;
 
 			this.byId("PC1-Header-Spacer").setVisible(false);
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
@@ -57,17 +60,46 @@ sap.ui.define([
 
 			var obj = JSON.parse( response );
 			var aSourceData = obj.values;
-			var aData = [];
+			var aOutputData = [];
+			var iSourceLength = aSourceData.length;
+			
+			for ( var i = 0; i < iSourceLength; i++ ) {
+				if (aSourceData[i]) { 									// skip if empty row
+					var oStartDate = this.formatDate( aData[i][0] );
+					var oEndDate = this.formatDate( aData[i][1] );
+					var sShortDescr = this.formatShortDescr( aData[i][5], oStartDate, oEndDate ); 
+					var sDescr = this.formatDescr( sShortDescr, aData[i][4]	);
 
+					switch ( aData[i][5] ) {
+						case "Hlavný stage":
+							aOutputData.push({
+								"band": aData[i][2],
+								"start": oStartDate,
+								"end": oEndDate,
+								"stage": aData[i][5],
+								"shortDescription": sShortDescr,
+								"description": sDescr,
+								"type": "Type09"
+							});		
+							break;
+						case "Curious Trenčín 2026 stage":
+							aDataEvents.push({
+								"band": aData[i][2],
+								"start": oStartDate,
+								"end": oEndDate,
+								"stage": aData[i][5],
+								"shortDescription": sShortDescr,
+								"description": sDescr,
+								"type": "Type10"
+							});		
+							break;
+						default:
+					}
+				}
+			}
 
-
-
-			console.log( aSourceData.length );
-			console.log( aSourceData[1][1] );
-
-
-
-
+			console.log( aSourceData );
+			console.log( aOutputData );
 
 		},
 
