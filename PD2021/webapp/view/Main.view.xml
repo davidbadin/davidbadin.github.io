@@ -8,7 +8,7 @@
 							<VBox width="100%" id="vbox1">
 								<SinglePlanningCalendar
 									id="PC1"
-									class="sapUiTinyMarginBeginEnd myCalendar"
+									class="sapUiTinyMarginBeginEnd"
 									viewChange="handleViewChange"
 									appointmentSelect="handleAppointmentSelect"
 									headerDateSelect="handleHeaderDateSelect"
