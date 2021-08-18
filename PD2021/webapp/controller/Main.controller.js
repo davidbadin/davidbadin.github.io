@@ -62,7 +62,7 @@ sap.ui.define([
 
 
 
-
+			console.log( aSourceData.length );
 			console.log( aSourceData[1][1] );
 
 
