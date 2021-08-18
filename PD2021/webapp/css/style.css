@@ -87,7 +87,9 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
 .sapMSinglePCBlockersColumn{ border-color: var(--color-black);}
 
 /* GRID */
-
+.myCalendar .sapUiCalendarApp {
+    height:8rem;
+}
 /* .sapMSinglePCRow, .sapMSinglePCBlockersColumn {
     box-sizing: border-box;
     border: 0.0625rem solid;
