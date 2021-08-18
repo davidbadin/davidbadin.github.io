@@ -23,24 +23,16 @@ sap.ui.define([
 			var sSheetRangeInfo = "'PD2021_info'!A1:B100";
 			var sApiKey = "AIzaSyBIHleeVgn137sWxmlCGvFQjewrv-ueXMI";
 			
-			sUriData = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetIdData + "/values/" + sSheetRangeData + "?key=" + sApiKey;
-			sUriInfo = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetIdInfo + "/values/" + sSheetRangeInfo + "?key=" + sApiKey;
-
+			
 			this.byId("PC1-Header-Spacer").setVisible(false);
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
 		
-			// oSourceDataModel.attachRequestCompleted(this.afterDataLoaded, this);	
-			// oSourceDataModel.loadData(sUriData);
-
-			// oSourceInfoModel.attachRequestCompleted(this.afterInfoLoaded, this);	
-			// oSourceInfoModel.loadData(sUriInfo);		
-
-			// var sUriTest = "https://sheets.googleapis.com/v4/spreadsheets/1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs/values/A5:F7?key=AIzaSyBIHleeVgn137sWxmlCGvFQjewrv-ueXMI";
-
-
+			sUriData = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetIdData + "/values/" + sSheetRangeData + "?key=" + sApiKey;
+			sUriInfo = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetIdInfo + "/values/" + sSheetRangeInfo + "?key=" + sApiKey;
+			
 			this.loadData (sUriData, this.prepareData, this);
-
+			this.loadData (sUriInfo, this.prepareInfo, this);
 
 		},
 
@@ -55,8 +47,6 @@ sap.ui.define([
 		},
 
 		prepareData: function (response, that) {
-			console.log( response );
-
 			var oView = that.getView();
 			var oModel = oView.getModel();
 
@@ -148,8 +138,25 @@ sap.ui.define([
 				"stages": aStages,
 				"events": aOutputData
 			});
+		},
 
+		prepareInfo: function (response, that) {
+			var oView = that.getView();
+			var oInfoModel = oView.getModel("infoModel");
 
+			var obj = JSON.parse( response );
+			var aSourceData = obj.values;
+			var iSourceLength = aSourceData.length;
+
+			var sInfo = "";
+
+			for (var i = 0; i < iSourceLength; i++) {
+				if ( aData[i] ) {
+					sInfo = sInfo + aSourceData[i][0] + "\n" + "\n" + aSourceData[j][1] + "\n" + "\n" + " ***** " + "\n" + "\n"
+				}
+			}
+
+			oInfoModel.setProperty("/info", sInfo);
 		},
 
 		formatDate: function (sDate) {
