@@ -60,7 +60,6 @@ span.sapMBtnInner.sapMBtnEmphasized  {
 
 /* POPUP SECTION */
 .sapMDialog>.sapMDialogSection { background: var(--color-darkgrey); }
-.sapMBarPH { background-color: var(--color-darkgrey); }
 html.sap-desktop .sapMIBar.sapMFooter-CTX {
     background-color: var(--color-darkgrey);
     border-top: 1px solid var(--color-darkgrey);
