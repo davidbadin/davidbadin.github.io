@@ -18,6 +18,7 @@ sap.ui.define([
 			var sUriData;
 			var sUriInfo;
 
+			// *** update this part if spreadsheet url/range changed ***
 			var sSheetId = "1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs";
 			var sSheetRangeData = "'PD2021'!A2:F100";
 			var sSheetRangeInfo = "'PD2021_info'!A1:B100";
@@ -103,6 +104,7 @@ sap.ui.define([
 				}
 			}
 			
+			// set higlighted date (if not during festival, the first day will be higlighted)
 			if ( oToday.getMonth() === 7 && oToday.getDate() === 28 ) {
 				oStartFestDate = new Date("2021", "7", "28", "9", "00");
 				oStartFestDate2 = new Date("2021", "7", "29", "00", "00");
@@ -125,6 +127,7 @@ sap.ui.define([
 				}
 			}
 
+			// stages for the INFO/LEGEND
 			aStages = [
 				{
 					text: "Hlavný stage",
