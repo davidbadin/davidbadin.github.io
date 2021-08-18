@@ -64,29 +64,29 @@ sap.ui.define([
 			
 			for ( var i = 0; i < iSourceLength; i++ ) {
 				if (aSourceData[i]) { 									// skip if empty row
-					var oStartDate = that.formatDate( aData[i][0] );
-					var oEndDate = that.formatDate( aData[i][1] );
-					var sShortDescr = that.formatShortDescr( aData[i][4], oStartDate, oEndDate ); 
-					var sDescr = that.formatDescr( sShortDescr, aData[i][3]	);
+					var oStartDate = that.formatDate( aSourceData[i][0] );
+					var oEndDate = that.formatDate( aSourceData[i][1] );
+					var sShortDescr = that.formatShortDescr( aSourceData[i][4], oStartDate, oEndDate ); 
+					var sDescr = that.formatDescr( sShortDescr, aSourceData[i][3]	);
 
-					switch ( aData[i][5] ) {
+					switch ( aSourceData[i][5] ) {
 						case "Hlavný stage":
 							aOutputData.push({
-								"band": aData[i][2],
+								"band": aSourceData[i][2],
 								"start": oStartDate,
 								"end": oEndDate,
-								"stage": aData[i][4],
+								"stage": aSourceData[i][4],
 								"shortDescription": sShortDescr,
 								"description": sDescr,
 								"type": "Type09"
 							});		
 							break;
 						case "Curious Trenčín 2026 stage":
-							aDataEvents.push({
-								"band": aData[i][2],
+							aOutputData.push({
+								"band": aSourceData[i][2],
 								"start": oStartDate,
 								"end": oEndDate,
-								"stage": aData[i][4],
+								"stage": aSourceData[i][4],
 								"shortDescription": sShortDescr,
 								"description": sDescr,
 								"type": "Type10"
