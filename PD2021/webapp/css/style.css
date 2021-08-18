@@ -87,9 +87,6 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
 .sapMSinglePCBlockersColumn{ border-color: var(--color-black);}
 
 /* GRID */
-.sapMPlanCal>.sapMList .sapMPlanCalRowHead>.sapMLIB, .sapMPlanCal>.sapMList .sapMPlanCalAppRow>.sapUiCalendarRow, .sapMPlanCal>.sapMList .sapMPlanCalAppRow>div>.sapUiCalendarRow {
-    height: 8rem;
-    }
 /* .myCalendar .sapUiCalendarApp {
     height:8rem;
 } */
