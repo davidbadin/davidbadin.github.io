@@ -73,7 +73,20 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
 
 
 /* CALENDAR SECTION */
-.sapMSinglePCRow { background-color: black}
+.sapMSinglePCRow { background-color: var(--color-darkgrey);}
+.sapMSinglePCBlockersColumn { background-color: var(--color-darkgrey); }
+.sapMSinglePCRowHeaders  { 
+    color: var(--color-white);
+    background-color: var(--color-darkgrey); 
+}
+.sapMSinglePCBlockersRow { background-color: var(--color-darkgrey); }
+.sapMSinglePCRowHeaderHidden { background-color: var(--color-darkgrey); }
+
+.sapMSinglePCRow { border-color: var(--color-darkgrey);}
+.sapMSinglePCRow .sapMSinglePCBlockersColumn { border-color: var(--color-darkgrey);}
+.sapMSinglePCBlockersColumn{ border-color: var(--color-darkgrey);}
+
+/* .sapMSinglePCRow { background-color: black}
 .sapMSinglePCBlockersColumn { background-color: black; }
 .sapMSinglePCRowHeaders  { 
     color: var(--color-white);
@@ -84,7 +97,7 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
 
 .sapMSinglePCRow { border-color: var(--color-darkgrey);}
 .sapMSinglePCRow .sapMSinglePCBlockersColumn { border-color: black;}
-.sapMSinglePCBlockersColumn{ border-color: black;}
+.sapMSinglePCBlockersColumn{ border-color: black;} */
 
 
 /* CALENDAR APPOINTMENTS */
