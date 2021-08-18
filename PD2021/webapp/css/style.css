@@ -59,6 +59,9 @@ span.sapMBtnInner.sapMBtnEmphasized  {
 
 /* POPUP SECTION */
 .sapMDialog>header.sapMDialogTitle .sapMTitle { color: var(--color-white); }
+.sapMDialog>.sapMDialogSection {
+    background: var(--color-darkgrey);
+}
 
 
 /* CALENDAR SECTION */
