@@ -204,11 +204,13 @@ sap.ui.define([
 		
 		formatDescr: function (sShortDescr, sDescr) {
 
-		    var tmp = document.createElement("div"); // eslint-disable-line sap-no-element-creation
-		    tmp.innerHTML = sDescr;
-			var sText = tmp.textContent || tmp.innerText;
+		    // var tmp = document.createElement("div"); // eslint-disable-line sap-no-element-creation
+		    // tmp.innerHTML = sDescr;
+			// var sText = tmp.textContent || tmp.innerText;
 			
-			return sShortDescr + "\n" + "\n" + sText;
+			// return sShortDescr + "\n" + "\n" + sText;
+
+			return sShortDescr + "\n" + "\n" + sDescr;
 		},
 		
 		handleAppointmentSelect: function (oEvent) {
