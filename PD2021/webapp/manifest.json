@@ -15,7 +15,7 @@
 		},
 		"dataSources": {
 			"sheetSource": {
-				"uri": "https://spreadsheets.google.com/feeds/cells/1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs/1/public/full?alt=json",
+				"uri": "https://sheets.googleapis.com/v4/spreadsheets/1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs/values/A5:F78",
 				"type": "JSON"
 			},
 			"sheetInfoSource": {

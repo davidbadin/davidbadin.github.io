@@ -14,10 +14,14 @@ sap.ui.define([
 			var oView = this.getView();
 			var oSourceDataModel = oView.getModel("sourceDataModel");
 			var oSourceInfoModel = oView.getModel("sourceInfoModel");
-			var sUriData = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri;
-			var sUriInfo = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetInfoSource.uri;
+			var sUriData;
+			var sUriInfo;
 			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
+
+			var sApiKey = "AIzaSyBIHleeVgn137sWxmlCGvFQjewrv-ueXMI";
 			
+			sUriData = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetSource.uri + "?key=" + sApiKey;
+			// sUriInfo = this.getOwnerComponent().getMetadata().getManifestEntry("sap.app").dataSources.sheetInfoSource.uri + "?key=" + sApiKey;
 
 			this.byId("PC1-Header-Spacer").setVisible(false);
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
@@ -29,41 +33,15 @@ sap.ui.define([
 			// oSourceInfoModel.attachRequestCompleted(this.afterInfoLoaded, this);	
 			// oSourceInfoModel.loadData(sUriInfo);		
 
-			// gapi.client.sheets.spreadsheets.values.get({
-			// 	spreadsheetId: "1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs",
-			// 	range: "A5:F8"
-			//   }).then((response) => {
-			// 	var result = response.result;
-			// 	var numRows = result.values ? result.values.length : 0;
-			// 	console.log(result);
-			// 	console.log(numRows);
-			//   });
+			// var sUriTest = "https://sheets.googleapis.com/v4/spreadsheets/1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs/values/A5:F7?key=AIzaSyBIHleeVgn137sWxmlCGvFQjewrv-ueXMI";
 
-			// var HttpClient = function() {
-			// 	this.get = function(aUrl, aCallback) {
-			// 		var anHttpRequest = new XMLHttpRequest();
-			// 		anHttpRequest.onreadystatechange = function() { 
-			// 			if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
-			// 				aCallback(anHttpRequest.responseText);
-			// 		}
-			
-			// 		anHttpRequest.open( "GET", aUrl, true );            
-			// 		anHttpRequest.send( null );
-			// 	}
-			// }
 
-			// var client = new HttpClient();
-			// client.get("https://sheets.googleapis.com/v4/spreadsheets/1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs/values/A5F7", function(response) {
-			// 	console.log( response ); 
-			// });
-
-			var sUriTest = "https://sheets.googleapis.com/v4/spreadsheets/1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs/values/A5:F7?key=AIzaSyBIHleeVgn137sWxmlCGvFQjewrv-ueXMI";
-			this.httpGetAsync (sUriTest, this.displayText);
+			this.loadData (sUriData, this.prepareData);
 
 
 		},
 
-		httpGetAsync: function (theUrl, callback)
+		loadData: function (theUrl, callback)
 		{
 			var xmlHttp = new XMLHttpRequest();
 			xmlHttp.onreadystatechange = function() { 
@@ -74,8 +52,13 @@ sap.ui.define([
 			xmlHttp.send(null);
 		},
 
-		displayText: function (response) {
-			console.log( response );
+		prepareData: function (response) {
+			console.log( response.values );
+
+			// var oSourceData = 
+
+
+
 		},
 
 		afterDataLoaded: function () {
