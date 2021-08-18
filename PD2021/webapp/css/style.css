@@ -2,8 +2,8 @@
 
 :root {
     --color-white: white;
-    --color-black: black;
-    --color-darkgrey: rgb(53, 52, 52);
+    --color-black: #353434;
+    --color-darkgrey: #5e5a5a;
     --color-lightgrey: rgb(230, 230, 230);
     --color-typeA: #7eb9c0;
     --color-typeB: #cc5974;
