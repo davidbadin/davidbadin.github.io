@@ -54,7 +54,7 @@ sap.ui.define([
 
 		prepareData: function (response) {
 			console.log( response );
-			console.log( response.json() );
+			console.log( response.getProperty("/values") );
 
 			// var oSourceData = 
 
