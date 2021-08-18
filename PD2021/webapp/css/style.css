@@ -62,6 +62,9 @@ span.sapMBtnInner.sapMBtnEmphasized  {
 .sapMDialog>.sapMDialogSection {
     background: var(--color-darkgrey);
 }
+.sapMBarPH {
+    background-color: var(--color-darkgrey);
+}
 
 
 /* CALENDAR SECTION */
