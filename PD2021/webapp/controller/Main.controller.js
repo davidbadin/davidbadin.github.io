@@ -17,9 +17,8 @@ sap.ui.define([
 			var sUriData;
 			var sUriInfo;
 
-			var sSheetIdData = "1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs";
+			var sSheetId = "1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs";
 			var sSheetRangeData = "'PD2021'!A2:F100";
-			var sSheetIdInfo = "";
 			var sSheetRangeInfo = "'PD2021_info'!A1:B100";
 			var sApiKey = "AIzaSyBIHleeVgn137sWxmlCGvFQjewrv-ueXMI";
 			
@@ -28,8 +27,8 @@ sap.ui.define([
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
 		
-			sUriData = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetIdData + "/values/" + sSheetRangeData + "?key=" + sApiKey;
-			sUriInfo = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetIdInfo + "/values/" + sSheetRangeInfo + "?key=" + sApiKey;
+			sUriData = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetId + "/values/" + sSheetRangeData + "?key=" + sApiKey;
+			sUriInfo = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetId + "/values/" + sSheetRangeInfo + "?key=" + sApiKey;
 			
 			this.loadData (sUriData, this.prepareData, this);
 			this.loadData (sUriInfo, this.prepareInfo, this);
