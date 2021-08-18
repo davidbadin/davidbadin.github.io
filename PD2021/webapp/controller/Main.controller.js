@@ -23,11 +23,11 @@ sap.ui.define([
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
 		
-			oSourceDataModel.attachRequestCompleted(this.afterDataLoaded, this);	
-			oSourceDataModel.loadData(sUriData);
+			// oSourceDataModel.attachRequestCompleted(this.afterDataLoaded, this);	
+			// oSourceDataModel.loadData(sUriData);
 
-			oSourceInfoModel.attachRequestCompleted(this.afterInfoLoaded, this);	
-			oSourceInfoModel.loadData(sUriInfo);		
+			// oSourceInfoModel.attachRequestCompleted(this.afterInfoLoaded, this);	
+			// oSourceInfoModel.loadData(sUriInfo);		
 
 			// gapi.client.sheets.spreadsheets.values.get({
 			// 	spreadsheetId: "1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs",
@@ -57,6 +57,25 @@ sap.ui.define([
 			// 	console.log( response ); 
 			// });
 
+			var sUriTest = "https://sheets.googleapis.com/v4/spreadsheets/1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs/values/A5:F7?key=AIzaSyBIHleeVgn137sWxmlCGvFQjewrv-ueXMI";
+			httpGetAsync (sUriTest, displayText);
+
+
+		},
+
+		httpGetAsync: function (theUrl, callback)
+		{
+			var xmlHttp = new XMLHttpRequest();
+			xmlHttp.onreadystatechange = function() { 
+				if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+					callback(xmlHttp.responseText);
+			}
+			xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+			xmlHttp.send(null);
+		},
+
+		displayText: function (response) {
+			console.log( response );
 		},
 
 		afterDataLoaded: function () {
