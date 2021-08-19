@@ -18,8 +18,11 @@
     background-size: cover;
 }
 .sapMHBox { background-color: var(--color-black); }
-.sapMHBox.popupBox { background-color: #fff; }
+/* .sapMHBox.popupBox { background-color: #fff; } */
+/* .popupBox { background-color: #fff; } */
 .sapMVBox { background-color: var(--color-black); }
+.popupBox.sapMVBox { background-color: #fff; }
+
 
 /* TITLE BAR SECTION */
 .sapMBarPH {
@@ -39,11 +42,14 @@
 .sapMPCHead .sapMPCHeadActionsToolbar { background-color: var(--color-black); } 
 .sapMTitle { color: var(--color-white); }
 
+
 /* Buttons */
 .myButtonDef .sapMBtnInner { 
     color: var(--color-white);
     background: var(--color-typeA);
     text-shadow: none;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
 
 span.sapMBtnInner.sapMBtnEmphasized  { 
