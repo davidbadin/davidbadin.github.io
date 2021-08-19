@@ -146,6 +146,14 @@ sap.ui.define([
 				"stages": aStages,
 				"events": aOutputData
 			});
+
+			if (!isAtStart) {
+				MessageToast.show("Program aktualizovaný", {
+					duration: 1000,
+					width: "15em",
+					animationDuration: 500
+				});
+			}
 		},
 
 		prepareInfo: function (response, that, isAtStart) {
