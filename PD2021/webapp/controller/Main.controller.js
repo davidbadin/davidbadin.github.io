@@ -168,7 +168,12 @@ sap.ui.define([
 
 			for (var i = 0; i < iSourceLength; i++) {
 				if ( aSourceData[i] ) {
-					sInfo = sInfo + aSourceData[i][0] + "\n" + "\n" + aSourceData[i][1] + "\n" + "\n" + " ***** " + "\n" + "\n"
+					if ( aSourceData[i][0] ) {
+						sInfo = sInfo + aSourceData[i][0] + "\n" + "\n" + aSourceData[i][1] + "\n" + "\n" + " ********************* " + "\n" + "\n"
+					} else {
+						sInfo = sInfo + aSourceData[i][1] + "\n" + "\n" + " ********************* " + "\n" + "\n"
+					}
+					
 				}
 			}
 
