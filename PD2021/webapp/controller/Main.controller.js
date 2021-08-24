@@ -13,7 +13,6 @@ sap.ui.define([
 			
 			var oView = this.getView();
 			var oUriModel = oView.getModel("uriModel");
-			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local); 
 			
 			var sUriData;
 			var sUriInfo;
