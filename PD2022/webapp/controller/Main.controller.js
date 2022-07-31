@@ -73,7 +73,7 @@ sap.ui.define([
 					var sDescr = that.formatDescr( sShortDescr, aSourceData[i][3] );
 
 					switch ( aSourceData[i][4] ) {
-						case "Hlavný stage":
+						case "A":
 							aOutputData.push({
 								"band": aSourceData[i][2],
 								"start": oStartDate,
@@ -84,7 +84,7 @@ sap.ui.define([
 								"type": "Type09"
 							});		
 							break;
-						case "B scéna":
+						case "B":
 							aOutputData.push({
 								"band": aSourceData[i][2],
 								"start": oStartDate,
