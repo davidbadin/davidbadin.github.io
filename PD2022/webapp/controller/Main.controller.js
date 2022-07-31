@@ -331,6 +331,11 @@ sap.ui.define([
 
 			this.loadData (sUriData, this.prepareData, this, false);
 			this.loadData (sUriInfo, this.prepareInfo, this, false);
+		},
+
+		onSpotifyPress: function () {
+			
+			var myWindow = window.open("https://open.spotify.com/playlist/2AfkiP1vIJoeYqGkceDf39");
 		}
 
 	});
