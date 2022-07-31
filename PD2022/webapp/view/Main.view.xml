@@ -1,4 +1,4 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:unified="sap.ui.unified" controllerName="Project.PD2021.controller.Main" displayBlock="true">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:unified="sap.ui.unified" controllerName="Project.PD2022.controller.Main" displayBlock="true">
 	<Shell id="shell">
 		<App id="app">
 			<pages>
@@ -49,7 +49,7 @@
 									</appointments>
 								</SinglePlanningCalendar>
 								<FlexBox class="sapUiTinyMarginBeginEnd">
-									<Image width="100%" src="webapp/img/pd2021banner.png"/>
+									<Image width="100%" src="webapp/img/PD2021banner.png"/>
 								</FlexBox>
 								<SinglePlanningCalendar
 									id="PC2"

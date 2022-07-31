@@ -7,7 +7,7 @@ sap.ui.define([
 
 	Opa5.extendConfig({
 		arrangements: new Startup(),
-		viewNamespace: "Project.PD2021.view.",
+		viewNamespace: "Project.PD2022.view.",
 		autoWait: true
 	});
 });

@@ -8,7 +8,7 @@ sap.ui.define([
 ], function (Controller, JSONModel, Fragment, unifiedLibrary, MessageBox, MessageToast) {
 	"use strict";
 
-	return Controller.extend("Project.PD2021.controller.Main", {
+	return Controller.extend("Project.PD2022.controller.Main", {
 		onInit: function () {
 			
 			var oView = this.getView();
@@ -18,9 +18,9 @@ sap.ui.define([
 			var sUriInfo;
 
 			// *** update this part if spreadsheet url/range changed ***
-			var sSheetId = "1Sdueu-N5Hlj01NdYsoHB7dI1T5smjUH6WsPseBHaSTs";
-			var sSheetRangeData = "'PD2021'!A2:F100";
-			var sSheetRangeInfo = "'PD2021_info'!A1:B100";
+			var sSheetId = "1O9khRTDa9-hkyBLW_ZNEKgHbaaWqK5uZ0GYbkr1G0o8";
+			var sSheetRangeData = "'PD2022'!A2:F100";
+			var sSheetRangeInfo = "'PD2022_info'!A1:B100";
 			var sApiKey = "AIzaSyBIHleeVgn137sWxmlCGvFQjewrv-ueXMI";
 			
 			
@@ -290,7 +290,7 @@ sap.ui.define([
 			if (!this._oLegendPopover) {
 				Fragment.load({
 					id: "LegendFrag",
-					name: "Project.PD2021.view.fragment.Legend",
+					name: "Project.PD2022.view.fragment.Legend",
 					controller: this
 				}).then(function(oPopoverContent){
 					this._oLegendPopover = oPopoverContent;
