@@ -1,14 +1,18 @@
 /* Enter your custom styles here */
 
 :root {
-    --color-white: white;
+    /* --color-white: white;
     --color-black: #2a2a2a;
     --color-darkgrey: #424343;
     --color-lightgrey: rgb(230, 230, 230);
-    /* --color-typeA: #7eb9c0;
+    --color-typeA: #7eb9c0;
     --color-typeB: #cc5974;
     --color-typeC: #e7b755; */
-    --color-typeA: #e7b755;
+    --color-white: white;
+    --color-black: #525252;
+    --color-darkgrey: #858585;
+    --color-lightgrey: rgb(230, 230, 230);
+    --color-typeA: #f5ee81;
     --color-typeB: white;
 }
 

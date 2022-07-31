@@ -48,9 +48,9 @@
 										</unified:CalendarAppointment>
 									</appointments>
 								</SinglePlanningCalendar>
-								<FlexBox class="sapUiTinyMarginBeginEnd">
+								<!-- <FlexBox class="sapUiTinyMarginBeginEnd">
 									<Image width="100%" src="webapp/img/PD2021banner.png"/>
-								</FlexBox>
+								</FlexBox> -->
 								<SinglePlanningCalendar
 									id="PC2"
 									class="sapUiTinyMarginBeginEnd"
@@ -66,7 +66,7 @@
 									enableAppointmentsResize="false"
 									enableAppointmentsCreate="false"
 									stickyMode="All"
-									endHour="4"
+									endHour="1"
 									fullDay="false"
 									appointments="{path: '/events', templateShareable: true}" 
 									>
