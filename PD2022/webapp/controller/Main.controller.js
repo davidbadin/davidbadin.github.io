@@ -7,8 +7,9 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"sap/m/Dialog",
 	"sap/m/Button",
-	"sap/m/Text"
-], function (Controller, JSONModel, Fragment, unifiedLibrary, MessageBox, MessageToast, Dialog, Button, Text) {
+	"sap/m/Text",
+	"sap/m/List"
+], function (Controller, JSONModel, Fragment, unifiedLibrary, MessageBox, MessageToast, Dialog, Button, Text, List) {
 	"use strict";
 
 	return Controller.extend("Project.PD2022.controller.Main", {
@@ -174,9 +175,9 @@ sap.ui.define([
 			for (var i = 0; i < iSourceLength; i++) {
 				if ( aSourceData[i] ) {
 					if ( aSourceData[i][0] ) {
-						sInfo = sInfo + aSourceData[i][0] + "\n" + "\n" + aSourceData[i][1] + "\n" + "\n" + " ********************* " + "\n" + "\n"
+						sInfo = sInfo + "\n" + "\n" + " ********************* " + "\n" + "\n" + aSourceData[i][0] + "\n" + "\n" + aSourceData[i][1]
 					} else {
-						sInfo = sInfo + aSourceData[i][1] + "\n" + "\n" + " ********************* " + "\n" + "\n"
+						sInfo = sInfo + "\n" + "\n" + " ********************* " + "\n" + "\n" + aSourceData[i][1]
 					}
 					
 				}
@@ -258,10 +259,6 @@ sap.ui.define([
 
 				sTitle = oAppointment.getTitle();
 				this.openPopup (sTitle, sDescr, sSpotUrl);
-
-				// MessageBox.show(sDescr, {
-				// 	title: sTitle,
-				// });
 			}
 		},
 
@@ -292,7 +289,9 @@ sap.ui.define([
 
 				this.oDialog = new Dialog({
 					title: sTitle,
-					content: new Text({ text: sDescr }),
+					content: new sap.m.VBox({
+						items: [new Text({ text: sDescr })]
+					}), 
 					type: sap.m.DialogType.Message,
 					buttons: aButtons
 				});
@@ -303,7 +302,7 @@ sap.ui.define([
 
 			this.oDialog.open();
 		},
-		
+
 		onDayPress: function (oEvent) {
 			var sId = oEvent.getSource().getId().slice(-5);
 			var oModel = this.getOwnerComponent().getModel();
@@ -359,8 +358,31 @@ sap.ui.define([
 			var oView = this.getView();
 			var oInfoModel = oView.getModel("infoModel");
 			var sInfo = oInfoModel.getProperty("/info");
-					
-			MessageBox.show(sInfo, {title: "Informácie pre návštevníkov"});
+			var sTitle = "Informácie pre návštevníkov";
+			var sLink = new sap.m.Link({
+				text: "Predpredaj lístkov tu",	
+				press: [this.handleLinkPress, this]
+			});
+
+			this.oDialog = new Dialog({
+				title: sTitle,
+				content: new sap.m.VBox({
+					items: [sLink, new Text({ text: sInfo })]
+				}), 
+				
+				type: sap.m.DialogType.Message,
+				buttons: new Button({
+					text: "Ok",
+					press: function () {
+						this.oDialog.close();
+						this.oDialog.destroy();    
+						this.oDialog = undefined;
+					}.bind(this)
+				})
+			});
+			this.oDialog.open();
+
+			// MessageBox.show(sInfo, {title: "Informácie pre návštevníkov"});
 		},
 
 		onRefresh: function () {
@@ -375,6 +397,13 @@ sap.ui.define([
 
 		onSpotifyPress: function () {
 			var myWindow = window.open("https://open.spotify.com/playlist/2AfkiP1vIJoeYqGkceDf39");
+		},
+
+		handleLinkPress: function (sUrl) {
+			if (!sUrl) {
+			sUrl = "https://www.punkacidetom.sk/listky";
+			} 
+			window.open(sUrl);
 		}
 
 	});
