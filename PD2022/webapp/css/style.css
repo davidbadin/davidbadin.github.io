@@ -166,12 +166,12 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
 }
 
 
-
-
+/* no space between 2 calendars */
 .sapMSinglePCBlockersColumns {
     margin-left: 4rem;
     min-height: 0rem;
     position: relative;
 }
-
-.sapMSinglePCBlockersColumns .sapMSpecialDaysInDayView { height: 0rem }
+.sapMSinglePCBlockersColumns .sapMSpecialDaysInDayView .style { 
+    height: 0rem 
+}
