@@ -114,13 +114,13 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
     border-width: 0px;
 }
 .sapUiCalendarAppTitle {
-    color: var(--color-white);
+    color: var(--color-black);
 }
 .sapUiCalendarAppText {
     color: var(--color-lightgrey);
 }
 .sapUiCalendarAppArrowIcon, .sapUiCalendarRow .sapUiCalendarAppArrowIconLeft, .sapUiCalendarRow .sapUiCalendarAppArrowIconRight {
-    color: var(--color-white);
+    color: var(--color-black);
 }
 
 
@@ -160,3 +160,11 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
     background: var(--color-typeC);
 }
 
+
+
+
+.sapMSinglePCBlockersColumns {
+    margin-left: 4rem;
+    min-height: 0rem;
+    position: relative;
+}
