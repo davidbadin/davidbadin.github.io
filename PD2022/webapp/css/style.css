@@ -9,7 +9,7 @@
     --color-typeB: #cc5974;
     --color-typeC: #e7b755; */
     --color-white: white;
-    --color-black: #525252;
+    --color-black: #544e4e;
     --color-darkgrey: #858585;
     --color-lightgrey: rgb(230, 230, 230);
     --color-typeA: #f5ee81;
@@ -51,7 +51,7 @@
 
 /* Buttons */
 .myButtonDef .sapMBtnInner { 
-    color: var(--color-white);
+    color: var(--color-black);
     background: var(--color-typeA);
     text-shadow: none;
     padding-left: 0.4rem;
