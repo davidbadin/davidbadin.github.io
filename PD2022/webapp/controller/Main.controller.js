@@ -84,17 +84,17 @@ sap.ui.define([
 								"type": "Type09"
 							});		
 							break;
-						case "Curious Trenčín 2026 stage":
-							aOutputData.push({
-								"band": aSourceData[i][2],
-								"start": oStartDate,
-								"end": oEndDate,
-								"stage": aSourceData[i][4],
-								"shortDescription": sShortDescr,
-								"description": sDescr,
-								"type": "Type10"
-							});		
-							break;
+						// case "Curious Trenčín 2026 stage":
+						// 	aOutputData.push({
+						// 		"band": aSourceData[i][2],
+						// 		"start": oStartDate,
+						// 		"end": oEndDate,
+						// 		"stage": aSourceData[i][4],
+						// 		"shortDescription": sShortDescr,
+						// 		"description": sDescr,
+						// 		"type": "Type10"
+						// 	});		
+						// 	break;
 						default:
 					}
 				}
@@ -132,11 +132,12 @@ sap.ui.define([
 				{
 					text: "Hlavný stage",
 					type: CalendarDayType.Type09
-				},
-				{
-					text: "Curious Trenčín 2026 stage",
-					type: CalendarDayType.Type10
 				}
+				// ,
+				// {
+				// 	text: "Curious Trenčín 2026 stage",
+				// 	type: CalendarDayType.Type10
+				// }
 			]
 
 			oModel.setData({
