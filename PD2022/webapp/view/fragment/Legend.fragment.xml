@@ -1,0 +1,22 @@
+<core:FragmentDefinition
+		xmlns="sap.m"
+		xmlns:core="sap.ui.core"
+		xmlns:u="sap.ui.unified">
+	<Popover 
+			title="Legenda"
+			placement="Bottom"
+			showHeader="false">
+		<PlanningCalendarLegend appointmentItemsHeader="Legenda"
+                columnWidth="160px"
+                standardItems=""
+				appointmentItems="{path : '/stages', templateShareable: true}">
+			<appointmentItems>
+				<u:CalendarLegendItem text="{text}" type="{type}"/>
+			</appointmentItems>
+		</PlanningCalendarLegend>
+        <FlexBox direction="Column" justifyContent="Center" class="sapUiTinyMargin popupBox">
+            <Button icon="sap-icon://information" id="info" text="Informácie" press="onInfoPress" class="myButtonDef" width="100%"/>
+			<Button icon="sap-icon://refresh" id="refreshButton" text="Aktualizovať" press="onRefresh" class="myButtonDef" width="100%"/>
+        </FlexBox>
+	</Popover>
+</core:FragmentDefinition>
