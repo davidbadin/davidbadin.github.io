@@ -139,6 +139,21 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
 .sapUiCalendarAppArrowIcon, .sapUiCalendarRow .sapUiCalendarAppArrowIconLeft, .sapUiCalendarRow .sapUiCalendarAppArrowIconRight {
     color: var(--color-black);
 }
+/* .sapMIBar-CTX .sapMBtnInner, .sapMBar .sapMBtnInner, .sapMHeader-CTX .sapMBtnInner, .sapMFooter-CTX .sapMBtnInner { */
+.sapMIBar-CTX .sapMBtnInner {
+    background: var(--color-typeA)
+}
+.sapMBtnInner {
+    color: var(--color-black);
+    text-shadow: 0 0 0rem var(--color-black);
+}
+.sapMDialog>.sapMDialogSection {
+    background: var(--color-black);
+}
+html.sap-desktop .sapMIBar.sapMFooter-CTX {
+    background-color: var(--color-black);
+    border-top: 1px solid var(--color-black);
+}
 
 
 /* Main stage - type09=>typeA */

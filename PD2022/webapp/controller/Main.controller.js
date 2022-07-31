@@ -4,8 +4,11 @@ sap.ui.define([
 	"sap/ui/core/Fragment",
 	"sap/ui/unified/library",
 	"sap/m/MessageBox",
-	"sap/m/MessageToast"
-], function (Controller, JSONModel, Fragment, unifiedLibrary, MessageBox, MessageToast) {
+	"sap/m/MessageToast",
+	"sap/m/Dialog",
+	"sap/m/Button",
+	"sap/m/Text"
+], function (Controller, JSONModel, Fragment, unifiedLibrary, MessageBox, MessageToast, Dialog, Button, Text) {
 	"use strict";
 
 	return Controller.extend("Project.PD2022.controller.Main", {
@@ -100,6 +103,7 @@ sap.ui.define([
 					var oEndDate = that.formatDate( aSourceData[i][1] );
 					var sShortDescr = that.formatShortDescr( sStage, oStartDate, oEndDate ); 
 					var sDescr = that.formatDescr( sShortDescr, aSourceData[i][3] );
+					var sSpotUrl = aSourceData[i][5];
 
 					aOutputData.push({
 						"band": sBand,
@@ -108,7 +112,8 @@ sap.ui.define([
 						"stage": sStage,
 						"shortDescription": sShortDescr,
 						"description": sDescr,
-						"type": sType
+						"type": sType,
+						"spotUrl": sSpotUrl
 					});							
 				}
 			}
@@ -239,19 +244,64 @@ sap.ui.define([
 				var sBand = oEvent.getParameter("appointment").getProperty("title");
 				// var dStartDate = oEvent.getParameter("appointment").getProperty("startDate");
 				var oData = oView.getModel().getData().events;
+				var sTitle;
 				var sDescr;
+				var sSpotUrl;
 
 				for (var i = 0; i < oData.length; i++ ) {
 					// if ( oData[i].band === sBand && oData[i].start === dStartDate) {		// unknown issue: oData[i].start NOT EQUAL dStartDate after "onRefresh"
 					if ( oData[i].band === sBand ) {
 						sDescr = oData[i].description;
+						sSpotUrl = oData[i].spotUrl;
 					}
 				}
 
-				MessageBox.show(sDescr, {
-					title: oAppointment.getTitle()
-				});
+				sTitle = oAppointment.getTitle();
+				this.openPopup (sTitle, sDescr, sSpotUrl);
+
+				// MessageBox.show(sDescr, {
+				// 	title: sTitle,
+				// });
 			}
+		},
+
+		openPopup: function (sTitle, sDescr, sSpotUrl) {
+			if (!this.oDialog) {
+				var aButtons = [];
+				if (sSpotUrl) {
+					aButtons.push( 
+						new Button({
+							text: "Spotify",
+							icon: "sap-icon://media-play",
+							press: function () {
+								window.open(sSpotUrl);
+							}.bind(this)
+						})
+					);
+				}
+				aButtons.push( 
+					new Button({
+						text: "Ok",
+						press: function () {
+							this.oDialog.close();
+							this.oDialog.destroy();    
+							this.oDialog = undefined;
+						}.bind(this)
+					})
+				);
+
+				this.oDialog = new Dialog({
+					title: sTitle,
+					content: new Text({ text: sDescr }),
+					type: sap.m.DialogType.Message,
+					buttons: aButtons
+				});
+
+				// to get access to the controller's model
+				this.getView().addDependent(this.oDialog);
+			}
+
+			this.oDialog.open();
 		},
 		
 		onDayPress: function (oEvent) {
