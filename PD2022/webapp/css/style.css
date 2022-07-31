@@ -13,7 +13,7 @@
     --color-darkgrey: #858585;
     --color-lightgrey: rgb(230, 230, 230);
     --color-typeA: #f5ee81;
-    --color-typeB: #b3b08f;
+    --color-typeB: #e7e6d1;
 }
 
 /* GENERAL */
@@ -35,7 +35,7 @@
     background-color: var(--color-black);
 }
 .sapMIBar-CTX .sapMTitle {
-    color: var(--color-typeB);
+    color: var(--color-white);
     text-shadow: none;
 } 
 .sapMShellBrandingBar {

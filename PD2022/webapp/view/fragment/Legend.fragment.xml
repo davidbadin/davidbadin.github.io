@@ -4,16 +4,16 @@
 		xmlns:u="sap.ui.unified">
 	<Popover
 		placement="Bottom"
-		showHeader="false" >
-			<!-- title="Legenda" -->
-		<!-- <PlanningCalendarLegend appointmentItemsHeader="Legenda"
+		showHeader="false"
+		title="Legenda" >
+		<PlanningCalendarLegend appointmentItemsHeader="Legenda"
                 columnWidth="160px"
                 standardItems=""
 				appointmentItems="{path : '/stages', templateShareable: true}">
 			<appointmentItems>
 				<u:CalendarLegendItem text="{text}" type="{type}"/>
 			</appointmentItems>
-		</PlanningCalendarLegend> -->
+		</PlanningCalendarLegend>
         <FlexBox direction="Column" justifyContent="Center" class="sapUiTinyMargin popupBox">
             <Button icon="sap-icon://information" id="info" text="Informácie" press="onInfoPress" class="myButtonDef" width="100%"/>
 			<Button icon="sap-icon://media-play" id="spotifyButton" text="Spotify" press="onSpotifyPress" class="myButtonDef" width="100%"/>

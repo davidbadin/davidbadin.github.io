@@ -78,7 +78,7 @@ sap.ui.define([
 								"band": aSourceData[i][2],
 								"start": oStartDate,
 								"end": oEndDate,
-								"stage": aSourceData[i][4],
+								"stage": "Hlavný stage",
 								"shortDescription": sShortDescr,
 								"description": sDescr,
 								"type": "Type09"
@@ -89,7 +89,7 @@ sap.ui.define([
 								"band": aSourceData[i][2],
 								"start": oStartDate,
 								"end": oEndDate,
-								"stage": aSourceData[i][4],
+								"stage": "B scéna",
 								"shortDescription": sShortDescr,
 								"description": sDescr,
 								"type": "Type10"
