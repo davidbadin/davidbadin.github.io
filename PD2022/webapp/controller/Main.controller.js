@@ -361,13 +361,13 @@ sap.ui.define([
 			var sTitle = "Informácie pre návštevníkov";
 			var sLink = new sap.m.Link({
 				text: "Predpredaj lístkov tu",	
-				press: [this.handleLinkPress, this]
+				press: [this.handleTicketsLinkPress, this]
 			});
 
 			this.oDialog = new Dialog({
 				title: sTitle,
 				content: new sap.m.VBox({
-					items: [sLink, new Text({ text: sInfo })]
+					items: [new Text(), sLink, new Text({ text: sInfo })]
 				}), 
 				
 				type: sap.m.DialogType.Message,
@@ -399,11 +399,8 @@ sap.ui.define([
 			var myWindow = window.open("https://open.spotify.com/playlist/2AfkiP1vIJoeYqGkceDf39");
 		},
 
-		handleLinkPress: function (sUrl) {
-			if (!sUrl) {
-			sUrl = "https://www.punkacidetom.sk/listky";
-			} 
-			window.open(sUrl);
+		handleTicketsLinkPress: function () {
+			window.open("https://www.punkacidetom.sk/listky");
 		}
 
 	});
