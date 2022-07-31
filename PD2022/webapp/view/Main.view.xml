@@ -51,7 +51,7 @@
 								<!-- <FlexBox class="sapUiTinyMarginBeginEnd">
 									<Image width="100%" src="webapp/img/PD2021banner.png"/>
 								</FlexBox> -->
-								<SinglePlanningCalendar
+								<!-- <SinglePlanningCalendar
 									id="PC2"
 									class="sapUiTinyMarginBeginEnd"
 									viewChange="handleViewChange"
@@ -82,7 +82,7 @@
 											endDate= "{end}">
 										</unified:CalendarAppointment>
 									</appointments>
-								</SinglePlanningCalendar>
+								</SinglePlanningCalendar> -->
 							</VBox>
 						</HBox>
 					</content>
