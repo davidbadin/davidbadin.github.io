@@ -26,7 +26,7 @@ sap.ui.define([
 			
 			this.byId("PC1-Header-Spacer").setVisible(false);
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
-			this.byId("PC2-Header-NavToolbar").setVisible(false);
+			// this.byId("PC2-Header-NavToolbar").setVisible(false);
 		
 			sUriData = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetId + "/values/" + sSheetRangeData + "?key=" + sApiKey;
 			sUriInfo = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetId + "/values/" + sSheetRangeInfo + "?key=" + sApiKey;
@@ -59,11 +59,11 @@ sap.ui.define([
 			var aOutputData = [];
 
 			var oStartFestDate;
-			var oStartFestDate2;
+			// var oStartFestDate2;
 			var oToday = new Date();
 
-			var CalendarDayType = unifiedLibrary.CalendarDayType;
-			var aStages = [];
+			// var CalendarDayType = unifiedLibrary.CalendarDayType;
+			// var aStages = [];
 
 			for ( var i = 0; i < iSourceLength; i++ ) {
 				if (aSourceData[i]) { 									// skip if empty row
