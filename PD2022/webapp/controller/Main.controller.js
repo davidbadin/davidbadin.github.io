@@ -65,38 +65,51 @@ sap.ui.define([
 			var CalendarDayType = unifiedLibrary.CalendarDayType;
 			var aStages = [];
 
+			// stages for the INFO/LEGEND
+			aStages = [
+				{
+					text: "Hlavný stage",
+					type: CalendarDayType.Type09
+				}
+				,
+				{
+					text: "B scéna",
+					type: CalendarDayType.Type10
+				}
+			]
+
 			for ( var i = 0; i < iSourceLength; i++ ) {
 				if (aSourceData[i]) { 									// skip if empty row
-					var oStartDate = that.formatDate( aSourceData[i][0] );
-					var oEndDate = that.formatDate( aSourceData[i][1] );
-					var sShortDescr = that.formatShortDescr( aSourceData[i][4], oStartDate, oEndDate ); 
-					var sDescr = that.formatDescr( sShortDescr, aSourceData[i][3] );
+					var sStage;
+					var sType;
 
 					switch ( aSourceData[i][4] ) {
 						case "A":
-							aOutputData.push({
-								"band": aSourceData[i][2],
-								"start": oStartDate,
-								"end": oEndDate,
-								"stage": "Hlavný stage",
-								"shortDescription": sShortDescr,
-								"description": sDescr,
-								"type": "Type09"
-							});		
+							sStage = aStages[0].text;
+							sType = "Type09";
 							break;
 						case "B":
-							aOutputData.push({
-								"band": aSourceData[i][2],
-								"start": oStartDate,
-								"end": oEndDate,
-								"stage": "B scéna",
-								"shortDescription": sShortDescr,
-								"description": sDescr,
-								"type": "Type10"
-							});		
+							sStage = aStages[1].text;
+							sType = "Type10";	
 							break;
 						default:
 					}
+					
+					var sBand = aSourceData[i][2];
+					var oStartDate = that.formatDate( aSourceData[i][0] );
+					var oEndDate = that.formatDate( aSourceData[i][1] );
+					var sShortDescr = that.formatShortDescr( sStage, oStartDate, oEndDate ); 
+					var sDescr = that.formatDescr( sShortDescr, aSourceData[i][3] );
+
+					aOutputData.push({
+						"band": sBand,
+						"start": oStartDate,
+						"end": oEndDate,
+						"stage": sStage,
+						"shortDescription": sShortDescr,
+						"description": sDescr,
+						"type": sType
+					});							
 				}
 			}
 			
@@ -126,19 +139,6 @@ sap.ui.define([
 					}
 				}
 			}
-
-			// stages for the INFO/LEGEND
-			aStages = [
-				{
-					text: "Hlavný stage",
-					type: CalendarDayType.Type09
-				}
-				,
-				{
-					text: "B scéna",
-					type: CalendarDayType.Type10
-				}
-			]
 
 			oModel.setData({
 				"startDate": oStartFestDate,
