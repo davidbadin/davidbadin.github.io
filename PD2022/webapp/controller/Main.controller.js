@@ -152,7 +152,7 @@ sap.ui.define([
 
 			oModel.setData({
 				"startDate": oStartFestDate,
-				"startDate2": oStartFestDate2,
+				// "startDate2": oStartFestDate2,
 				// "stages": aStages,
 				"events": aOutputData
 			});
