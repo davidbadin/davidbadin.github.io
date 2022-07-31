@@ -2,9 +2,9 @@
 		xmlns="sap.m"
 		xmlns:core="sap.ui.core"
 		xmlns:u="sap.ui.unified">
-	<Popover> 
+	<Popover
+		placement="Bottom"> 
 			<!-- title="Legenda" -->
-			<!-- placement="Bottom" -->
 			<!-- showHeader="false" > -->
 		<!-- <PlanningCalendarLegend appointmentItemsHeader="Legenda"
                 columnWidth="160px"

@@ -21,7 +21,7 @@
 									enableAppointmentsResize="false"
 									enableAppointmentsCreate="false"
 									stickyMode="All"
-									startHour="9"
+									startHour="12"
 									fullDay="false"
 									appointments="{path: '/events', templateShareable: true}" 
 									>

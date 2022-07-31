@@ -5,9 +5,11 @@
     --color-black: #2a2a2a;
     --color-darkgrey: #424343;
     --color-lightgrey: rgb(230, 230, 230);
-    --color-typeA: #7eb9c0;
+    /* --color-typeA: #7eb9c0;
     --color-typeB: #cc5974;
-    --color-typeC: #e7b755;
+    --color-typeC: #e7b755; */
+    --color-typeA: #e7b755;
+    --color-typeB: white;
 }
 
 /* GENERAL */
