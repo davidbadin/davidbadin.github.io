@@ -12,8 +12,10 @@
     --color-black: #544e4e;
     --color-darkgrey: #858585;
     --color-lightgrey: rgb(230, 230, 230);
-    --color-typeA: #f5ee81;
-    --color-typeB: #e7e6d1;
+    /* --color-typeA: #f5ee81; */
+    /* --color-typeB: #e7e6d1; */
+    --color-typeA: #eff16d;
+    --color-typeB: #f9f9f8;
 }
 
 /* GENERAL */
@@ -92,6 +94,16 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
 }
 .popupBox.sapMVBox {
     background-color: var(--color-black);
+}
+.sapUiUnifiedLegend {
+    color: var(--color-white);
+    background-color: var(--color-black);
+}
+.sapMPlanCalLegendHeader {
+    color: var(--color-white);
+}
+.sapUiUnifiedLegendSquare {
+    background: var(--color-black);
 }
 
 /* CALENDAR SECTION */
