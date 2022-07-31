@@ -26,7 +26,7 @@ sap.ui.define([
 			
 			this.byId("PC1-Header-Spacer").setVisible(false);
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
-			// this.byId("PC2-Header-NavToolbar").setVisible(false);
+			this.byId("PC2-Header-NavToolbar").setVisible(false);
 		
 			sUriData = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetId + "/values/" + sSheetRangeData + "?key=" + sApiKey;
 			sUriInfo = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetId + "/values/" + sSheetRangeInfo + "?key=" + sApiKey;
@@ -59,11 +59,11 @@ sap.ui.define([
 			var aOutputData = [];
 
 			var oStartFestDate;
-			// var oStartFestDate2;
+			var oStartFestDate2;
 			var oToday = new Date();
 
-			// var CalendarDayType = unifiedLibrary.CalendarDayType;
-			// var aStages = [];
+			var CalendarDayType = unifiedLibrary.CalendarDayType;
+			var aStages = [];
 
 			for ( var i = 0; i < iSourceLength; i++ ) {
 				if (aSourceData[i]) { 									// skip if empty row
@@ -72,41 +72,31 @@ sap.ui.define([
 					var sShortDescr = that.formatShortDescr( aSourceData[i][4], oStartDate, oEndDate ); 
 					var sDescr = that.formatDescr( sShortDescr, aSourceData[i][3] );
 
-					aOutputData.push({
-						"band": aSourceData[i][2],
-						"start": oStartDate,
-						"end": oEndDate,
-						"stage": aSourceData[i][4],
-						"shortDescription": sShortDescr,
-						"description": sDescr,
-						"type": "Type09"
-					});		
-
-					// switch ( aSourceData[i][4] ) {
-					// 	case "Hlavný stage":
-							// aOutputData.push({
-							// 	"band": aSourceData[i][2],
-							// 	"start": oStartDate,
-							// 	"end": oEndDate,
-							// 	"stage": aSourceData[i][4],
-							// 	"shortDescription": sShortDescr,
-							// 	"description": sDescr,
-							// 	"type": "Type09"
-							// });		
-							// break;
-						// case "Curious Trenčín 2026 stage":
-						// 	aOutputData.push({
-						// 		"band": aSourceData[i][2],
-						// 		"start": oStartDate,
-						// 		"end": oEndDate,
-						// 		"stage": aSourceData[i][4],
-						// 		"shortDescription": sShortDescr,
-						// 		"description": sDescr,
-						// 		"type": "Type10"
-						// 	});		
-						// 	break;
-						// default:
-					// }
+					switch ( aSourceData[i][4] ) {
+						case "Hlavný stage":
+							aOutputData.push({
+								"band": aSourceData[i][2],
+								"start": oStartDate,
+								"end": oEndDate,
+								"stage": aSourceData[i][4],
+								"shortDescription": sShortDescr,
+								"description": sDescr,
+								"type": "Type09"
+							});		
+							break;
+						case "B scéna":
+							aOutputData.push({
+								"band": aSourceData[i][2],
+								"start": oStartDate,
+								"end": oEndDate,
+								"stage": aSourceData[i][4],
+								"shortDescription": sShortDescr,
+								"description": sDescr,
+								"type": "Type10"
+							});		
+							break;
+						default:
+					}
 				}
 			}
 			
@@ -117,43 +107,43 @@ sap.ui.define([
 			that.byId("day04").setType("Default");
 			if ( oToday.getMonth() === 7 && oToday.getDate() === 28 ) {
 				oStartFestDate = new Date("2022", "7", "27", "12", "00");
-				// oStartFestDate2 = new Date("2022", "7", "28", "00", "00");
+				oStartFestDate2 = new Date("2022", "7", "28", "00", "00");
 				that.byId("day04").setType("Emphasized");
 			} else {
 				if ( oToday.getMonth() === 7 && oToday.getDate() === 27 ) {
 					oStartFestDate = new Date("2022", "7", "26", "12", "00");
-					// oStartFestDate2 = new Date("2022", "7", "27", "00", "00");
+					oStartFestDate2 = new Date("2022", "7", "27", "00", "00");
 					that.byId("day03").setType("Emphasized");
 				} else {
 					if ( oToday.getMonth() === 7 && oToday.getDate() === 26 ) {
 						oStartFestDate = new Date("2022", "7", "25", "12", "00");
-						// oStartFestDate2 = new Date("2022", "7", "26", "00", "00");
+						oStartFestDate2 = new Date("2022", "7", "26", "00", "00");
 						that.byId("day02").setType("Emphasized");
 					} else {
 						oStartFestDate = new Date("2022", "7", "24", "12", "00");
-						// oStartFestDate2 = new Date("2022", "7", "25", "00", "00");
+						oStartFestDate2 = new Date("2022", "7", "25", "00", "00");
 						that.byId("day01").setType("Emphasized");
 					}
 				}
 			}
 
 			// stages for the INFO/LEGEND
-			// aStages = [
-			// 	{
-			// 		text: "Hlavný stage",
-			// 		type: CalendarDayType.Type09
-			// 	}
-			// 	,
-			// 	{
-			// 		text: "Curious Trenčín 2026 stage",
-			// 		type: CalendarDayType.Type10
-			// 	}
-			// ]
+			aStages = [
+				{
+					text: "Hlavný stage",
+					type: CalendarDayType.Type09
+				}
+				,
+				{
+					text: "B scéna",
+					type: CalendarDayType.Type10
+				}
+			]
 
 			oModel.setData({
 				"startDate": oStartFestDate,
-				// "startDate2": oStartFestDate2,
-				// "stages": aStages,
+				"startDate2": oStartFestDate2,
+				"stages": aStages,
 				"events": aOutputData
 			});
 
@@ -276,19 +266,19 @@ sap.ui.define([
 			switch (sId) {
 				case "day01":
 					oModel.setProperty("/startDate", new Date("2022", "7", "24", "12", "00"));
-					// oModel.setProperty("/startDate2", new Date("2022", "7", "25", "00", "00"));
+					oModel.setProperty("/startDate2", new Date("2022", "7", "25", "00", "00"));
 					break;
 				case "day02":
 					oModel.setProperty("/startDate", new Date("2022", "7", "25", "12", "00"));
-					// oModel.setProperty("/startDate2", new Date("2022", "7", "26", "00", "00"));
+					oModel.setProperty("/startDate2", new Date("2022", "7", "26", "00", "00"));
 					break;
 				case "day03":
 					oModel.setProperty("/startDate", new Date("2022", "7", "26", "12", "00"));
-					// oModel.setProperty("/startDate2", new Date("2022", "7", "27", "00", "00"));
+					oModel.setProperty("/startDate2", new Date("2022", "7", "27", "00", "00"));
 					break;
 				case "day04":
 					oModel.setProperty("/startDate", new Date("2022", "7", "27", "12", "00"));
-					// oModel.setProperty("/startDate2", new Date("2022", "7", "28", "00", "00"));
+					oModel.setProperty("/startDate2", new Date("2022", "7", "28", "00", "00"));
 					break;
 			}
 			
@@ -334,7 +324,6 @@ sap.ui.define([
 		},
 
 		onSpotifyPress: function () {
-			
 			var myWindow = window.open("https://open.spotify.com/playlist/2AfkiP1vIJoeYqGkceDf39");
 		}
 
