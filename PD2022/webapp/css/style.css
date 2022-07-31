@@ -164,3 +164,9 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
 .sapUiCalLegDayType01>.sapUiUnifiedLegendSquare>.sapUiUnifiedLegendSquareColor {
     background: var(--color-typeC);
 }
+
+
+
+.myCalendar .sapUiCalendarApp {
+    height: 10rem;
+}
