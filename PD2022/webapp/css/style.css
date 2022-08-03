@@ -8,14 +8,13 @@
     --color-typeA: #7eb9c0;
     --color-typeB: #cc5974;
     --color-typeC: #e7b755; */
+
     --color-white: white;
     --color-black: #544e4e;
     --color-darkgrey: #858585;
     --color-lightgrey: rgb(230, 230, 230);
-    /* --color-typeA: #f5ee81; */
-    /* --color-typeB: #e7e6d1; */
-    --color-typeA: #eff16d;
-    --color-typeB: #f9f9f8;
+    --color-typeA: #fff47e;
+    --color-typeB: #fafaff;
 }
 
 /* GENERAL */
@@ -156,6 +155,10 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
 }
 .sapMLnk {
     color: var(--color-typeA);
+}
+.sapMIBar-CTX.sapMFooter-CTX {
+    background-color: var(--color-black);
+    border-top: 1px solid var(--color-black);
 }
 
 
