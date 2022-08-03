@@ -2,12 +2,11 @@
 
 :root {
     /* --color-white: white;
-    --color-black: #2a2a2a;
-    --color-darkgrey: #424343;
+    --color-black: #544e4e;
+    --color-darkgrey: #858585;
     --color-lightgrey: rgb(230, 230, 230);
-    --color-typeA: #7eb9c0;
-    --color-typeB: #cc5974;
-    --color-typeC: #e7b755; */
+    --color-typeA: #fff47e;
+    --color-typeB: #fafaff; */
 
     --color-white: white;
     --color-black: #544e4e;
@@ -15,6 +14,7 @@
     --color-lightgrey: rgb(230, 230, 230);
     --color-typeA: #fff47e;
     --color-typeB: #fafaff;
+
 }
 
 /* GENERAL */
