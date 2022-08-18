@@ -1,46 +1,126 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
-	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/Fragment",
 	"sap/ui/unified/library",
-	"sap/m/MessageBox",
 	"sap/m/MessageToast",
 	"sap/m/Dialog",
 	"sap/m/Button",
 	"sap/m/Text",
-	"sap/m/List"
-], function (Controller, JSONModel, Fragment, unifiedLibrary, MessageBox, MessageToast, Dialog, Button, Text, List) {
+	"Project/PD2022/Constants"
+], function (Controller, Fragment, unifiedLibrary, MessageToast, Dialog, Button, Text, Constants) {
 	"use strict";
 
 	return Controller.extend("Project.PD2022.controller.Main", {
 		onInit: function () {
-			
+
 			var oView = this.getView();
 			var oUriModel = oView.getModel("uriModel");
-			
+
 			var sUriData;
 			var sUriInfo;
-
-			// *** update this part if spreadsheet url/range changed ***
-			var sSheetId = "1O9khRTDa9-hkyBLW_ZNEKgHbaaWqK5uZ0GYbkr1G0o8";
-			var sSheetRangeData = "'PD2022'!A2:F100";
-			var sSheetRangeInfo = "'PD2022_info'!A1:B100";
-			var sApiKey = "AIzaSyBIHleeVgn137sWxmlCGvFQjewrv-ueXMI";
-			
+			var sSheetId = Constants.sheetId;
+			var sSheetRangeData = Constants.sheetRangeData;
+			var sSheetRangeInfo = Constants.sheetRangeInfo;
+			var sApiKey = Constants.apiKey;
+			var sApiUri = Constants.apiUri;
 			
 			this.byId("PC1-Header-Spacer").setVisible(false);
 			this.byId("PC1-Header-NavToolbar").setVisible(false);
 			this.byId("PC2-Header-NavToolbar").setVisible(false);
 		
-			sUriData = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetId + "/values/" + sSheetRangeData + "?key=" + sApiKey;
-			sUriInfo = "https://sheets.googleapis.com/v4/spreadsheets/" + sSheetId + "/values/" + sSheetRangeInfo + "?key=" + sApiKey;
+			sUriData = sApiUri + sSheetId + "/values/" + sSheetRangeData + "?key=" + sApiKey;
+			sUriInfo = sApiUri + sSheetId + "/values/" + sSheetRangeInfo + "?key=" + sApiKey;
 
 			oUriModel.setProperty("/uriData", sUriData);
 			oUriModel.setProperty("/uriInfo", sUriInfo);
 
+			this.prepareOutput();
+
 			this.loadData (sUriData, this.prepareData, this, true);	// true = isAtStart (to defer start and refresh)
 			this.loadData (sUriInfo, this.prepareInfo, this, true);
+		},
 
+		prepareOutput: function() {
+			var oView = this.getView();
+			var oModel = oView.getModel();
+
+			var oStartFestDate;
+			var oStartFestDate2;
+			var oToday = new Date();
+
+			var CalendarDayType = unifiedLibrary.CalendarDayType;
+			var aStages = [];
+
+			var aLocalData = [];
+			var aOutputData = [];
+
+			// stages for the INFO/LEGEND
+			aStages = [
+				{
+					text: Constants.stage.stageA,
+					type: "Type09",
+					legendType: CalendarDayType.Type09
+				},
+				{
+					text: Constants.stage.stageB,
+					type: "Type10",
+					legendType: CalendarDayType.Type10
+				}
+			]
+
+			// set higlighted date (if not during festival, the first day will be higlighted)
+			this.byId("day01").setType("Default");
+			this.byId("day02").setType("Default");
+			this.byId("day03").setType("Default");
+			this.byId("day04").setType("Default");
+			if ( oToday.getMonth() === 7 && oToday.getDate() === Constants.date.day4.date ) {
+				oStartFestDate = Constants.date.day4.part1;
+				oStartFestDate2 = Constants.date.day4.part2;
+				this.byId("day04").setType("Emphasized");
+			} else {
+				if ( oToday.getMonth() === 7 && oToday.getDate() === Constants.date.day3.date ) {
+					oStartFestDate = Constants.date.day3.part1;
+					oStartFestDate2 = Constants.date.day3.part2;
+					this.byId("day03").setType("Emphasized");
+				} else {
+					if ( oToday.getMonth() === 7 && oToday.getDate() === Constants.date.day2.date ) {
+						oStartFestDate = Constants.date.day2.part1;
+						oStartFestDate2 = Constants.date.day2.part2;
+						this.byId("day02").setType("Emphasized");
+					} else {
+						oStartFestDate = Constants.date.day1.part1;
+						oStartFestDate2 = Constants.date.day1.part2;
+						this.byId("day01").setType("Emphasized");
+					}
+				}
+			}
+
+			// get local storage data if exists
+			aLocalData = JSON.parse(localStorage.getItem("data"));
+			if (aLocalData) {
+				for ( var i = 0; i < aLocalData.length; i++ ) {
+					var dStartDate = new Date(aLocalData[i].start);
+					var dEndDate = new Date(aLocalData[i].end);
+					aOutputData.push({
+						"band": aLocalData[i].band,
+						"start": dStartDate,
+						"end": dEndDate,
+						"stage": aLocalData[i].stage,
+						"shortDescription": aLocalData[i].shortDescription,
+						"description": aLocalData[i].description,
+						"type": aLocalData[i].type,
+						"spotUrl": aLocalData[i].spotUrl,
+						"favorite": aLocalData[i].favorite
+					});
+				}
+			}
+
+			oModel.setData({
+				"startDate": oStartFestDate,
+				"startDate2": oStartFestDate2,
+				"stages": aStages,
+				"events": aOutputData
+			});
 		},
 
 		loadData: function (theUrl, callback, that, isAtStart) {
@@ -61,26 +141,11 @@ sap.ui.define([
 			var aSourceData = obj.values;
 			var iSourceLength = aSourceData.length;
 			var aOutputData = [];
-
-			var oStartFestDate;
-			var oStartFestDate2;
-			var oToday = new Date();
-
-			var CalendarDayType = unifiedLibrary.CalendarDayType;
+			var aOutputDataUpd = [];
+			var aLocalData = [];
 			var aStages = [];
-
-			// stages for the INFO/LEGEND
-			aStages = [
-				{
-					text: "Hlavný stage",
-					type: CalendarDayType.Type09
-				}
-				,
-				{
-					text: "B scéna",
-					type: CalendarDayType.Type10
-				}
-			]
+			
+			aStages = oModel.getProperty("/stages");
 
 			for ( var i = 0; i < iSourceLength; i++ ) {
 				if (aSourceData[i]) { 									// skip if empty row
@@ -90,11 +155,11 @@ sap.ui.define([
 					switch ( aSourceData[i][4] ) {
 						case "A":
 							sStage = aStages[0].text;
-							sType = "Type09";
+							sType = aStages[0].type;
 							break;
 						case "B":
 							sStage = aStages[1].text;
-							sType = "Type10";	
+							sType = aStages[1].type;
 							break;
 						default:
 					}
@@ -114,44 +179,25 @@ sap.ui.define([
 						"shortDescription": sShortDescr,
 						"description": sDescr,
 						"type": sType,
-						"spotUrl": sSpotUrl
+						"spotUrl": sSpotUrl,
+						"favorite": ""
 					});							
 				}
 			}
-			
-			// set higlighted date (if not during festival, the first day will be higlighted)
-			that.byId("day01").setType("Default");
-			that.byId("day02").setType("Default");
-			that.byId("day03").setType("Default");
-			that.byId("day04").setType("Default");
-			if ( oToday.getMonth() === 7 && oToday.getDate() === 28 ) {
-				oStartFestDate = new Date("2022", "7", "27", "12", "00");
-				oStartFestDate2 = new Date("2022", "7", "28", "00", "00");
-				that.byId("day04").setType("Emphasized");
-			} else {
-				if ( oToday.getMonth() === 7 && oToday.getDate() === 27 ) {
-					oStartFestDate = new Date("2022", "7", "26", "12", "00");
-					oStartFestDate2 = new Date("2022", "7", "27", "00", "00");
-					that.byId("day03").setType("Emphasized");
-				} else {
-					if ( oToday.getMonth() === 7 && oToday.getDate() === 26 ) {
-						oStartFestDate = new Date("2022", "7", "25", "12", "00");
-						oStartFestDate2 = new Date("2022", "7", "26", "00", "00");
-						that.byId("day02").setType("Emphasized");
-					} else {
-						oStartFestDate = new Date("2022", "7", "24", "12", "00");
-						oStartFestDate2 = new Date("2022", "7", "25", "00", "00");
-						that.byId("day01").setType("Emphasized");
-					}
-				}
-			}
 
-			oModel.setData({
-				"startDate": oStartFestDate,
-				"startDate2": oStartFestDate2,
-				"stages": aStages,
-				"events": aOutputData
-			});
+
+
+			// get favorites
+			aLocalData = JSON.parse(localStorage.getItem("data"));
+			if (aLocalData) {
+				for (var i = 0; i < aOutputData.length; i++) {
+					aOutputData[i].favorite = aLocalData[i].favorite;
+				}
+			} 
+
+			// save local storage data
+			localStorage.setItem("data", JSON.stringify(aOutputData));
+			oModel.setProperty("/events", aOutputData);
 
 			if (!isAtStart) {
 				MessageToast.show("Program aktualizovaný", {
@@ -160,6 +206,8 @@ sap.ui.define([
 					animationDuration: 500
 				});
 			}
+
+			
 		},
 
 		prepareInfo: function (response, that, isAtStart) {
@@ -188,7 +236,7 @@ sap.ui.define([
 
 		formatDate: function (sDate) {
 			var sYear, sMonth, sDay, sHour, sMinute;
-			
+					
 			sYear = sDate.slice(6, 10);
 			sMonth = parseInt(sDate.slice(3, 5)) - 1;
 			sDay = sDate.slice(0, 2);
@@ -248,23 +296,40 @@ sap.ui.define([
 				var sTitle;
 				var sDescr;
 				var sSpotUrl;
+				var sFavorite;
 
 				for (var i = 0; i < oData.length; i++ ) {
 					// if ( oData[i].band === sBand && oData[i].start === dStartDate) {		// unknown issue: oData[i].start NOT EQUAL dStartDate after "onRefresh"
 					if ( oData[i].band === sBand ) {
 						sDescr = oData[i].description;
 						sSpotUrl = oData[i].spotUrl;
+						sFavorite = oData[i].favorite;
 					}
 				}
 
 				sTitle = oAppointment.getTitle();
-				this.openPopup (sTitle, sDescr, sSpotUrl);
+				this.openPopup (sTitle, sDescr, sSpotUrl, sFavorite);
 			}
 		},
 
-		openPopup: function (sTitle, sDescr, sSpotUrl) {
+		openPopup: function (sTitle, sDescr, sSpotUrl, sFavorite) {
 			if (!this.oDialog) {
+				var favorIcon;
 				var aButtons = [];
+				if (sFavorite) {
+					favorIcon = Constants.iconFavorOn;
+				} else {
+					favorIcon = Constants.iconFavorOff;
+				}
+				aButtons.push( 
+					new Button({
+						id: "favIcon",
+						icon: favorIcon,
+						press: function () {
+							this.handleFavoritePress(sTitle);
+						}.bind(this)
+					})
+				);
 				if (sSpotUrl) {
 					aButtons.push( 
 						new Button({
@@ -314,20 +379,20 @@ sap.ui.define([
 	
 			switch (sId) {
 				case "day01":
-					oModel.setProperty("/startDate", new Date("2022", "7", "24", "12", "00"));
-					oModel.setProperty("/startDate2", new Date("2022", "7", "25", "00", "00"));
+					oModel.setProperty("/startDate", Constants.date.day1.part1);
+					oModel.setProperty("/startDate2", Constants.date.day1.part2);
 					break;
 				case "day02":
-					oModel.setProperty("/startDate", new Date("2022", "7", "25", "12", "00"));
-					oModel.setProperty("/startDate2", new Date("2022", "7", "26", "00", "00"));
+					oModel.setProperty("/startDate", Constants.date.day2.part1);
+					oModel.setProperty("/startDate2", Constants.date.day2.part2);
 					break;
 				case "day03":
-					oModel.setProperty("/startDate", new Date("2022", "7", "26", "12", "00"));
-					oModel.setProperty("/startDate2", new Date("2022", "7", "27", "00", "00"));
+					oModel.setProperty("/startDate", Constants.date.day3.part1);
+					oModel.setProperty("/startDate2", Constants.date.day3.part2);
 					break;
 				case "day04":
-					oModel.setProperty("/startDate", new Date("2022", "7", "27", "12", "00"));
-					oModel.setProperty("/startDate2", new Date("2022", "7", "28", "00", "00"));
+					oModel.setProperty("/startDate", Constants.date.day4.part1);
+					oModel.setProperty("/startDate2", Constants.date.day4.part2);
 					break;
 			}
 			
@@ -381,8 +446,6 @@ sap.ui.define([
 				})
 			});
 			this.oDialog.open();
-
-			// MessageBox.show(sInfo, {title: "Informácie pre návštevníkov"});
 		},
 
 		onRefresh: function () {
@@ -396,11 +459,39 @@ sap.ui.define([
 		},
 
 		onSpotifyPress: function () {
-			var myWindow = window.open("https://open.spotify.com/playlist/2AfkiP1vIJoeYqGkceDf39");
+			var sLink = Constants.spotifyLink;
+			var myWindow = window.open(sLink);
 		},
 
 		handleTicketsLinkPress: function () {
-			window.open("https://www.punkacidetom.sk/listky");
+			var sLink = Constants.ticketsLink;
+			window.open(sLink);
+		},
+
+		handleFavoritePress: function (band) {
+			var oView = this.getView();
+			var oModel = oView.getModel();
+			var aData = [];
+			var oButton = sap.ui.getCore().byId("favIcon");
+
+			aData = oModel.getProperty("/events");
+
+			for (var i = 0; i < aData.length; i++) {
+				if (aData[i].band === band) {
+					if (aData[i].favorite) {
+						aData[i].favorite = "";
+						oButton.setIcon(Constants.iconFavorOff);
+					} else {
+						aData[i].favorite = Constants.iconFavorOn;
+						oButton.setIcon(Constants.iconFavorOn);
+					}
+				}
+			}
+
+			oModel.setProperty("data", aData);
+			oModel.refresh();
+			localStorage.setItem("data", JSON.stringify(aData));
+
 		}
 
 	});

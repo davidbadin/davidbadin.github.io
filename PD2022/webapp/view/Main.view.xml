@@ -40,6 +40,7 @@
 									</views>
 									<appointments>
 										<unified:CalendarAppointment
+											icon= "{favorite}"
 											title= "{band}"
 											text= "{shortDescription}"
 											type= "{type}"
@@ -75,6 +76,7 @@
 									</views>
 									<appointments>
 										<unified:CalendarAppointment
+											icon= "{favorite}"
 											title= "{band}"
 											text= "{shortDescription}"
 											type= "{type}"

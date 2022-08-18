@@ -11,7 +11,7 @@
                 standardItems=""
 				appointmentItems="{path : '/stages', templateShareable: true}">
 			<appointmentItems>
-				<u:CalendarLegendItem text="{text}" type="{type}"/>
+				<u:CalendarLegendItem text="{text}" type="{legendType}"/>
 			</appointmentItems>
 		</PlanningCalendarLegend>
         <FlexBox direction="Column" justifyContent="Center" class="sapUiTinyMargin popupBox">
