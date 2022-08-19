@@ -56,7 +56,9 @@ sap.ui.define([],
 
             //icons
             iconFavorOn: "sap-icon://heart",
-            iconFavorOff: "sap-icon://heart-2"
+            iconFavorOff: "sap-icon://heart-2",
+            iconSpotify: "sap-icon://media-play",
+            iconClose: "sap-icon://decline"
         };
     
         return constants;

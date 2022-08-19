@@ -274,13 +274,6 @@ sap.ui.define([
 		},
 		
 		formatDescr: function (sShortDescr, sDescr) {
-
-		    // var tmp = document.createElement("div"); // eslint-disable-line sap-no-element-creation
-		    // tmp.innerHTML = sDescr;
-			// var sText = tmp.textContent || tmp.innerText;
-			
-			// return sShortDescr + "\n" + "\n" + sText;
-
 			return sShortDescr + "\n" + "\n" + sDescr;
 		},
 		
@@ -333,8 +326,7 @@ sap.ui.define([
 				if (sSpotUrl) {
 					aButtons.push( 
 						new Button({
-							text: "Spotify",
-							icon: "sap-icon://media-play",
+							icon: Constants.iconSpotify,
 							press: function () {
 								window.open(sSpotUrl);
 							}.bind(this)
@@ -343,7 +335,8 @@ sap.ui.define([
 				}
 				aButtons.push( 
 					new Button({
-						text: "Ok",
+						// text: "Ok",
+						icon: Constants.iconClose,
 						press: function () {
 							this.oDialog.close();
 							this.oDialog.destroy();    
@@ -425,7 +418,7 @@ sap.ui.define([
 			var sInfo = oInfoModel.getProperty("/info");
 			var sTitle = "Informácie pre návštevníkov";
 			var sLink = new sap.m.Link({
-				text: "Predpredaj lístkov tu",	
+				text: "Predpredaj lístkov a eshop tu",	
 				press: [this.handleTicketsLinkPress, this]
 			});
 
@@ -437,7 +430,7 @@ sap.ui.define([
 				
 				type: sap.m.DialogType.Message,
 				buttons: new Button({
-					text: "Ok",
+					icon: Constants.iconClose,
 					press: function () {
 						this.oDialog.close();
 						this.oDialog.destroy();    

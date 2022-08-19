@@ -1,13 +1,6 @@
 /* Enter your custom styles here */
 
 :root {
-    /* --color-white: white;
-    --color-black: #544e4e;
-    --color-darkgrey: #858585;
-    --color-lightgrey: rgb(230, 230, 230);
-    --color-typeA: #fff47e;
-    --color-typeB: #fafaff; */
-
     --color-white: white;
     --color-black: #544e4e;
     --color-darkgrey: #858585;
@@ -138,7 +131,6 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
 .sapUiCalendarAppArrowIcon, .sapUiCalendarRow .sapUiCalendarAppArrowIconLeft, .sapUiCalendarRow .sapUiCalendarAppArrowIconRight {
     color: var(--color-black);
 }
-/* .sapMIBar-CTX .sapMBtnInner, .sapMBar .sapMBtnInner, .sapMHeader-CTX .sapMBtnInner, .sapMFooter-CTX .sapMBtnInner { */
 .sapMIBar-CTX .sapMBtnInner {
     background: var(--color-typeA)
 }
@@ -155,6 +147,12 @@ html.sap-desktop .sapMIBar.sapMFooter-CTX {
 }
 .sapMLnk {
     color: var(--color-typeA);
+}
+.sapMLnk:focus {
+    color: var(--color-typeA)!important;
+}
+.sapMLnk:hover {
+    color: var(--color-typeA)!important;
 }
 .sapMIBar-CTX.sapMFooter-CTX {
     background-color: var(--color-black);
