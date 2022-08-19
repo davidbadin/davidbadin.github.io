@@ -316,7 +316,7 @@ sap.ui.define([
 				}
 				aButtons.push( 
 					new Button({
-						id: "favIcon",
+						id: "favorIcon",
 						icon: favorIcon,
 						press: function () {
 							this.handleFavoritePress(sTitle);
@@ -465,7 +465,7 @@ sap.ui.define([
 			var oView = this.getView();
 			var oModel = oView.getModel();
 			var aData = [];
-			var oButton = sap.ui.getCore().byId("favIcon");
+			var oButton = sap.ui.getCore().byId("favorIcon");
 
 			aData = oModel.getProperty("/events");
 
