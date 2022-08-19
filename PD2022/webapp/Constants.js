@@ -35,22 +35,26 @@ sap.ui.define([],
                 day1: {
                     part1: sDay1Part1,
                     part2: sDay1Part2,
-                    date: 24,
+                    day: 24,
+                    month: 7,   //current month - 1 (january = 0,...)
                 },
                 day2: {
                     part1: sDay2Part1,
                     part2: sDay2Part2,
-                    date: 25,
+                    day: 25,
+                    month: 7,
                 },
                 day3: {
                     part1: sDay3Part1,
                     part2: sDay3Part2,
-                    date: 26,
+                    day: 26,
+                    month: 7,
                 },
                 day4: {
                     part1: sDay4Part1,
                     part2: sDay4Part2,
-                    date: 27,
+                    day: 27,
+                    month: 7,
                 },
             },
 

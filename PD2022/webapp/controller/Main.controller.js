@@ -73,17 +73,17 @@ sap.ui.define([
 			this.byId("day02").setType("Default");
 			this.byId("day03").setType("Default");
 			this.byId("day04").setType("Default");
-			if ( oToday.getMonth() === 7 && oToday.getDate() === Constants.date.day4.date ) {
+			if ( oToday.getMonth() === Constants.date.day4.month && oToday.getDate() === Constants.date.day4.day ) {
 				oStartFestDate = Constants.date.day4.part1;
 				oStartFestDate2 = Constants.date.day4.part2;
 				this.byId("day04").setType("Emphasized");
 			} else {
-				if ( oToday.getMonth() === 7 && oToday.getDate() === Constants.date.day3.date ) {
+				if ( oToday.getMonth() === Constants.date.day3.month && oToday.getDate() === Constants.date.day3.day ) {
 					oStartFestDate = Constants.date.day3.part1;
 					oStartFestDate2 = Constants.date.day3.part2;
 					this.byId("day03").setType("Emphasized");
 				} else {
-					if ( oToday.getMonth() === 7 && oToday.getDate() === Constants.date.day2.date ) {
+					if ( oToday.getMonth() === Constants.date.day2.month && oToday.getDate() === Constants.date.day2.day ) {
 						oStartFestDate = Constants.date.day2.part1;
 						oStartFestDate2 = Constants.date.day2.part2;
 						this.byId("day02").setType("Emphasized");
