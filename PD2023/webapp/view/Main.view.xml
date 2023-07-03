@@ -49,10 +49,15 @@
 										</unified:CalendarAppointment>
 									</appointments>
 								</SinglePlanningCalendar>
-								<!-- <FlexBox class="sapUiTinyMarginBeginEnd">
+								<FlexBox height="4rem" class="footerText">
+									<Text text="KAŽDÝ VEČER AFTERPÁRTY V NOČNOM BARE" class="footerText"/>
+								</FlexBox>
+								<FlexBox class="sapUiTinyMarginBeginEnd">
 									<Image width="100%" src="webapp/img/PD_transp.png"/>
 								</FlexBox>
-								<SinglePlanningCalendar
+								<FlexBox height="2rem" class="sapUiTinyMarginBeginEnd">
+								</FlexBox>
+								<!-- <SinglePlanningCalendar
 									id="PC2"
 									class="sapUiTinyMarginBeginEnd"
 									viewChange="handleViewChange"

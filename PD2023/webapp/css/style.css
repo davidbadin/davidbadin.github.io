@@ -43,6 +43,15 @@
 .sapMPCHead .sapMPCHeadActionsToolbar { background-color: var(--color-black); } 
 .sapMTitle { color: var(--color-white); }
 
+/* FOOTER SECTION */
+.footerText {
+    font-size: 0.9rem;
+    justify-content: center;
+    align-items: center;
+}
+.sapMText.footerText {
+    color: var(--color-typeC);
+}
 
 /* Buttons */
 .myButtonDef .sapMBtnInner { 
