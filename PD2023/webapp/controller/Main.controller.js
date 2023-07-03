@@ -98,7 +98,7 @@ sap.ui.define([
 			}
 
 			// get local storage data if exists
-			aLocalData = JSON.parse(localStorage.getItem("data"));
+			aLocalData = JSON.parse(localStorage.getItem("pd2023_data"));
 			if (aLocalData) {
 				for ( var i = 0; i < aLocalData.length; i++ ) {
 					var dStartDate = new Date(aLocalData[i].start);
@@ -190,7 +190,7 @@ sap.ui.define([
 
 
 			// get favorites
-			aLocalData = JSON.parse(localStorage.getItem("data"));
+			aLocalData = JSON.parse(localStorage.getItem("pd2023_data"));
 			if (aLocalData) {
 				for (var i = 0; i < aOutputData.length; i++) {
 					aOutputData[i].favorite = aLocalData[i].favorite;
@@ -198,7 +198,7 @@ sap.ui.define([
 			} 
 
 			// save local storage data
-			localStorage.setItem("data", JSON.stringify(aOutputData));
+			localStorage.setItem("pd2023_data", JSON.stringify(aOutputData));
 			oModel.setProperty("/events", aOutputData);
 
 			if (!isAtStart) {
@@ -485,7 +485,7 @@ sap.ui.define([
 
 			oModel.setProperty("data", aData);
 			oModel.refresh();
-			localStorage.setItem("data", JSON.stringify(aData));
+			localStorage.setItem("pd2023_data", JSON.stringify(aData));
 
 		}
 
