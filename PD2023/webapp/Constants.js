@@ -30,6 +30,14 @@ sap.ui.define([],
                 stageB: "B stage"
             },
 
+            // bottom text
+            bottomText: {
+                1: "0:45 - 1:30 ZDENY + MARŤAS",
+                2: "23:55 - 3:00 TRSNI SI! (nočný bar)",
+                3: "23:55 - 3:00 THE UGLY SELECTORS (nočný bar)",
+                4: "23:55 - 3:00 RICHŤO - BANDASKA (nočný bar)"
+            },
+
             //calendar dates (defined above)
             date: {
                 day1: {
@@ -55,7 +63,7 @@ sap.ui.define([],
                     part2: sDay4Part2,
                     day: 26,
                     month: 7,
-                },
+                }
             },
 
             //icons

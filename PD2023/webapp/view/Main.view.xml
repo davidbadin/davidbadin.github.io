@@ -50,7 +50,7 @@
 									</appointments>
 								</SinglePlanningCalendar>
 								<FlexBox height="4rem" class="footerText">
-									<Text text="KAŽDÝ VEČER AFTERPÁRTY V NOČNOM BARE" class="footerText"/>
+									<Text text="KAŽDÝ VEČER AFTERPÁRTY V NOČNOM BARE" class="footerText" id="bottomText"/>
 								</FlexBox>
 								<FlexBox class="sapUiTinyMarginBeginEnd">
 									<Image width="100%" src="webapp/img/PD_transp.png"/>

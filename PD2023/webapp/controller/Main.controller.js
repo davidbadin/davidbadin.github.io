@@ -56,6 +56,8 @@ sap.ui.define([
 			var aLocalData = [];
 			var aOutputData = [];
 
+			var sDay;
+
 			// stages for the INFO/LEGEND
 			aStages = [
 				{
@@ -71,31 +73,28 @@ sap.ui.define([
 			]
 
 			// set higlighted date (if not during festival, the first day will be higlighted)
-			this.byId("day01").setType("Default");
-			this.byId("day02").setType("Default");
-			this.byId("day03").setType("Default");
-			this.byId("day04").setType("Default");
 			if ( oToday.getMonth() === Constants.date.day4.month && oToday.getDate() === Constants.date.day4.day ) {
-				oStartFestDate = Constants.date.day4.part1;
-				oStartFestDate2 = Constants.date.day4.part2;
-				this.byId("day04").setType("Emphasized");
+				sDay = 4;
 			} else {
 				if ( oToday.getMonth() === Constants.date.day3.month && oToday.getDate() === Constants.date.day3.day ) {
-					oStartFestDate = Constants.date.day3.part1;
-					oStartFestDate2 = Constants.date.day3.part2;
-					this.byId("day03").setType("Emphasized");
+					sDay = 3;
 				} else {
 					if ( oToday.getMonth() === Constants.date.day2.month && oToday.getDate() === Constants.date.day2.day ) {
-						oStartFestDate = Constants.date.day2.part1;
-						oStartFestDate2 = Constants.date.day2.part2;
-						this.byId("day02").setType("Emphasized");
+						sDay = 2;
 					} else {
-						oStartFestDate = Constants.date.day1.part1;
-						oStartFestDate2 = Constants.date.day1.part2;
-						this.byId("day01").setType("Emphasized");
+						sDay = 1;
 					}
 				}
 			}
+
+			oStartFestDate = Constants.date["day" + sDay].part1;
+			oStartFestDate2 = Constants.date["day" + sDay].part2;
+			this.setDefaultButtons(this);
+			this.byId("day0" + sDay).setType("Emphasized");
+
+
+			// set bottom text
+			this.byId("bottomText").setProperty("text", Constants.bottomText[sDay]);
 
 			// get local storage data if exists
 			aLocalData = JSON.parse(localStorage.getItem("pd2023_data"));
@@ -143,7 +142,6 @@ sap.ui.define([
 			var aSourceData = obj.values;
 			var iSourceLength = aSourceData.length;
 			var aOutputData = [];
-			var aOutputDataUpd = [];
 			var aLocalData = [];
 			var aStages = [];
 			
@@ -193,7 +191,9 @@ sap.ui.define([
 			aLocalData = JSON.parse(localStorage.getItem("pd2023_data"));
 			if (aLocalData) {
 				for (var i = 0; i < aOutputData.length; i++) {
-					aOutputData[i].favorite = aLocalData[i].favorite;
+					if (aLocalData[i]) {
+						aOutputData[i].favorite = aLocalData[i].favorite;
+					}
 				}
 			} 
 
@@ -366,32 +366,20 @@ sap.ui.define([
 		onDayPress: function (oEvent) {
 			var sId = oEvent.getSource().getId().slice(-5);
 			var oModel = this.getOwnerComponent().getModel();
+			var sDay;
 			
-			this.byId("day01").setType("Default");
-			this.byId("day02").setType("Default");
-			this.byId("day03").setType("Default");
-			this.byId("day04").setType("Default");
-	
-			switch (sId) {
-				case "day01":
-					oModel.setProperty("/startDate", Constants.date.day1.part1);
-					oModel.setProperty("/startDate2", Constants.date.day1.part2);
-					break;
-				case "day02":
-					oModel.setProperty("/startDate", Constants.date.day2.part1);
-					oModel.setProperty("/startDate2", Constants.date.day2.part2);
-					break;
-				case "day03":
-					oModel.setProperty("/startDate", Constants.date.day3.part1);
-					oModel.setProperty("/startDate2", Constants.date.day3.part2);
-					break;
-				case "day04":
-					oModel.setProperty("/startDate", Constants.date.day4.part1);
-					oModel.setProperty("/startDate2", Constants.date.day4.part2);
-					break;
-			}
-			
+			this.setDefaultButtons(this);
+
+			sDay = sId.charAt(sId.length - 1);
+
+			oModel.setProperty("/startDate", Constants.date["day" + sDay].part1);
+			oModel.setProperty("/startDate2", Constants.date["day" + sDay].part2);
+
+			// highlight the DAY button
 			this.byId(sId).setType("Emphasized");
+
+			// set bottom text
+			this.byId("bottomText").setProperty("text", Constants.bottomText[sDay]);
 		},
 
 		handleOpenLegend: function (oEvent) {
@@ -487,6 +475,13 @@ sap.ui.define([
 			oModel.refresh();
 			localStorage.setItem("pd2023_data", JSON.stringify(aData));
 
+		},
+
+		setDefaultButtons: function (that) {
+			that.byId("day01").setType("Default");
+			that.byId("day02").setType("Default");
+			that.byId("day03").setType("Default");
+			that.byId("day04").setType("Default");
 		}
 
 	});

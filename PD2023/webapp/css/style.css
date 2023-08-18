@@ -42,6 +42,10 @@
 /* HEADER SECTION */
 .sapMPCHead .sapMPCHeadActionsToolbar { background-color: var(--color-black); } 
 .sapMTitle { color: var(--color-white); }
+.sapMPCHead .sapMPCHeadActionsToolbar, .sapMPCHead .sapMPCHeadNavToolbar, .sapMPCHead .sapMTB.sapMTB-Transparent-CTX {
+    padding-left: 1rem;
+    background-color: var(--color-black);
+}
 
 /* FOOTER SECTION */
 .footerText {
