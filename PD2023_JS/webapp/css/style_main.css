@@ -1,0 +1,90 @@
+/* Custom styles here */
+
+:root {
+    --color-white: #fdfdfd;
+    --color-black: #1d1d1d;
+    --color-darkgrey: #3a3a3a;
+    --color-lightgrey: #b1b1b1;
+    --color-typeA: #28525f;
+    --color-typeB: #ed5151;
+    --color-typeC: #e9dd30;
+}
+
+/* GENERAL */
+
+body {
+    background-color: var(--color-darkgrey);
+}
+
+.center {
+    align-items: center;
+    justify-content: center;    
+}
+
+/* HEADER*/
+.divHeader {
+    width: 100%;
+    height: 3rem;
+    display: flex;
+}
+
+.textHeader {
+    color: #e9dd30;
+}
+
+.divTopButtons {
+    width: 100%;
+    height: 3rem;
+    display: flex;
+}
+
+.butDayButtons {
+    background-color: #ed5151;
+    width: 20%;
+    min-width: 3rem;
+    max-width: 100px;
+    margin: 0.3125rem;
+}
+
+
+/* MAIN BLOCK*/
+.divMainBlock {
+    width: auto;
+    display: flex;
+}
+
+.divHoursLabel {
+    width: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.divHourLabel {
+    width: 1.5rem;
+    height: 1.25rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 0.25rem;
+    font-size: 1rem;
+}
+
+.divEventsBlock {
+    width: auto;
+    flex-grow: 1;
+    display: flex;
+}
+
+.divStageBlock {
+    flex-grow: 1;
+}
+
+.divEvent {
+    
+}
+
+.divEventDum {
+
+}

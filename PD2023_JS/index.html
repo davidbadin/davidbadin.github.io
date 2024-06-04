@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>PD2023</title>
+        <link rel="icon" type="image/png" sizes="64x64" href="./webapp/img/favicon64.png" />
+		<link rel="apple-touch-icon" sizes="180x180" href="./webapp/img/favicon180.png">
+        <link rel="stylesheet" href="webapp/css/style_main.css">
+    </head>
+    <body>
+        <script src="./webapp/model/constants.js"></script>
+        <script src="./webapp/controller/main.js"></script>
+        <div class="divHeader center">
+            <span id="textHeaderTitle" class="textHeader"></span>
+        </div>
+        <div class="divTopButtons center">
+            <button id="buttonDay1" class="butDayButtons">Day1</button>
+            <button id="buttonDay2" class="butDayButtons">Day2</button>
+            <button id="buttonDay3" class="butDayButtons">Day3</button>
+            <button id="buttonDay4" class="butDayButtons">Day4</button>
+        </div>
+        <div id="divMainBlock" class="divMainBlock">
+            <div id="divHoursLabel" class="divHoursLabel"></div>
+            <div id="divEventsBlock" class="divEventsBlock"></div>
+        </div>
+        <script type="text/javascript">
+            onInit();
+        </script>
+    </body>
+</html>
