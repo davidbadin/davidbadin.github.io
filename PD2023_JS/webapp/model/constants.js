@@ -5,7 +5,7 @@ const con = {
     // dates & times
     numOfDays: 4,
     schedStartTime: 12,
-    schedEndTime: 20,
+    schedEndTime: 3,
     
     // stages
     stage: [
@@ -21,5 +21,6 @@ const con = {
 
 var cust = {
     // technical
-    sizeCust: 1.5
+    sizeCust: 1.5,
+    mainBlockHeight: 0
 }
