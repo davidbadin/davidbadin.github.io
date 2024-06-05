@@ -3,7 +3,7 @@
 let festivalStartDate = new Date(2023, 7, 23);
 
 const con = {
-    // title
+    // title 
     titleLong: "Punkáči deťom 2023",
     titleShort: "PD2023",
 
