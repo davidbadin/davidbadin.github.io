@@ -8,9 +8,14 @@ function createTopButtons() {
 
     for (let i = 0; i < con.days.length; i++) {
         newButton = document.createElement("button");
-        newButton.setAttribute("class", "butDayButtons");
-        newButton.setAttribute("id", "buttonDay" + (i + 1) );
+        newButton.setAttribute("id", "buttonDay" + con.days[i].number );
         newButton.textContent = con.days[i].name;
+
+        // set active button
+        if (cust.currDay == con.days[i].number) {
+            newButton.classList.add("buttonActive");
+        }
+
         newButton.addEventListener("click", function onClickDay () {    
             onDayPress( con.days[i] );
         } );
@@ -22,9 +27,28 @@ function createTopButtons() {
 
 function onDayPress(day) {
 
-    console.log("click " + day.number);  
+    let button;
+
     cust.currDay = day.number;
 
-    onInit();
+    // set buttons active / non-active
+    for (let i = 0; i < con.days.length; i++) {
+        
+        button = {};
+        button = document.getElementById("buttonDay" + con.days[i].number);
+        if (button) {
+            if (cust.currDay == con.days[i].number) {
+                // active
+                button.classList.add("buttonActive");
+            } else {
+                // non-active
+                button.classList.remove("buttonActive");
+            };
+        };
+
+    };
+
+    // create elements
+    onInit(false);
 
 };

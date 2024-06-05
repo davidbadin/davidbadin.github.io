@@ -38,12 +38,16 @@ body {
     display: flex;
 }
 
-.butDayButtons {
+button {
     background-color: #ed5151;
     width: 20%;
     min-width: 3rem;
     max-width: 100px;
     margin: 0.3125rem;
+}
+
+button.buttonActive {
+    background-color: var(--color-typeC);
 }
 
 
@@ -82,15 +86,16 @@ body {
 }
 
 .divEvent {
-    background-color: #ed5151;
+    background-color: var(--color-lightgrey);
     
 }
 
-.divEventStageA {
+.divEvent.stageA {
     background-color: var(--color-typeA);
     
 }
-.divEventStageB {
+
+.divEvent.stageB {
     background-color: var(--color-typeB);
     
 }

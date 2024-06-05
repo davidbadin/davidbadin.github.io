@@ -35,12 +35,12 @@ const con = {
         {
             name: "A stage",
             shortName: "A",
-            style: "divEventStageA"
+            style: "stageA"
         },
         {
             name: "B stage",
             shortName: "B",
-            style: "divEventStageB"
+            style: "stageB"
         }
     ],
 
@@ -56,9 +56,9 @@ const con = {
     labelHourHeight: 1.25
 };
 
-var cust = {
+let cust = {
     // technical
     sizeCust: 1.5,
     mainBlockHeight: 0,
-    currDay: 2
+    currDay: 1
 }

@@ -2,10 +2,15 @@
 let aDataEvents = [];
 
 // onInit
-function onInit() {
+function onInit(loadData) {
 
-    // get data
-    getAppData();
+    if (loadData === true) {
+        // get data and create elements
+        getAppData();
+    } else {
+        // create elements only
+        createElements();
+    };
 
     console.log("end of init");
 
@@ -32,11 +37,9 @@ function processData(response, that, isAtStart) {
     
     let obj = JSON.parse( response );
     let sourceData = obj.values;
-    var stage;
+    let stage;
+    let aDataEventsLoaded = [];
     
-    // clear event data
-    aDataEvents = [];
-
     for ( var i = 0; i < sourceData.length; i++ ) {
         if (sourceData[i]) { 									// skip if empty row
             
@@ -50,8 +53,16 @@ function processData(response, that, isAtStart) {
             let descrLong = that.formatLongDescr( descrShort, sourceData[i][3] );
             let spotifyUrl = sourceData[i][5];
             let id = sourceData[i][6];
+            let favorite = false;
 
-            aDataEvents.push({
+            // get "favorite"
+            let fav = aDataEvents.find(o => o.id == id );
+            if (fav) { 
+                // if ID found
+                favorite = fav.favorite;
+            };
+
+            aDataEventsLoaded.push({
                 "band": band,
                 "start": startDate,
                 "end": endDate,
@@ -59,18 +70,21 @@ function processData(response, that, isAtStart) {
                 "shortDescription": descrShort,
                 "description": descrLong,
                 "spotUrl": spotifyUrl,
-                "favorite": false,
+                "favorite": favorite,
                 "id": id
             });							
         }
     }    
 
-    aDataEvents.sort(function(a, b) { return a.start - b.start } );
+    aDataEventsLoaded.sort(function(a, b) { return a.start - b.start } );
+
+    // assign to global data
+    aDataEvents = aDataEventsLoaded;
 
     console.log(aDataEvents);
     
-    createElements();
-    
+    // create elements
+    createElements();   
 
 };
 
@@ -223,10 +237,10 @@ function createNewEvent( eventData, prevDate ) {
     stage = con.stage.find(o => o.shortName == eventData.stage );
 
     newEvent = document.createElement("div");
-    newEvent.setAttribute("class", stage.style );
     newEvent.setAttribute("style", "height:" + eventDimensions.eventHeight + "rem; margin-top:" + eventDimensions.eventMarginTop + "rem");
     newEvent.setAttribute("id", "divEvent_" + eventData.id);
+    newEvent.classList.add("divEvent");
+    newEvent.classList.add(stage.style);
 
     return newEvent;
-
 };
