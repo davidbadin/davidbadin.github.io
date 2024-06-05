@@ -1,21 +1,76 @@
-console.log("Hello world");
+// global data
+let aDataEvents = [];
 
+// onInit
 function onInit() {
 
     // get data
-    loadData();
-
-    // set main block properties
-    setInitProperties();
-    createElements();
+    getAppData();
 
     console.log("end of init");
 
 };
 
-function loadData() {
+function getAppData() {
 
+    let urlMainData = con.apiUri + con.sheetId + "/values/" + con.sheetRangeData + "?key=" + con.apiKey;
+    this.loadData (urlMainData, this.processData, this, true);
 
+};
+
+function loadData(theUrl, callback, that, isAtStart) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText, that, isAtStart);
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.send(null);
+};
+
+function processData(response, that, isAtStart) {
+    
+    let obj = JSON.parse( response );
+    let sourceData = obj.values;
+    var stage;
+    
+    // clear event data
+    aDataEvents = [];
+
+    for ( var i = 0; i < sourceData.length; i++ ) {
+        if (sourceData[i]) { 									// skip if empty row
+            
+            stage = "";
+            stage = con.stage.find(o => o.shortName == sourceData[i][4] );
+            
+            let band = sourceData[i][2];
+            let startDate = that.formatDate( sourceData[i][0] );
+            let endDate = that.formatDate( sourceData[i][1] );
+            let descrShort = that.formatShortDescr( stage.name, startDate, endDate ); 
+            let descrLong = that.formatLongDescr( descrShort, sourceData[i][3] );
+            let spotifyUrl = sourceData[i][5];
+            let id = sourceData[i][6];
+
+            aDataEvents.push({
+                "band": band,
+                "start": startDate,
+                "end": endDate,
+                "stage": stage.shortName,
+                "shortDescription": descrShort,
+                "description": descrLong,
+                "spotUrl": spotifyUrl,
+                "favorite": false,
+                "id": id
+            });							
+        }
+    }    
+
+    aDataEvents.sort(function(a, b) { return a.start - b.start } );
+
+    console.log(aDataEvents);
+    
+    createElements();
+    
 
 };
 
@@ -23,7 +78,7 @@ function setInitProperties() {
     let totalHours;
     
     // get total hours
-    totalHours = con.schedEndTime - con.schedStartTime;
+    totalHours = con.schedEndHour - con.schedStartHour;
     if (totalHours <= 0) {
         totalHours = totalHours + 24;
     }
@@ -34,12 +89,15 @@ function setInitProperties() {
     document.getElementById("divHoursLabel").setAttribute("style", "height:" + cust.mainBlockHeight + "rem");
 };
 
-function createElements() {
+function createElements() {   
+
+    // get initial properties
+    setInitProperties();
 
     // create HOURS LABEL
     createHoursLabel();
 
-    // create EVENTS columns
+    // create EVENT columns
     createEventColumns();
 
 };
@@ -52,8 +110,9 @@ function createHoursLabel() {
     let schedEnd;
 
     parrentDiv = document.getElementById("divHoursLabel");
-    currHour = con.schedStartTime;
-    schedEnd = con.schedEndTime > con.schedStartTime ? con.schedEndTime : con.schedEndTime + 24;
+    parrentDiv.textContent = "";        // clear DIV (remove all child elements)
+    currHour = con.schedStartHour;
+    schedEnd = con.schedEndHour > con.schedStartHour ? con.schedEndHour : con.schedEndHour + 24;
 
     while ( currHour <= schedEnd) {
         newDiv = document.createElement("div");
@@ -70,46 +129,51 @@ function createHoursLabel() {
 function createEventColumns() {
     let parrentDiv;                 // main block for stages/events
     let newCol = {};                // column for a stage
+    let newEvent = {};              // event
     let numberOfStages;             // number of stages                
-    let eventDimensions = {};       // event dimensions (height, top margin)
+    let stageData = {};             // stage name, style,...
+    let currDateStart;              // begin of timeline
+    let currDateEnd;                // end of timeline
+    let prevDate;                   // end of the previous event (same day & stage; initial value = start of timeline)
 
-
-    let startDate;
-    let endDate;
-    let prevDate;
-    
-
+    // initialization
     numberOfStages = con.stage.length;
     parrentDiv = document.getElementById("divEventsBlock");
+    parrentDiv.textContent = "";        // clear DIV (remove all child elements)
     eventDummyHeight = (con.labelHourHeight / 2);
+    currDateStart = getCurrentDayStart( );
+    currDateEnd = getCurrentDayEnd( );
 
-
-    for (let i = 0; i < numberOfStages; i++) {
+    for (let iStage = 0; iStage < numberOfStages; iStage++) {      
 
         // create column for a stage
         newCol = document.createElement("div");
-        createNewCol(newCol, i);
+        createNewCol(newCol, iStage);
+        stageData = con.stage[iStage];
+
+        // get the current date & time - start of the timeline
+        prevDate = currDateStart;
         
-        //create events
-        prevDate = new Date(2024, 0, 1, con.schedStartTime, 0, 0);
+        //create events for this stage
+        for (let iEvent = 0; iEvent < aDataEvents.length; iEvent++) {
+                       
+            if ( aDataEvents[iEvent].stage !== stageData.shortName ) {
+                // skip if it is another stage
+                continue;
+            };
+            
+            if ( aDataEvents[iEvent].start < currDateStart || aDataEvents[iEvent].end > currDateEnd ) {
+                // skip events that are outside the timeline
+                continue;
+            };
 
-        //START LOOP OVER EVENTS IN STAGE i
+            // create single event
+            newEvent = createNewEvent(aDataEvents[iEvent], prevDate);    
 
-        startDate = new Date(2024, 0, 1, 12, 30, 0);
-        endDate = new Date(2024, 0, 1, 13, 0, 0);
-        
-        eventDimensions = getEventDimensions(startDate, endDate, prevDate);
+            newCol.appendChild(newEvent);
+            prevDate = aDataEvents[iEvent].end;
 
-        let newEvent = document.createElement("div");
-        newEvent.setAttribute("class", "divEvent");
-        newEvent.setAttribute("style", "height:" + eventDimensions.eventHeight + "rem; margin-top:" + eventDimensions.eventMarginTop + "rem");
-        //newEvent.setAttribute("id", "divEvent" + i);
-
-        newCol.appendChild(newEvent);
-        prevDate = endDate;
-
-        //ENDLOOP 
-
+        }
 
         parrentDiv.appendChild(newCol);
 
@@ -117,7 +181,7 @@ function createEventColumns() {
 };
 
 function createNewCol(newCol, stageNumber) {
-    
+
     let newEventDummy;              // top dummy header for allignment
 
     // create column for a stage
@@ -147,4 +211,22 @@ function getEventDimensions(startDateTime, endDateTime, prevEndDateTime) {
     eventDimensions.eventMarginTop = con.sizeDefHour * cust.sizeCust * minutesBeforeEvent / 60;
 
     return(eventDimensions);
+};
+
+function createNewEvent( eventData, prevDate ) {
+
+    let newEvent;
+    let eventDimensions;
+    let stage;
+
+    eventDimensions = getEventDimensions(eventData.start, eventData.end, prevDate);
+    stage = con.stage.find(o => o.shortName == eventData.stage );
+
+    newEvent = document.createElement("div");
+    newEvent.setAttribute("class", stage.style );
+    newEvent.setAttribute("style", "height:" + eventDimensions.eventHeight + "rem; margin-top:" + eventDimensions.eventMarginTop + "rem");
+    newEvent.setAttribute("id", "divEvent_" + eventData.id);
+
+    return newEvent;
+
 };

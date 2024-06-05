@@ -86,6 +86,11 @@ body {
     
 }
 
-.divEventDummy {
-
+.divEventStageA {
+    background-color: var(--color-typeA);
+    
+}
+.divEventStageB {
+    background-color: var(--color-typeB);
+    
 }
