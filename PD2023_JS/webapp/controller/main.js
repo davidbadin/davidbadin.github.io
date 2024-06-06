@@ -4,9 +4,25 @@ let aDataEvents = [];
 // onInit
 function onInit(loadData) {
 
+    // get local data
+    if (aDataEvents.length < 1) {
+        aDataEvents = getLocalData(con.localStorageData);
+    };
+
     if (loadData === true) {
-        // get data and create elements
-        getAppData();
+
+        if(aDataEvents) {
+            // display saved data first
+            createElements();
+            
+            // then load data and update
+            getAppData();
+
+        } else {
+            // get data and create elements
+            getAppData();
+        };
+        
     } else {
         // create elements only
         createElements();
@@ -19,21 +35,21 @@ function onInit(loadData) {
 function getAppData() {
 
     let urlMainData = con.apiUri + con.sheetId + "/values/" + con.sheetRangeData + "?key=" + con.apiKey;
-    this.loadData (urlMainData, this.processData, this, true);
+    this.loadData (urlMainData, this.processData);
 
 };
 
-function loadData(theUrl, callback, that, isAtStart) {
+function loadData(theUrl, callback) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() { 
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-            callback(xmlHttp.responseText, that, isAtStart);
+            callback(xmlHttp.responseText);
     }
     xmlHttp.open("GET", theUrl, true); // true for asynchronous 
     xmlHttp.send(null);
 };
 
-function processData(response, that, isAtStart) {
+function processData(response) {
     
     let obj = JSON.parse( response );
     let sourceData = obj.values;
@@ -44,29 +60,37 @@ function processData(response, that, isAtStart) {
         if (sourceData[i]) { 									// skip if empty row
             
             stage = "";
-            stage = con.stage.find(o => o.shortName == sourceData[i][4] );
+            stage = con.stage.find(o => o.id == sourceData[i][4] );
             
             let band = sourceData[i][2];
-            let startDate = that.formatDate( sourceData[i][0] );
-            let endDate = that.formatDate( sourceData[i][1] );
-            let descrShort = that.formatShortDescr( stage.name, startDate, endDate ); 
-            let descrLong = that.formatLongDescr( descrShort, sourceData[i][3] );
+            let startDate = formatDate( sourceData[i][0] );
+            let endDate = formatDate( sourceData[i][1] );
+            let descrShort = formatShortDescr( stage.name, startDate, endDate ); 
+            let descrLong = formatLongDescr( descrShort, sourceData[i][3] );
             let spotifyUrl = sourceData[i][5];
             let id = sourceData[i][6];
             let favorite = false;
 
             // get "favorite"
-            let fav = aDataEvents.find(o => o.id == id );
-            if (fav) { 
-                // if ID found
-                favorite = fav.favorite;
+            if(aDataEvents){
+                let fav = aDataEvents.find(o => o.id == id );
+                if (fav) { 
+                    // if ID found
+                    favorite = fav.favorite;
+                };
             };
+
+            // ==> TO BE DELETED 
+            if(startDate.getMinutes() == 30) {
+                favorite = true;
+            }
+            // <== TO BE DELETED
 
             aDataEventsLoaded.push({
                 "band": band,
                 "start": startDate,
                 "end": endDate,
-                "stage": stage.shortName,
+                "stage": stage.id,
                 "shortDescription": descrShort,
                 "description": descrLong,
                 "spotUrl": spotifyUrl,
@@ -78,13 +102,19 @@ function processData(response, that, isAtStart) {
 
     aDataEventsLoaded.sort(function(a, b) { return a.start - b.start } );
 
-    // assign to global data
-    aDataEvents = aDataEventsLoaded;
+    console.log(aDataEventsLoaded);
 
-    console.log(aDataEvents);
-    
-    // create elements
-    createElements();   
+    // compare with existing global data - if same, do nothing
+    if(JSON.stringify(aDataEventsLoaded) !== JSON.stringify(aDataEvents)) {
+        // assign to global data
+        aDataEvents = aDataEventsLoaded;
+
+        // save data to local
+        setLocalData(con.localStorageData, aDataEvents);
+
+        // create elements
+        createElements();     
+    }      
 
 };
 
@@ -171,7 +201,7 @@ function createEventColumns() {
         //create events for this stage
         for (let iEvent = 0; iEvent < aDataEvents.length; iEvent++) {
                        
-            if ( aDataEvents[iEvent].stage !== stageData.shortName ) {
+            if ( aDataEvents[iEvent].stage !== stageData.id ) {
                 // skip if it is another stage
                 continue;
             };
@@ -192,6 +222,7 @@ function createEventColumns() {
         parrentDiv.appendChild(newCol);
 
     }
+
 };
 
 function createNewCol(newCol, stageNumber) {
@@ -229,18 +260,74 @@ function getEventDimensions(startDateTime, endDateTime, prevEndDateTime) {
 
 function createNewEvent( eventData, prevDate ) {
 
-    let newEvent;
+    let eventBlock;
+    let textBlock;
+    let topLineBlock;
+    let favBlock;
+    let favText;
+    let titleBlock;
+    let titleText;
+    let descrBlock;
+    let descrText;
+    
     let eventDimensions;
     let stage;
+   
 
     eventDimensions = getEventDimensions(eventData.start, eventData.end, prevDate);
-    stage = con.stage.find(o => o.shortName == eventData.stage );
+    stage = con.stage.find(o => o.id == eventData.stage );
 
-    newEvent = document.createElement("div");
-    newEvent.setAttribute("style", "height:" + eventDimensions.eventHeight + "rem; margin-top:" + eventDimensions.eventMarginTop + "rem");
-    newEvent.setAttribute("id", "divEvent_" + eventData.id);
-    newEvent.classList.add("divEvent");
-    newEvent.classList.add(stage.style);
+    // event block
+    eventBlock = document.createElement("div");
+    eventBlock.setAttribute("style", "height:" + eventDimensions.eventHeight + "rem; margin-top:" + eventDimensions.eventMarginTop + "rem");
+    eventBlock.setAttribute("id", "divEvent_" + eventData.id);
+    eventBlock.classList.add("divEvent");
+    eventBlock.classList.add(stage.style);
 
-    return newEvent;
+    
+
+    // text block
+    textBlock = document.createElement("div");
+    textBlock.classList.add("divEventContent");
+
+    // top line (fav icon + title)
+    topLineBlock = document.createElement("div");
+    topLineBlock.classList.add("divEventTopLine");
+
+    // favorite icon
+    favBlock = document.createElement("div");
+    favBlock.classList.add("divEventFav");
+    favText = document.createElement("span");
+    favText.classList.add("spanEventFav");
+    favText.classList.add("material-icons");
+    if (eventData.favorite == true) {
+        favText.textContent = "favorite";
+    } else {
+        favText.textContent = "";
+    }
+    favBlock.appendChild(favText);
+
+    // title
+    titleBlock = document.createElement("div");
+    titleBlock.classList.add("divEventTitle");
+    titleText = document.createElement("span");
+    titleText.classList.add("spanEventTitle");
+    titleText.textContent = eventData.band;
+    titleBlock.appendChild(titleText);
+
+    // description
+    descrBlock = document.createElement("div");
+    descrBlock.classList.add("divEventDescr");
+    descrText = document.createElement("span");
+    descrText.classList.add("spanEventDescr");
+    descrText.textContent = eventData.shortDescription;
+    descrBlock.appendChild(descrText);
+
+    topLineBlock.appendChild(favBlock);
+    topLineBlock.appendChild(titleBlock);
+    textBlock.appendChild(topLineBlock);
+    textBlock.appendChild(descrBlock);
+    eventBlock.appendChild(textBlock);
+
+    return eventBlock;
 };

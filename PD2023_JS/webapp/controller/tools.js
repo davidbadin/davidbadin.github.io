@@ -75,3 +75,22 @@ function getCurrentDayEnd( ) {
     return currDate;
 
 };
+
+function getLocalData(localDataName) {
+
+    let localData = [];
+    
+    localData = JSON.parse(localStorage.getItem(localDataName));
+
+    // string to date
+    for (let i = 0; i < localData.length; i++) {
+        localData[i].start = new Date(localData[i].start);
+        localData[i].end = new Date(localData[i].end);
+    };
+
+    return localData;
+};
+
+function setLocalData(localDataName, data) {
+    localStorage.setItem(localDataName, JSON.stringify(data));  
+};

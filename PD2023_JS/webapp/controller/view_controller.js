@@ -3,13 +3,18 @@ function createTopButtons() {
 
     let topButtonsDiv;
     let newButton;
+    let buttonText;
 
     topButtonsDiv = document.getElementById("divTopButtons");
 
     for (let i = 0; i < con.days.length; i++) {
         newButton = document.createElement("button");
         newButton.setAttribute("id", "buttonDay" + con.days[i].number );
-        newButton.textContent = con.days[i].name;
+
+        textButton = document.createElement("span");
+        textButton.classList.add("spanDayButton");
+        textButton.textContent = con.days[i].name;
+        newButton.appendChild(textButton);
 
         // set active button
         if (cust.currDay == con.days[i].number) {

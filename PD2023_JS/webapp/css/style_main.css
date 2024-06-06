@@ -50,6 +50,10 @@ button.buttonActive {
     background-color: var(--color-typeC);
 }
 
+.spanspanDayButton {
+
+}
+
 
 /* MAIN BLOCK*/
 .divMainBlock {
@@ -75,7 +79,7 @@ button.buttonActive {
     font-size: 1rem;
 }
 
-.divEventsBlock {
+.divEventsMainBlock {
     width: auto;
     flex-grow: 1;
     display: flex;
@@ -90,6 +94,34 @@ button.buttonActive {
     
 }
 
+.divEventContent {
+    padding: 0.5rem;
+}
+.divEventTopLine {
+    display: flex;
+    flex-direction: row;
+}
+.divEventFav {
+    display: flex;
+    align-items: center;
+}
+.divEventTitle {
+    display: flex;
+    align-items: center;
+}
+.divEventDescr {}
+
+span {
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+.spanEventFav {}
+.spanEventTitle {
+    font-weight: bold;
+}
+.spanEventDescr {}
+
+/* STAGE CUSTUMIZING */
 .divEvent.stageA {
     background-color: var(--color-typeA);
     
@@ -99,3 +131,4 @@ button.buttonActive {
     background-color: var(--color-typeB);
     
 }
+/* STAGE CUSTUMIZING */

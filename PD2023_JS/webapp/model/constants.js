@@ -34,12 +34,12 @@ const con = {
     stage: [
         {
             name: "A stage",
-            shortName: "A",
+            id: "A",
             style: "stageA"
         },
         {
             name: "B stage",
-            shortName: "B",
+            id: "B",
             style: "stageB"
         }
     ],
@@ -49,6 +49,9 @@ const con = {
     sheetId: "1YuHNmbkh-oGDLgRFZjmwuJaMhWU-iAqsi-MzGUpNS-Q",
     apiKey: "AIzaSyBIHleeVgn137sWxmlCGvFQjewrv-ueXMI",
     sheetRangeData: "'PD2023'!A2:G100",
+
+    // local data
+    localStorageData: "pd2023_data",
 
     // technical
     sizeDefHour: 6,
