@@ -5,6 +5,9 @@ let aDataEvents = [];
 // onInit
 function onInit(loadData) {
 
+    // get device type
+    setDeviceProperties();
+
     // get local data
     if (aDataEvents.length < 1) {
         aDataEvents = getLocalData(con.localStorageData);
@@ -28,6 +31,9 @@ function onInit(loadData) {
         // create elements only
         createElements();
     };
+
+    // scroll to the current hour
+    scrollToHour();
 
     console.log("end of init");
 
@@ -154,6 +160,7 @@ function createHoursLabel() {
     let newSpan;
     let currHour;
     let schedEnd;
+    let hour;
 
     parrentDiv = document.getElementById("divHoursLabel");
     parrentDiv.textContent = "";        // clear DIV (remove all child elements)
@@ -163,10 +170,13 @@ function createHoursLabel() {
     while ( currHour <= schedEnd) {
         newDiv = document.createElement("div");
         newDiv.setAttribute("class", "divHourLabel");
+        newDiv.setAttribute("tabindex", "-1");
         newSpan = document.createElement("span");
-        newSpan.textContent = currHour < 24 ? currHour : currHour - 24;
+        hour =  currHour < 24 ? currHour : currHour - 24;
+        newSpan.textContent = hour;
         
         newDiv.appendChild(newSpan);
+        newDiv.setAttribute("id", "hourLabel_" + hour);
         parrentDiv.appendChild(newDiv);
         currHour++;
     }
@@ -339,4 +349,33 @@ function createNewEvent( eventData, prevDate ) {
     eventBlock.appendChild(textBlock);
 
     return eventBlock;
+};
+
+function setDeviceProperties() {
+    if (detectDeviceType() === 'Mobile') {
+        cust.sizeCust = 4.5;
+        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--font-size", "x-large"); })
+        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--font-size-title", "xx-large"); })
+        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--title-height", "5rem"); })
+    } else {
+        cust.sizeCust = 1.5;
+        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--font-size", "medium"); })
+        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--font-size-title", "large"); })
+        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--title-height", "3rem"); })
+    };
+};
+
+function scrollToHour() {
+
+    let nowDate = new Date();
+    let currDateStart;
+    let currDateEnd;
+
+    currDateStart = getCurrentDayStart( );
+    currDateEnd = getCurrentDayEnd( );
+
+    if ( ( nowDate >= currDateStart ) && ( nowDate <= currDateEnd ) ) {
+        console.log(nowDate);
+        document.getElementById("hourLabel_" + nowDate.getHours()).scrollIntoView({ behavior: "smooth", block: "center" });
+    };
 };

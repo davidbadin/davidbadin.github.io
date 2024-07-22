@@ -104,3 +104,7 @@ function isValidDate(date) {
         return false;
     }
 };
+
+function detectDeviceType() {
+    return ( /Mobile|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop' )
+};
