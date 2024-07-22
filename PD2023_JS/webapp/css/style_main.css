@@ -126,6 +126,7 @@ button.buttonActive {
 span {
     font-family:Arial, Helvetica, sans-serif;
     white-space: pre-line;
+    font-size: x-large;
 }
 
 .spanEventTitle {

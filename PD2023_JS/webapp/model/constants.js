@@ -61,7 +61,7 @@ const con = {
 
 let cust = {
     // technical
-    sizeCust: 1.5,
+    sizeCust: 4.5,
     mainBlockHeight: 0,
     currDay: 1
 }
