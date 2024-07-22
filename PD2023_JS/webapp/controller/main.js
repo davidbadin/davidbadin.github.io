@@ -67,7 +67,7 @@ function processData(response) {
             let startDate = formatDate( sourceData[i][0] );
             let endDate = formatDate( sourceData[i][1] );
             let descrShort = formatShortDescr( stage.name, startDate, endDate ); 
-            let descrLong = formatLongDescr( descrShort, sourceData[i][3] );
+            let descrLong = sourceData[i][3];
             let spotifyUrl = sourceData[i][5];
             let id = sourceData[i][6];
             let favorite = false;
@@ -79,25 +79,26 @@ function processData(response) {
                     // if ID found
                     favorite = fav.favorite;
                 };
-            };
+            };       
 
-            // ==> TO BE DELETED 
-            if(startDate.getMinutes() == 30) {
-                favorite = true;
-            }
-            // <== TO BE DELETED
-
-            aDataEventsLoaded.push({
-                "band": band,
-                "start": startDate,
-                "end": endDate,
-                "stage": stage.id,
-                "shortDescription": descrShort,
-                "description": descrLong,
-                "spotUrl": spotifyUrl,
-                "favorite": favorite,
-                "id": id
-            });							
+            if ( 
+                isValidDate(startDate)
+                && isValidDate(endDate)
+                && id != null
+                && stage.id != null 
+            ) {
+                aDataEventsLoaded.push({
+                    "band": band,
+                    "start": startDate,
+                    "end": endDate,
+                    "stage": stage.id,
+                    "shortDescription": descrShort,
+                    "description": descrLong,
+                    "spotUrl": spotifyUrl,
+                    "favorite": favorite,
+                    "id": id
+                });		
+            }					
         }
     }    
 
@@ -180,6 +181,7 @@ function createEventColumns() {
     let currDateStart;              // begin of timeline
     let currDateEnd;                // end of timeline
     let prevDate;                   // end of the previous event (same day & stage; initial value = start of timeline)
+    let stageCreated;               // flag - stage was created already
 
     // initialization
     numberOfStages = con.stage.length;
@@ -191,13 +193,11 @@ function createEventColumns() {
 
     for (let iStage = 0; iStage < numberOfStages; iStage++) {      
 
-        // create column for a stage
-        newCol = document.createElement("div");
-        createNewCol(newCol, iStage);
-        stageData = con.stage[iStage];
-
         // get the current date & time - start of the timeline
         prevDate = currDateStart;
+        stageCreated = false;
+        newCol = null;
+        stageData = con.stage[iStage];
         
         //create events for this stage
         for (let iEvent = 0; iEvent < aDataEvents.length; iEvent++) {
@@ -212,23 +212,32 @@ function createEventColumns() {
                 continue;
             };
 
+            // create column for a stage
+            if ( stageCreated == false ) {
+                newCol = document.createElement("div");
+                createNewCol(newCol, iStage);
+                stageCreated = true;
+            };
+
             // create single event
-            newEvent = createNewEvent(aDataEvents[iEvent], prevDate);    
+            newEvent = createNewEvent(aDataEvents[iEvent], prevDate);  
+            newEvent.setAttribute("onclick", "onClickEvent(" + aDataEvents[iEvent].id + ")");
 
             newCol.appendChild(newEvent);
             prevDate = aDataEvents[iEvent].end;
 
         }
 
-        parrentDiv.appendChild(newCol);
-
+        if ( newCol !== null ) {
+            parrentDiv.appendChild(newCol);
+        };
     }
 
 };
 
 function createNewCol(newCol, stageNumber) {
 
-    let newEventDummy;              // top dummy header for allignment
+    let newEventDummy;              // top dummy header for allignment issues
 
     // create column for a stage
     newCol.setAttribute("class", "divStageBlock");
@@ -285,8 +294,6 @@ function createNewEvent( eventData, prevDate ) {
     eventBlock.classList.add("divEvent");
     eventBlock.classList.add(stage.style);
 
-    
-
     // text block
     textBlock = document.createElement("div");
     textBlock.classList.add("divEventContent");
@@ -300,6 +307,7 @@ function createNewEvent( eventData, prevDate ) {
     favBlock.classList.add("divEventFav");
     favText = document.createElement("span");
     favText.classList.add("spanEventFav");
+    favText.setAttribute("id", "divEventFav_" + eventData.id);
     favText.classList.add("material-icons");
     if (eventData.favorite == true) {
         favText.textContent = "favorite";

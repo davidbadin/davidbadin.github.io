@@ -5,8 +5,8 @@
     --color-black: #1d1d1d;
     --color-darkgrey: #3a3a3a;
     --color-lightgrey: #b1b1b1;
-    --color-typeA: #28525f;
-    --color-typeB: #ed5151;
+    --color-typeA: #e03c57;
+    --color-typeB: #12697b;
     --color-typeC: #e9dd30;
 }
 
@@ -29,7 +29,8 @@ body {
 }
 
 .textHeader {
-    color: #e9dd30;
+    color: var(--color-typeC);
+    font-weight: bold;
 }
 
 .divTopButtons {
@@ -39,7 +40,7 @@ body {
 }
 
 button {
-    background-color: #ed5151;
+    background-color: var(--color-typeA);
     width: 20%;
     min-width: 3rem;
     max-width: 100px;
@@ -48,9 +49,10 @@ button {
 
 button.buttonActive {
     background-color: var(--color-typeC);
+    font-weight: bold;
 }
 
-.spanspanDayButton {
+.spanDayButton {
 
 }
 
@@ -81,25 +83,29 @@ button.buttonActive {
 
 .divEventsMainBlock {
     width: auto;
-    flex-grow: 1;
+    flex: 1;
     display: flex;
 }
 
 .divStageBlock {
-    flex-grow: 1;
+    flex: 1;
 }
 
 .divEvent {
     background-color: var(--color-lightgrey);
-    
+    cursor: pointer;    
+    display: flex;
 }
 
 .divEventContent {
     padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
 }
 .divEventTopLine {
     display: flex;
     flex-direction: row;
+    padding-top: 0.25rem;
 }
 .divEventFav {
     display: flex;
@@ -108,17 +114,24 @@ button.buttonActive {
 .divEventTitle {
     display: flex;
     align-items: center;
+    padding-left: 0.25rem;
 }
-.divEventDescr {}
+.divEventDescr {
+    padding-top: 0.75rem;
+    padding-left: 0.25rem;
+    display: flex;
+    font-style: italic;
+}
 
 span {
     font-family:Arial, Helvetica, sans-serif;
+    white-space: pre-line;
 }
 
-.spanEventFav {}
 .spanEventTitle {
     font-weight: bold;
 }
+
 .spanEventDescr {}
 
 /* STAGE CUSTUMIZING */
@@ -131,4 +144,45 @@ span {
     background-color: var(--color-typeB);
     
 }
-/* STAGE CUSTUMIZING */
+/* POPUP */
+.divPopupEvent {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px
+        rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    visibility: hidden;
+    flex-direction: column;
+}
+
+.divPopupEventComm {
+    background-color: var(--color-black);
+    display: flex;
+}
+
+.divPopupEventTitle {
+    color: var(--color-typeC);
+    padding-bottom: 0.75rem;
+}
+
+.divPopupEventSubtitle {
+    color: var(--color-lightgrey);
+    padding-bottom: 1.25rem;
+}
+
+.divPopupEventBody {
+    color: var(--color-lightgrey);
+}
+
+.divPopupEventButtons {
+    justify-content: flex-end;
+    padding-top: 2rem;
+}
+
+button.buttonPopup {
+    background-color: var(--color-typeC);
+}

@@ -32,10 +32,6 @@ function formatShortDescr( stage, startDate, endDate ) {
     return startTime + "-" + endTime + ", " + stage;
 };
 
-function formatLongDescr( shortDescr, longDescr) {
-    return shortDescr + "\n" + "\n" + longDescr;
-};
-
 function getCurrentDayStart( ) {
 
     let currDate = new Date( 
@@ -81,16 +77,30 @@ function getLocalData(localDataName) {
     let localData = [];
     
     localData = JSON.parse(localStorage.getItem(localDataName));
-
-    // string to date
-    for (let i = 0; i < localData.length; i++) {
-        localData[i].start = new Date(localData[i].start);
-        localData[i].end = new Date(localData[i].end);
-    };
+    
+    if (localData) {
+        for (let i = 0; i < localData.length; i++) {
+            // string to date
+            localData[i].start = new Date(localData[i].start);
+            localData[i].end = new Date(localData[i].end);
+        };
+    }
 
     return localData;
 };
 
 function setLocalData(localDataName, data) {
     localStorage.setItem(localDataName, JSON.stringify(data));  
+};
+
+function isValidDate(date) {
+    if (Object.prototype.toString.call(date) === "[object Date]") {
+        if ( isNaN(date.getTime()) ) { 
+            return false;
+        } else {
+            return true;
+        };
+    } else {
+        return false;
+    }
 };
