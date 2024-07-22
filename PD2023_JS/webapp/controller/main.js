@@ -353,10 +353,10 @@ function createNewEvent( eventData, prevDate ) {
 
 function setDeviceProperties() {
     if (detectDeviceType() === 'Mobile') {
-        cust.sizeCust = 4.5;
-        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--font-size", "x-large"); })
-        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--font-size-title", "xx-large"); })
-        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--title-height", "5rem"); })
+        cust.sizeCust = 4;
+        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--font-size", "xx-large"); })
+        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--font-size-title", "xxx-large"); })
+        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--title-height", "6rem"); })
     } else {
         cust.sizeCust = 1.5;
         window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--font-size", "medium"); })

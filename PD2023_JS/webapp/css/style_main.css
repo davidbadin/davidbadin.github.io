@@ -44,12 +44,16 @@ body {
     display: flex;
 }
 
-button {
+.buttonDay {
     background-color: var(--color-typeA);
-    width: 20%;
-    min-width: 3rem;
-    max-width: 100px;
-    margin: 0.3125rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin: 0.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
 }
 
 button.buttonActive {
@@ -66,6 +70,7 @@ button.buttonActive {
     position: sticky;
     top: 0;
     background-color: var(--color-darkgrey);
+    padding-bottom: 1rem;
  }
 
 

@@ -9,6 +9,7 @@ function createTopButtons() {
     for (let i = 0; i < con.days.length; i++) {
         newButton = document.createElement("button");
         newButton.setAttribute("id", "buttonDay" + con.days[i].number );
+        newButton.setAttribute("class", "buttonDay");
 
         textButton = document.createElement("span");
         textButton.classList.add("spanDayButton");
