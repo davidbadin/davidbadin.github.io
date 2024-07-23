@@ -183,11 +183,12 @@ span {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    width: 75%;
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 0 20px
         rgba(0, 0, 0, 0.3);
-    z-index: 1000;
+    z-index: 500;
     visibility: hidden;
     flex-direction: column;
 }
@@ -204,7 +205,7 @@ span {
 
 .divPopupEventSubtitle {
     color: var(--color-lightgrey);
-    padding-bottom: 1.25rem;
+    margin-bottom: 5rem;
 }
 
 .divPopupEventBody {
@@ -213,7 +214,7 @@ span {
 
 .divPopupEventButtons {
     justify-content: flex-end;
-    margin-top: 5rem;
+    margin-top: 8rem;
 }
 
 button.buttonPopup {
