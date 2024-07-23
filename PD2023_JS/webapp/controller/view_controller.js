@@ -82,9 +82,9 @@ function onClickEvent(eventId) {
         document.getElementById("spanPopupEventBody").textContent = eventData.description;
         // favorite button
         if (eventData.favorite) {
-            document.getElementById("buttonPopupFav").textContent = "favorite";
+            document.getElementById("spanPopupFav").textContent = "favorite";
         } else {
-            document.getElementById("buttonPopupFav").textContent = "favorite_border";
+            document.getElementById("spanPopupFav").textContent = "favorite_border";
         }
         // Spotify button
         if (eventData.spotUrl) {
@@ -108,12 +108,12 @@ function onClickFav() {
         if (eventIndex >= 0 ) {
             if (aDataEvents[eventIndex].favorite) {
                 // unset favorite
-                document.getElementById("buttonPopupFav").textContent = "favorite_border";
+                document.getElementById("spanPopupFav").textContent = "favorite_border";
                 document.getElementById("divEventFav_" + eventId).textContent = "";
                 aDataEvents[eventIndex].favorite = false;
             } else {
                 // set favorite
-                document.getElementById("buttonPopupFav").textContent = "favorite";
+                document.getElementById("spanPopupFav").textContent = "favorite";
                 document.getElementById("divEventFav_" + eventId).textContent = "favorite";
                 aDataEvents[eventIndex].favorite = true;
             }

@@ -8,10 +8,15 @@
     --color-typeA: #e03c57;
     --color-typeB: #12697b;
     --color-typeC: #e9dd30;
+    --color-typeA-highlight: #f27172;
+    --color-typeB-highlight: #4d8fa2;
 
-    --font-size: medium;
-    --font-size-title: large;
+    --font-size: 1rem;
+    --font-size-title: 1.5rem;
     --title-height: 3rem;
+    --hoursLabelWidth: 1.5rem;
+    --popup-button-font-size: 1.5rem;
+    --hour-label-padding-right: 0.75rem;
 }
 
 /* GENERAL */
@@ -30,6 +35,7 @@ body {
     width: 100%;
     height: var(--title-height);
     display: flex;
+    margin-bottom: 0.5rem;
 }
 
 .textHeader {
@@ -81,7 +87,7 @@ button.buttonActive {
 }
 
 .divHoursLabel {
-    width: 1.5rem;
+    width: var(--hoursLabelWidth);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -94,8 +100,9 @@ button.buttonActive {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding-right: 0.25rem;
+    padding-right: var(--hour-label-padding-right);
     font-size: 1rem;
+    font-weight: bold;
 }
 
 .divEventsMainBlock {
@@ -155,20 +162,27 @@ span {
 /* STAGE CUSTUMIZING */
 .divEvent.stageA {
     background-color: var(--color-typeA);
-    
 }
 
 .divEvent.stageB {
     background-color: var(--color-typeB);
-    
 }
+
+.divEvent.stageA.eventHighlighted {
+    background-color: var(--color-typeA-highlight);
+}
+
+.divEvent.stageB.eventHighlighted {
+    background-color: var(--color-typeB-highlight);
+}
+
 /* POPUP */
 .divPopupEvent {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    padding: 3rem;
+    padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 0 20px
         rgba(0, 0, 0, 0.3);
@@ -198,9 +212,14 @@ span {
 
 .divPopupEventButtons {
     justify-content: flex-end;
-    padding-top: 2rem;
+    margin-top: 5rem;
 }
 
 button.buttonPopup {
     background-color: var(--color-typeC);
+    margin: 0.3rem;
+}
+
+.spanPopupButton {
+    font-size: var(--popup-button-font-size);
 }

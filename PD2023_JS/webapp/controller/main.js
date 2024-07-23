@@ -32,8 +32,10 @@ function onInit(loadData) {
         createElements();
     };
 
-    // scroll to the current hour
-    scrollToHour();
+    // scroll to the current hour: 
+    // loadData == false => not initial run of app => scroll to the current event if the current day
+    // loadData == true => initial run => as above; if not: scroll to first event of the first day
+    scrollToHour(loadData);
 
     console.log("end of init");
 
@@ -292,7 +294,8 @@ function createNewEvent( eventData, prevDate ) {
     
     let eventDimensions;
     let stage;
-   
+
+    let nowDate = new Date();
 
     eventDimensions = getEventDimensions(eventData.start, eventData.end, prevDate);
     stage = con.stage.find(o => o.id == eventData.stage );
@@ -303,7 +306,11 @@ function createNewEvent( eventData, prevDate ) {
     eventBlock.setAttribute("id", "divEvent_" + eventData.id);
     eventBlock.classList.add("divEvent");
     eventBlock.classList.add(stage.style);
-
+    // highlight the event that is running right now
+    if ( ( nowDate >= eventData.start ) && ( nowDate <= eventData.end ) ) {
+        eventBlock.classList.add("eventHighlighted");
+    }
+    
     // text block
     textBlock = document.createElement("div");
     textBlock.classList.add("divEventContent");
@@ -352,20 +359,30 @@ function createNewEvent( eventData, prevDate ) {
 };
 
 function setDeviceProperties() {
+
+    let deviceProp;
+
     if (detectDeviceType() === 'Mobile') {
-        cust.sizeCust = 4;
-        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--font-size", "xx-large"); })
-        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--font-size-title", "xxx-large"); })
-        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--title-height", "6rem"); })
+        deviceProp = con.format.find(o => o.device === "mobile" );
     } else {
-        cust.sizeCust = 1.5;
-        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--font-size", "medium"); })
-        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--font-size-title", "large"); })
-        window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty("--title-height", "3rem"); })
+        deviceProp = con.format.find(o => o.device === "desktop" );
     };
+
+    cust.sizeCust = deviceProp.sizeCust;
+    setCssProp("--font-size", deviceProp.fontSize);
+    setCssProp("--font-size-title", deviceProp.fontSizeTitle); 
+    setCssProp("--title-height", deviceProp.titleHeight); 
+    setCssProp("--hoursLabelWidth", deviceProp.hoursLabelWidth);
+    setCssProp("--popup-button-font-size", deviceProp.popupButtonFontSize);
+    setCssProp("--hour-label-padding-right", deviceProp.hourLabelPaddingRight);
+
 };
 
-function scrollToHour() {
+function setCssProp(name, value) {
+    window.addEventListener('DOMContentLoaded', function() { document.documentElement.style.setProperty(name, value); })
+};
+
+function scrollToHour(initialRun) {
 
     let nowDate = new Date();
     let currDateStart;
@@ -375,7 +392,11 @@ function scrollToHour() {
     currDateEnd = getCurrentDayEnd( );
 
     if ( ( nowDate >= currDateStart ) && ( nowDate <= currDateEnd ) ) {
-        console.log(nowDate);
         document.getElementById("hourLabel_" + nowDate.getHours()).scrollIntoView({ behavior: "smooth", block: "center" });
+    } else { 
+        if (initialRun) {
+            // if initial run of the app: scroll to the first evetn of the first day 
+            document.getElementById("hourLabel_" + con.firstDayHourFocus).scrollIntoView({ behavior: "smooth", block: "center" });
+        }
     };
 };
