@@ -61,9 +61,10 @@ const con = {
             sizeCust: 4,
             fontSize: "2rem",
             fontSizeTitle: "3rem",
+            fontSizePopup: "3rem",
             titleHeight: "6rem",
             hoursLabelWidth: "4rem",
-            popupButtonFontSize: "3rem",
+            popupButtonFontSize: "5rem",
             hourLabelPaddingRight: "1rem"
         },
         {
@@ -71,9 +72,10 @@ const con = {
             sizeCust: 2,
             fontSize: "1rem",
             fontSizeTitle: "1.5rem",
+            fontSizePopup: "1.25rem",
             titleHeight: "3rem",
             hoursLabelWidth: "2rem",
-            popupButtonFontSize: "1.5rem",
+            popupButtonFontSize: "2.5rem",
             hourLabelPaddingRight: "0.75rem"
         },
     ],

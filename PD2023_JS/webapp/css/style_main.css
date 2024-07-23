@@ -13,6 +13,7 @@
 
     --font-size: 1rem;
     --font-size-title: 1.5rem;
+    --font-size-popup: 1.25rem;
     --title-height: 3rem;
     --hoursLabelWidth: 1.5rem;
     --popup-button-font-size: 1.5rem;
@@ -217,9 +218,13 @@ span {
 
 button.buttonPopup {
     background-color: var(--color-typeC);
-    margin: 0.3rem;
+    margin: 0.5rem;
 }
 
 .spanPopupButton {
     font-size: var(--popup-button-font-size);
+}
+
+.spanPopupText {
+    font-size: var(--font-size-popup);
 }

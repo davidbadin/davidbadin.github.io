@@ -369,6 +369,7 @@ function setDeviceProperties() {
     cust.sizeCust = deviceProp.sizeCust;
     setCssProp("--font-size", deviceProp.fontSize);
     setCssProp("--font-size-title", deviceProp.fontSizeTitle); 
+    setCssProp("--font-size-popup", deviceProp.fontSizePopup);
     setCssProp("--title-height", deviceProp.titleHeight); 
     setCssProp("--hoursLabelWidth", deviceProp.hoursLabelWidth);
     setCssProp("--popup-button-font-size", deviceProp.popupButtonFontSize);
