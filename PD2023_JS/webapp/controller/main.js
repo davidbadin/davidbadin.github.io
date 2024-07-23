@@ -2,7 +2,7 @@
 let aDataEvents = [];
 
 
-// onInit
+// onInit: loadData = initial run of the app
 function onInit(loadData) {
 
     // get device type
@@ -17,48 +17,41 @@ function onInit(loadData) {
 
         if(aDataEvents) {
             // display saved data first
-            createElements();
+            createElements(true);
             
             // then load data and update
-            getAppData();
+            getAppData(false);
 
         } else {
             // get data and create elements
-            getAppData();
+            getAppData(true);
         };
         
     } else {
         // create elements only
-        createElements();
+        createElements(false);
     };
 
-    // scroll to the current hour: 
-    // loadData == false => not initial run of app => scroll to the current event if the current day
-    // loadData == true => initial run => as above; if not: scroll to first event of the first day
-    scrollToHour(loadData);
-
-    console.log("end of init");
-
 };
 
-function getAppData() {
+function getAppData(initialRun) {
 
     let urlMainData = con.apiUri + con.sheetId + "/values/" + con.sheetRangeData + "?key=" + con.apiKey;
-    this.loadData (urlMainData, this.processData);
+    this.loadData (urlMainData, this.processData, initialRun);
 
 };
 
-function loadData(theUrl, callback) {
+function loadData(theUrl, callback, initialRun) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() { 
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-            callback(xmlHttp.responseText);
+            callback(xmlHttp.responseText, initialRun);
     }
     xmlHttp.open("GET", theUrl, true); // true for asynchronous 
     xmlHttp.send(null);
 };
 
-function processData(response) {
+function processData(response, initialRun) {
     
     let obj = JSON.parse( response );
     let sourceData = obj.values;
@@ -123,7 +116,7 @@ function processData(response) {
         setLocalData(con.localStorageData, aDataEvents);
 
         // create elements
-        createElements();     
+        createElements(initialRun);     
     }      
 
 };
@@ -143,7 +136,7 @@ function setInitProperties() {
     document.getElementById("divHoursLabel").setAttribute("style", "height:" + cust.mainBlockHeight + "rem");
 };
 
-function createElements() {   
+function createElements(initialRun) {   
 
     // get initial properties
     setInitProperties();
@@ -153,6 +146,11 @@ function createElements() {
 
     // create EVENT columns
     createEventColumns();
+
+    // scroll to the current hour: 
+        // initialRun == false => scroll to the current event if the current day
+        // initialRun == true => as above; if not: scroll to first event of the first day
+    scrollToHour(initialRun);
 
 };
 
@@ -395,7 +393,7 @@ function scrollToHour(initialRun) {
         document.getElementById("hourLabel_" + nowDate.getHours()).scrollIntoView({ behavior: "smooth", block: "center" });
     } else { 
         if (initialRun) {
-            // if initial run of the app: scroll to the first evetn of the first day 
+            // if initial run of the app: scroll to the first event of the first day 
             document.getElementById("hourLabel_" + con.firstDayHourFocus).scrollIntoView({ behavior: "smooth", block: "center" });
         }
     };
