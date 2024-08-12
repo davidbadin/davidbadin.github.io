@@ -64,8 +64,6 @@ function onDayPress(day) {
 // POPUP controller:
 function onClickEvent(eventId) { 
     
-    console.log("onClick " + eventId);
-
     // get event data
     let eventData = aDataEvents.find(o => o.id == eventId );
     if (eventData) {

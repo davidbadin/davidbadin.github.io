@@ -105,8 +105,6 @@ function processData(response, initialRun) {
 
     aDataEventsLoaded.sort(function(a, b) { return a.start - b.start } );
 
-    console.log(aDataEventsLoaded);
-
     // compare with existing global data - if same, do nothing
     if(JSON.stringify(aDataEventsLoaded) !== JSON.stringify(aDataEvents)) {
         // assign to global data
