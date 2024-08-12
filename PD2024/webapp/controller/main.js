@@ -368,6 +368,7 @@ function setDeviceProperties() {
     setCssProp("--font-size", deviceProp.fontSize);
     setCssProp("--font-size-title", deviceProp.fontSizeTitle); 
     setCssProp("--font-size-popup", deviceProp.fontSizePopup);
+    setCssProp("--font-size-spotify-logo", deviceProp.fontSizeSpotifyLogo);
     setCssProp("--title-height", deviceProp.titleHeight); 
     setCssProp("--hoursLabelWidth", deviceProp.hoursLabelWidth);
     setCssProp("--popup-button-font-size", deviceProp.popupButtonFontSize);

@@ -14,6 +14,7 @@
     --font-size: 1rem;
     --font-size-title: 1.5rem;
     --font-size-popup: 1.25rem;
+    --font-size-spotify-logo: 1.5rem;
     --title-height: 3rem;
     --hoursLabelWidth: 1.5rem;
     --popup-button-font-size: 1.5rem;
@@ -60,22 +61,32 @@ body {
 
 .buttonDay {
     background-color: var(--color-typeA);
-    padding-left: 1rem;
-    padding-right: 1rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
     margin: 0.4rem;
     display: flex;
     align-items: center;
     justify-content: center; 
 }
 
-#spanDaySpotify {
-    font-family: 'Material Icons';
+.spanDayButton {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
 
-#spanDaySpotifyBlank {
-    visibility: hidden;
+.spanSpotifyButton {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+}
+
+#iSpotifyLogo {
+    font-size: var(--font-size-spotify-logo);
+    margin-left: 1rem;
+}
+
+#spanDaySpotifyText {
+    margin-left: 0.5rem;
 }
 
 button.buttonActive {
@@ -232,6 +243,10 @@ button.buttonPopup {
 }
 
 .spanPopupButton {
+    font-size: var(--popup-button-font-size);
+}
+
+.fa.spanPopupButton {
     font-size: var(--popup-button-font-size);
 }
 
