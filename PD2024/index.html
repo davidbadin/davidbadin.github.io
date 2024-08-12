@@ -17,7 +17,15 @@
             <div class="divHeader center">
                 <span id="textHeaderTitle" class="textHeader"></span>
             </div>
-            <div class="divTopButtons center" id="divTopButtons"></div>
+            <div class="divTopButtons" id="divTopButtons">
+                <div class="divTopButtons center" id="divTopDaysButtons"></div>
+                <div class="divTopButtons divTopSpotifyButton" id="divTopSpotifyButtons">
+                    <button id="buttonSpotify" onclick="onClickSpotifyPlaylist()" class="buttonDay buttonSpotify">
+                        <span id="spanDaySpotify" class="spanSpotifyButton">music_note</span>
+                        <span id="spanDaySpotifyBlank" class="spanSpotifyButton">I</span>
+                    </button>
+                </div>
+            </div>
         </div>
         <div id="divMainBlock" class="divMainBlock">
             <div id="divHoursLabel" class="divHoursLabel"></div>

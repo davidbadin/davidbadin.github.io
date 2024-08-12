@@ -51,6 +51,13 @@ body {
     display: flex;
 }
 
+.divTopSpotifyButton {
+    flex-basis: 0;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+}
+
 .buttonDay {
     background-color: var(--color-typeA);
     padding-left: 1rem;
@@ -61,6 +68,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center; 
+}
+
+#spanDaySpotify {
+    font-family: 'Material Icons';
+}
+
+#spanDaySpotifyBlank {
+    visibility: hidden;
 }
 
 button.buttonActive {

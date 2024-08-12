@@ -4,7 +4,8 @@ function createTopButtons() {
     let topButtonsDiv;
     let newButton;
 
-    topButtonsDiv = document.getElementById("divTopButtons");
+    // top days buttons
+    topButtonsDiv = document.getElementById("divTopDaysButtons");
 
     for (let i = 0; i < con.days.length; i++) {
         newButton = document.createElement("button");
@@ -28,6 +29,7 @@ function createTopButtons() {
         topButtonsDiv.appendChild(newButton);
 
     };
+
 };
 
 function onDayPress(day) {
@@ -132,4 +134,8 @@ function onClickClose() {
     const popDialog = document.getElementById("divPopupEvent");    
     popDialog.setAttribute("data-id", "0");
     popDialog.style.visibility = "hidden";
+};
+
+function onClickSpotifyPlaylist() {
+    window.open(con.spotifyPlaylist);
 };

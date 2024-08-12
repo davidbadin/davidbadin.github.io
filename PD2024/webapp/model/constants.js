@@ -47,6 +47,9 @@ const con = {
     apiKey: "AIzaSyBIHleeVgn137sWxmlCGvFQjewrv-ueXMI",
     sheetRangeData: "'PD2024'!A2:G100",
 
+    // Spotify playlist
+    spotifyPlaylist: "https://open.spotify.com/playlist/3hVSERyTLVDufAcI2KHSrv",
+
     // local data
     localStorageData: "pd2024_data",
 
