@@ -9,25 +9,21 @@ const con = {
 
     // dates & times
     schedStartHour: 11,
-    schedEndHour: 3,
+    schedEndHour: 2,
     firstDay: festivalStartDate,
     firstDayHourFocus: 16,
     days: [
         {
-            name: "streda",
+            name: "štvrtok",
             number: 1
         },
         {
-            name: "štvrtok",
+            name: "piatok",
             number: 2
         },
         {
-            name: "piatok",
-            number: 3
-        },
-        {
             name: "sobota",
-            number: 4
+            number: 3
         }
     ],
     
