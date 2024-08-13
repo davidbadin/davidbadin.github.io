@@ -14,6 +14,7 @@
     --font-size: 1rem;
     --font-size-title: 1.5rem;
     --font-size-popup: 1.25rem;
+    --font-size-popup-descr: 1rem;
     --font-size-spotify-logo: 1.5rem;
     --title-height: 3rem;
     --hoursLabelWidth: 1.5rem;
@@ -252,4 +253,8 @@ button.buttonPopup {
 
 .spanPopupText {
     font-size: var(--font-size-popup);
+}
+
+.spanPopupDescr {
+    font-size: var(--font-size-popup-descr);
 }
