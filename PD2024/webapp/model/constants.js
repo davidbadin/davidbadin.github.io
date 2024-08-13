@@ -61,7 +61,7 @@ const con = {
             fontSize: "2rem",
             fontSizeTitle: "3rem",
             fontSizePopup: "3rem",
-            fontSizePopupDescr: "1.5rem",
+            fontSizePopupDescr: "2rem",
             fontSizeSpotifyLogo: "2rem",
             titleHeight: "6rem",
             hoursLabelWidth: "4rem",
