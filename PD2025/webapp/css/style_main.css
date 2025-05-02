@@ -1,0 +1,260 @@
+/* Custom styles here */
+
+:root {
+    --color-white: #fdfdfd;
+    --color-black: #1d1d1d;
+    --color-darkgrey: #3a3a3a;
+    --color-lightgrey: #b1b1b1;
+    --color-typeA: #e03c57;
+    --color-typeB: #12697b;
+    --color-typeC: #e9dd30;
+    --color-typeA-highlight: #f27172;
+    --color-typeB-highlight: #4d8fa2;
+
+    --font-size: 1rem;
+    --font-size-title: 1.5rem;
+    --font-size-popup: 1.25rem;
+    --font-size-popup-descr: 1rem;
+    --font-size-spotify-logo: 1.5rem;
+    --title-height: 3rem;
+    --hoursLabelWidth: 1.5rem;
+    --popup-button-font-size: 1.5rem;
+    --hour-label-padding-right: 0.75rem;
+}
+
+/* GENERAL */
+
+body {
+    background-color: var(--color-darkgrey);
+}
+
+.center {
+    align-items: center;
+    justify-content: center;    
+}
+
+/* HEADER*/
+.divHeader {
+    width: 100%;
+    height: var(--title-height);
+    display: flex;
+    margin-bottom: 0.5rem;
+}
+
+.textHeader {
+    color: var(--color-typeC);
+    font-weight: bold;
+    font-size: var(--font-size-title);
+}
+
+.divTopButtons {
+    width: 100%;
+    height: 3rem;
+    display: flex;
+}
+
+.divTopSpotifyButton {
+    flex-basis: 0;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+}
+
+.buttonDay {
+    background-color: var(--color-typeA);
+    margin: 0.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+}
+
+.spanDayButton {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.spanSpotifyButton {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+}
+
+#iSpotifyLogo {
+    font-size: var(--font-size-spotify-logo);
+    margin-left: 1rem;
+}
+
+#spanDaySpotifyText {
+    margin-left: 0.5rem;
+}
+
+button.buttonActive {
+    background-color: var(--color-typeC);
+    font-weight: bold;
+}
+
+.fixedHeader {
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+    background-color: var(--color-darkgrey);
+    padding-bottom: 1rem;
+ }
+
+
+/* MAIN BLOCK*/
+.divMainBlock {
+    width: auto;
+    display: flex;
+}
+
+.divHoursLabel {
+    width: var(--hoursLabelWidth);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.divHourLabel {
+    width: 1.5rem;
+    height: 1.25rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: var(--hour-label-padding-right);
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.divEventsMainBlock {
+    width: auto;
+    flex: 1;
+    display: flex;
+}
+
+.divStageBlock {
+    flex: 1;
+}
+
+.divEvent {
+    background-color: var(--color-lightgrey);
+    cursor: pointer;    
+    display: flex;
+}
+
+.divEventContent {
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+}
+.divEventTopLine {
+    display: flex;
+    flex-direction: row;
+    padding-top: 0.25rem;
+}
+.divEventFav {
+    display: flex;
+    align-items: center;
+}
+.divEventTitle {
+    display: flex;
+    align-items: center;
+    padding-left: 0.25rem;
+}
+.divEventDescr {
+    padding-top: 0.75rem;
+    padding-left: 0.25rem;
+    display: flex;
+    font-style: italic;
+}
+
+span {
+    font-family:Arial, Helvetica, sans-serif;
+    white-space: pre-line;
+    font-size: var(--font-size);
+}
+
+.spanEventTitle {
+    font-weight: bold;
+}
+
+/* STAGE CUSTUMIZING */
+.divEvent.stageA {
+    background-color: var(--color-typeA);
+}
+
+.divEvent.stageB {
+    background-color: var(--color-typeB);
+}
+
+.divEvent.stageA.eventHighlighted {
+    background-color: var(--color-typeA-highlight);
+}
+
+.divEvent.stageB.eventHighlighted {
+    background-color: var(--color-typeB-highlight);
+}
+
+/* POPUP */
+.divPopupEvent {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 75%;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 20px
+        rgba(0, 0, 0, 0.3);
+    z-index: 500;
+    visibility: hidden;
+    flex-direction: column;
+}
+
+.divPopupEventComm {
+    background-color: var(--color-black);
+    display: flex;
+}
+
+.divPopupEventTitle {
+    color: var(--color-typeC);
+    padding-bottom: 0.75rem;
+}
+
+.divPopupEventSubtitle {
+    color: var(--color-lightgrey);
+    margin-bottom: 5rem;
+}
+
+.divPopupEventBody {
+    color: var(--color-lightgrey);
+}
+
+.divPopupEventButtons {
+    justify-content: flex-end;
+    margin-top: 8rem;
+}
+
+button.buttonPopup {
+    background-color: var(--color-typeC);
+    margin: 0.5rem;
+}
+
+.spanPopupButton {
+    font-size: var(--popup-button-font-size);
+}
+
+.fa.spanPopupButton {
+    font-size: var(--popup-button-font-size);
+}
+
+.spanPopupText {
+    font-size: var(--font-size-popup);
+}
+
+.spanPopupDescr {
+    font-size: var(--font-size-popup-descr);
+}

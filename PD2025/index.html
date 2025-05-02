@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>PD</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="icon" type="image/png" sizes="64x64" href="./webapp/img/favicon64.png" />
+		<link rel="apple-touch-icon" sizes="180x180" href="./webapp/img/favicon180.png">
+        <link rel="stylesheet" href="webapp/css/style_main.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+        <script src="./webapp/model/constants.js"></script>
+        <script src="./webapp/controller/main.js"></script>
+        <script src="./webapp/controller/view_controller.js"></script>
+        <script src="./webapp/controller/tools.js"></script>
+        <div class="fixedHeader">
+            <div class="divHeader center">
+                <span id="textHeaderTitle" class="textHeader"></span>
+            </div>
+            <div class="divTopButtons" id="divTopButtons">
+                <div class="divTopButtons center" id="divTopDaysButtons"></div>
+                <div class="divTopButtons divTopSpotifyButton" id="divTopSpotifyButtons">
+                    <button id="buttonSpotify" onclick="onClickSpotifyPlaylist()" class="buttonDay buttonSpotify">
+                        <i id="iSpotifyLogo" class="fa fa-spotify" aria-hidden="true"></i>
+                        <span id="spanDaySpotifyText" class="spanSpotifyButton">Spotify</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="divMainBlock" class="divMainBlock">
+            <div id="divHoursLabel" class="divHoursLabel"></div>
+            <div id="divEventsBlock" class="divEventsMainBlock"></div>
+            <div id="divPopupEvent" class="divPopupEvent divPopupEventComm">
+                <div id="divPopupEventTitle" class="divPopupEventTitle divPopupEventComm">
+                    <span id="spanPopupEventTitle" class="spanPopupText"></span>
+                </div>
+                <div id="divPopupEventSubtitle" class="divPopupEventSubtitle divPopupEventComm">
+                    <span id="spanPopupEventSubtitle" class="spanPopupDescr"></span>
+                </div>
+                <div id="divPopupEventBody" class="divPopupEventBody divPopupEventComm">
+                    <span id="spanPopupEventBody" class="spanPopupDescr"></span>
+                </div>
+                <div id="divPopupEventButtons" class="divPopupEventButtons divPopupEventComm">
+                    <button id="buttonPopupPlay" onclick="onClickPlay()" class="buttonPopup"><i class="fa fa-spotify spanPopupButton" aria-hidden="true"></i></button>
+                    <button id="buttonPopupFav" onclick="onClickFav()" class="buttonPopup"><span id="spanPopupFav" class="material-icons spanPopupButton"></span></button>
+                    <button id="buttonPopupClose" onclick="onClickClose()" class="buttonPopup"><span id="spanPopupClose" class="material-icons spanPopupButton">close</span></button>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            document.title = con.titleShort;
+            createTopButtons();
+            onInit(true);
+        </script>
+    </body>
+</html>
