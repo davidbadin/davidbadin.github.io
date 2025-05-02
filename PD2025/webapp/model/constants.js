@@ -48,7 +48,7 @@ const con = {
     sheetRangeData: "'PD2025'!A2:G100",
 
     // Spotify playlist
-    spotifyPlaylist: "https://open.spotify.com/playlist/3hVSERyTLVDufAcI2KHSrv",
+    spotifyPlaylist: "https://open.spotify.com/playlist/6xLDXTKkGWlNS2Ky2enHuI",
 
     // local data
     localStorageData: "pd2025_data",
