@@ -129,7 +129,7 @@ function setInitProperties() {
     }
     cust.mainBlockHeight = (totalHours * con.sizeDefHour * cust.sizeCust + con.labelHourHeight );
     
-    document.getElementById("textHeaderTitle").textContent = con.titleLong;
+    // document.getElementById("textHeaderTitle").textContent = con.titleLong;
     document.getElementById("divMainBlock").setAttribute("style", "height:" + cust.mainBlockHeight + "rem");
     document.getElementById("divHoursLabel").setAttribute("style", "height:" + cust.mainBlockHeight + "rem");
 };
@@ -327,6 +327,11 @@ function createNewEvent( eventData, prevDate ) {
     eventBlock.setAttribute("id", "divEvent_" + eventData.id);
     eventBlock.classList.add("divEvent");
     eventBlock.classList.add(stage.style);
+    if (detectDeviceType() === 'Mobile') {
+        eventBlock.classList.add("mobile");
+    } else {
+        eventBlock.classList.add("desktop");
+    };
     // highlight the event that is running right now
     if ( ( nowDate >= eventData.start ) && ( nowDate <= eventData.end ) ) {
         eventBlock.classList.add("eventHighlighted");
