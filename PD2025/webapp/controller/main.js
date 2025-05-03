@@ -142,6 +142,9 @@ function createElements(initialRun) {
     // create HOURS LABEL
     createHoursLabel();
 
+    // create EVENT LABELS / STAGE LABELS
+    createEventLabel();
+
     // create EVENT columns
     createEventColumns();
 
@@ -177,6 +180,28 @@ function createHoursLabel() {
         newDiv.setAttribute("id", "hourLabel_" + hour);
         parrentDiv.appendChild(newDiv);
         currHour++;
+    }
+};
+
+function createEventLabel() {
+    
+    let parrentDiv;                 // main block for stages/event labels
+    let newCol = {};                // column for a stage
+    let newSpan;                    // stage name
+    let numberOfStages;             // number of stages                
+
+    numberOfStages = con.stage.length;
+    parrentDiv = document.getElementById("divEventsLabels");
+    parrentDiv.textContent = "";        // clear DIV (remove all child elements)
+
+    for (let iStage = 0; iStage < numberOfStages; iStage++) {      
+        newCol = document.createElement("div");
+        newCol.setAttribute("class", "divEventsLabel");
+        newSpan = document.createElement("span");
+        newSpan.textContent = con.stage[iStage].name;
+        newSpan.setAttribute("class", "spanEventsLabel");
+        newCol.appendChild(newSpan);
+        parrentDiv.appendChild(newCol);
     }
 };
 

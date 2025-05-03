@@ -3,13 +3,13 @@
 :root {
     --color-white: #fdfdfd;
     --color-black: #1d1d1d;
-    --color-darkgrey: #3a3a3a;
+    --color-darkgrey: #1c1c1c;
     --color-lightgrey: #b1b1b1;
-    --color-typeA: #e03c57;
-    --color-typeB: #12697b;
-    --color-typeC: #e9dd30;
-    --color-typeA-highlight: #f27172;
-    --color-typeB-highlight: #4d8fa2;
+    --color-typeA: #8e8473;
+    --color-typeB: #eaec5d;
+    --color-typeC: #8e8473;
+    --color-typeA-highlight: #a19685;
+    --color-typeB-highlight: #ebe970;
 
     --font-size: 1rem;
     --font-size-title: 1.5rem;
@@ -51,6 +51,7 @@ body {
     width: 100%;
     height: 3rem;
     display: flex;
+    margin-bottom: 0.75rem;
 }
 
 .divTopSpotifyButton {
@@ -61,7 +62,7 @@ body {
 }
 
 .buttonDay {
-    background-color: var(--color-typeA);
+    background-color: var(--color-typeB);
     margin: 0.4rem;
     display: flex;
     align-items: center;
@@ -100,9 +101,39 @@ button.buttonActive {
     position: sticky;
     top: 0;
     background-color: var(--color-darkgrey);
-    padding-bottom: 1rem;
+    
  }
 
+/* STAGE LABELS*/ 
+.divStageLabels {
+    display: flex;
+    flex-direction: row;
+}
+
+.divHoursLabelBlank {
+    width: var(--hoursLabelWidth);    
+}
+
+.divEventsLabels {
+    width: auto;
+    display: flex;
+    flex: 1;   
+    font-weight: bold;
+}
+
+.divEventsLabel {
+    width: auto;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    background-color: var(--color-typeA);
+    margin-top: 0.4rem;
+    margin-bottom: 0.05rem;
+    margin-left: 0.1rem;
+    margin-right: 0.1em;
+    padding-top: 0.6rem;
+    padding-bottom: 0.5rem;
+}
 
 /* MAIN BLOCK*/
 .divMainBlock {
@@ -127,6 +158,7 @@ button.buttonActive {
     padding-right: var(--hour-label-padding-right);
     font-size: 1rem;
     font-weight: bold;
+    color: var(--color-lightgrey);
 }
 
 .divEventsMainBlock {
