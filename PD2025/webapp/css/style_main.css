@@ -198,11 +198,11 @@ button.buttonActive {
     display: flex;
 }
 
-.imgEventFooter {
+/* .imgEventFooter {
     height: auto;
     max-width: 100%;
-    object-fit: contain;
-}
+    object-fit: fill;
+} */
 
 .divEventContent {
     padding: 0.5rem;
@@ -271,6 +271,14 @@ span {
     background-position: top;
     background-size: cover;    
     background-repeat: no-repeat;
+}
+
+.divEventFooter.stageA {
+    background-image: url("../img/event_footer.png");
+    background-size: contain;    
+    background-repeat: repeat-x;
+    height: 1rem;
+    width: auto;
 }
 
 /* .divEventFooter.stageA {
