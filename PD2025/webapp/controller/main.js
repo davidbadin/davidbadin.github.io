@@ -312,6 +312,8 @@ function createNewEvent( eventData, prevDate ) {
     let titleText;
     let descrBlock;
     let descrText;
+    let eventSubBlock;
+    let footerBlock;
     
     let eventDimensions;
     let stage;
@@ -337,6 +339,21 @@ function createNewEvent( eventData, prevDate ) {
         eventBlock.classList.add("eventHighlighted");
     }
     
+    // event sub-block
+    eventSubBlock = document.createElement("div");
+    eventSubBlock.classList.add("divEventSubBlock");
+    eventSubBlock.classList.add(stage.style);
+    if (detectDeviceType() === 'Mobile') {
+        eventSubBlock.classList.add("mobile");
+    } else {
+        eventSubBlock.classList.add("desktop");
+    };
+
+    // footer
+    footerBlock = document.createElement("div");
+    footerBlock.classList.add("divEventFooter");
+    footerBlock.classList.add(stage.style);
+
     // text block
     textBlock = document.createElement("div");
     textBlock.classList.add("divEventContent");
@@ -379,7 +396,11 @@ function createNewEvent( eventData, prevDate ) {
     topLineBlock.appendChild(titleBlock);
     textBlock.appendChild(topLineBlock);
     textBlock.appendChild(descrBlock);
-    eventBlock.appendChild(textBlock);
+    
+    eventSubBlock.appendChild(textBlock);
+    eventBlock.appendChild(eventSubBlock);
+    eventBlock.appendChild(footerBlock);
+    
 
     return eventBlock;
 };

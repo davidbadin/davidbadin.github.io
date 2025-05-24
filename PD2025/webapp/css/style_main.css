@@ -181,11 +181,20 @@ button.buttonActive {
 }
 
 .divEvent {
-    background-color: var(--color-lightgrey);
+    /* background-color: var(--color-lightgrey); */
     cursor: pointer;    
     display: flex;
-    border-radius: 0.5rem;
-    margin: 0.2rem;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    flex-direction: column;
+}
+
+.divEventSubBlock {
+    flex-grow: 1;
+}
+
+.divEventFooter {
+    height: 1rem;
 }
 
 .divEventContent {
@@ -196,7 +205,7 @@ button.buttonActive {
 .divEventTopLine {
     display: flex;
     flex-direction: row;
-    padding-top: 0.25rem;
+    padding-top: 0.75rem;
 }
 .divEventFav {
     display: flex;
@@ -226,26 +235,39 @@ span {
 }
 
 /* STAGE CUSTUMIZING */
-.divEvent.stageA {
+
+/* .divEvent.stageA {
     background-color: var(--color-typeA);
-}
+} */
 
 .divEvent.stageB {
     background-color: var(--color-typeB);
 }
 
-.desktop.divEvent.stageA {
+/* .desktop.divEvent.stageA {
     box-shadow: 
         var(--color-black) 0px -2px 6px 0px inset,
         var(--color-typeA-highlight) 0px 15px 20px -15px,
-        var(--color-lightgrey) 0px -50px 36px -28px inset;
-}
+        var(--color-lightgrey) 0px -50px 36px -28px inset; 
+    background-color: var(--color-typeA); 
+} */
 
-.mobile.divEvent.stageA {
+/* .mobile.divEvent.stageA {
     box-shadow: 
         var(--color-black) 0px -4px 10px 0px inset,
         var(--color-typeA-highlight) 0px 25px 32px -25px,
         var(--color-lightgrey) 0px -80px 60px -45px inset;
+} */
+
+.divEventSubBlock.stageA {
+    background-image: url("../img/event_background.png");
+    background-position: top;
+    background-size: cover;    
+    background-repeat: no-repeat;
+}
+
+.divEventFooter.stageA {
+    background-image: url("../img/event_footer.png");
 }
 
 .desktop.divEvent.stageB {
