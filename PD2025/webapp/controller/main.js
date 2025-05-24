@@ -353,6 +353,13 @@ function createNewEvent( eventData, prevDate ) {
     footerBlock = document.createElement("div");
     footerBlock.classList.add("divEventFooter");
     footerBlock.classList.add(stage.style);
+    let footerImg = document.createElement("img");
+    if (stage.style == "stageA") {
+        footerImg.src = "./webapp/img/event_footer.png";
+    }
+    footerImg.classList.add("imgEventFooter");
+    footerImg.classList.add(stage.style);
+    footerBlock.appendChild(footerImg);
 
     // text block
     textBlock = document.createElement("div");

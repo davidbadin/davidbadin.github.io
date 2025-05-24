@@ -193,8 +193,15 @@ button.buttonActive {
     flex-grow: 1;
 }
 
+
 .divEventFooter {
-    height: 1rem;
+    display: flex;
+}
+
+.imgEventFooter {
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
 }
 
 .divEventContent {
@@ -266,9 +273,9 @@ span {
     background-repeat: no-repeat;
 }
 
-.divEventFooter.stageA {
+/* .divEventFooter.stageA {
     background-image: url("../img/event_footer.png");
-}
+} */
 
 .desktop.divEvent.stageB {
     box-shadow: 
