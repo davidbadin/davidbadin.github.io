@@ -196,7 +196,7 @@ function createEventLabel() {
 
     for (let iStage = 0; iStage < numberOfStages; iStage++) {      
         newCol = document.createElement("div");
-        newCol.setAttribute("class", "divEventsLabel");
+        newCol.setAttribute("class", "divEventsLabel " + con.stage[iStage].style );
         newSpan = document.createElement("span");
         newSpan.textContent = con.stage[iStage].name;
         newSpan.setAttribute("class", "spanEventsLabel");
@@ -313,6 +313,7 @@ function createNewEvent( eventData, prevDate ) {
     let descrBlock;
     let descrText;
     let eventSubBlock;
+    let headerBlock;
     let footerBlock;
     
     let eventDimensions;
@@ -348,6 +349,11 @@ function createNewEvent( eventData, prevDate ) {
     } else {
         eventSubBlock.classList.add("desktop");
     };
+
+    // footer
+    headerBlock = document.createElement("div");
+    headerBlock.classList.add("divEventHeader");
+    headerBlock.classList.add(stage.style);
 
     // footer
     footerBlock = document.createElement("div");
@@ -405,6 +411,7 @@ function createNewEvent( eventData, prevDate ) {
     textBlock.appendChild(descrBlock);
     
     eventSubBlock.appendChild(textBlock);
+    eventBlock.appendChild(headerBlock);
     eventBlock.appendChild(eventSubBlock);
     eventBlock.appendChild(footerBlock);
     

@@ -35,7 +35,7 @@ const con = {
             style: "stageA"
         },
         {
-            name: "Save the Festival Stage",
+            name: "United Stage",
             id: "B",
             style: "stageB"
         }

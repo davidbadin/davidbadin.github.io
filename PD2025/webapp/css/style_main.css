@@ -10,6 +10,8 @@
     --color-typeC: #8e8473;
     --color-typeA-highlight: #a19685;
     --color-typeB-highlight: #ebe970;
+    --color-typeA-dark: #524b41;
+    --color-typeB-dark: #bdbe1c;
 
     --font-size: 1rem;
     --font-size-title: 1.5rem;
@@ -33,12 +35,12 @@ body {
     justify-content: center;    
 }
 
-/* .divPage {
+.divPage {
     display: flex;
     justify-content: center;    
     align-items: center;
     flex-direction: column;
-} */
+}
 
 /* HEADER*/
 .divHeader {
@@ -83,7 +85,7 @@ body {
     align-items: center;
     justify-content: center; 
     border-radius: 0.5rem;
-    box-shadow: var(--color-lightgrey) 0px -50px 36px -28px inset;
+    /* box-shadow: var(--color-lightgrey) 0px -50px 36px -28px inset; */
 }
 
 .spanDayButton {
@@ -118,7 +120,8 @@ button.buttonActive {
     position: sticky;
     top: 0;
     background-color: var(--color-darkgrey);
-    
+    width: 100%;
+    max-width: 62.5rem;
  }
 
 /* STAGE LABELS*/ 
@@ -144,7 +147,7 @@ button.buttonActive {
     display: flex;
     flex: 1;
     justify-content: center;
-    background-color: var(--color-typeA);
+    
     margin-bottom: 0.05rem;
     margin-left: 0.1rem;
     margin-right: 0.1em;
@@ -152,9 +155,20 @@ button.buttonActive {
     padding-bottom: 0.5rem;
 }
 
+.divEventsLabel.stageA {
+    background-color: var(--color-typeA-dark);
+    color: var(--color-lightgrey);
+}
+
+.divEventsLabel.stageB {
+    background-color: var(--color-typeB-dark);
+    color: var(--color-darkgrey);
+}
+
 /* MAIN BLOCK*/
 .divMainBlock {
-    width: auto;
+    width: 100%;
+    max-width: 62.5rem;
     display: flex;
 }
 
@@ -202,6 +216,10 @@ button.buttonActive {
 }
 
 
+.divEventHeader {
+    display: flex;
+}
+
 .divEventFooter {
     display: flex;
 }
@@ -213,14 +231,15 @@ button.buttonActive {
 } */
 
 .divEventContent {
-    padding: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
     display: flex;
     flex-direction: column;
 }
 .divEventTopLine {
     display: flex;
     flex-direction: row;
-    padding-top: 0.75rem;
+    /* padding-top: 0.75rem; */
 }
 .divEventFav {
     display: flex;
@@ -255,9 +274,9 @@ span {
     background-color: var(--color-typeA);
 } */
 
-.divEvent.stageB {
+/* .divEvent.stageB {
     background-color: var(--color-typeB);
-}
+} */
 
 /* .desktop.divEvent.stageA {
     box-shadow: 
@@ -274,18 +293,53 @@ span {
         var(--color-lightgrey) 0px -80px 60px -45px inset;
 } */
 
+.divEventHeader.stageA {
+    background-image: url("../img/event_grey_top.png");
+    background-size: contain;   
+    background-repeat: no-repeat;
+    background-position: bottom;
+    height: 1.875rem;
+    width: 100%;
+}
+
 .divEventSubBlock.stageA {
-    background-image: url("../img/event_background.png");
+    background-image: url("../img/event_grey_mid.png");
     background-position: top;
     background-size: cover;    
     background-repeat: no-repeat;
 }
 
 .divEventFooter.stageA {
-    background-image: url("../img/event_footer.png");
+    background-image: url("../img/event_grey_bot.png");
     background-size: contain;    
-    background-repeat: repeat-x;
-    height: 1rem;
+    background-repeat: no-repeat;
+    background-position: top;
+    height: 1.875rem;
+    width: auto;
+}
+
+.divEventHeader.stageB {
+    background-image: url("../img/event_yellow_top.png");
+    background-size: contain;   
+    background-repeat: no-repeat;
+    background-position: bottom;
+    height: 1.875rem;
+    width: 100%;
+}
+
+.divEventSubBlock.stageB {
+    background-image: url("../img/event_yellow_mid.png");
+    background-position: top;
+    background-size: cover;    
+    background-repeat: no-repeat;
+}
+
+.divEventFooter.stageB {
+    background-image: url("../img/event_yellow_bot.png");
+    background-size: contain;    
+    background-repeat: no-repeat;
+    background-position: top;
+    height: 1.875rem;
     width: auto;
 }
 
@@ -293,7 +347,7 @@ span {
     background-image: url("../img/event_footer.png");
 } */
 
-.desktop.divEvent.stageB {
+/* .desktop.divEvent.stageB {
     box-shadow: 
         var(--color-black) 0px -2px 6px 0px inset,
         var(--color-typeB-highlight) 0px 15px 20px -15px,
@@ -305,7 +359,7 @@ span {
         var(--color-black) 0px -4px 10px 0px inset,
         var(--color-typeB-highlight) 0px 25px 32px -25px,
         var(--color-lightgrey) 0px -80px 60px -45px inset;
-}
+} */
 
 .divEvent.stageA.eventHighlighted {
     background-color: var(--color-typeA-highlight);
@@ -327,8 +381,8 @@ span {
     z-index: 500;
     visibility: hidden;
     flex-direction: column;
-    opacity: 95%;
-    background-image: url("../img/test3.png");
+    opacity: 98%;
+    /* background-image: url("../img/test3.png"); */
     background-position: center; 
     background-size: cover;    
     background-repeat: no-repeat;
@@ -336,9 +390,11 @@ span {
 }
 
 .divPopupEventComm {
-    text-shadow: 1px 1px 2px var(--color-black), 0 0 25px var(--color-lightgrey), 0 0 5px var(--color-darkgrey);
+    /* text-shadow: 
+        1px 1px 2px var(--color-black),
+        0 0 25px var(--color-lightgrey), 
+        0 0 5px var(--color-darkgrey); */
     display: flex;
-
 }
 
 .divPopupEventTitle {
