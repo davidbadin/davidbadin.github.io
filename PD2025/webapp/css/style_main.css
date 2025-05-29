@@ -211,13 +211,14 @@ button.buttonActive {
     flex-direction: column;
 }
 
-.divEventSubBlock {
-    flex-grow: 1;
-}
-
-
 .divEventHeader {
     display: flex;
+}
+
+.divEventSubBlock {
+    flex-grow: 1;
+    margin-top: -1px;
+    margin-bottom: -1px;
 }
 
 .divEventFooter {
@@ -305,8 +306,10 @@ span {
 .divEventSubBlock.stageA {
     background-image: url("../img/event_grey_mid.png");
     background-position: top;
-    background-size: cover;    
+    background-size: 100%;
     background-repeat: no-repeat;
+    /* box-shadow: var(--color-typeA) 0px -15px 2px -10px; */
+    /* box-shadow: var(--color-typeA) 0px 15px 2px -10px; */
 }
 
 .divEventFooter.stageA {
@@ -316,6 +319,7 @@ span {
     background-position: top;
     height: 1.875rem;
     width: auto;
+    /* box-shadow: rgba(240, 46, 170, 1) 0px -20px 2px -10px; */
 }
 
 .divEventHeader.stageB {
@@ -325,13 +329,15 @@ span {
     background-position: bottom;
     height: 1.875rem;
     width: 100%;
+    /* box-shadow: var(--color-typeB) 0px -15px 2px -10px; */
+    /* box-shadow: var(--color-typeB) 0px 15px 2px -10px; */
 }
 
 .divEventSubBlock.stageB {
     background-image: url("../img/event_yellow_mid.png");
     background-position: top;
-    background-size: cover;    
-    background-repeat: no-repeat;
+    background-size: 100%;
+    background-repeat: repeat-y;
 }
 
 .divEventFooter.stageB {
