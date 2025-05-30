@@ -58,7 +58,7 @@ const con = {
         {   
             device: "mobile",
             sizeCust: 4,
-            fontSize: "2rem",
+            fontSize: "1.5rem",
             fontSizeTitle: "3rem",
             fontSizePopup: "3rem",
             fontSizePopupDescr: "2rem",

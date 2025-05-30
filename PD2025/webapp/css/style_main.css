@@ -79,13 +79,22 @@ body {
 }
 
 .buttonDay {
-    background-color: var(--color-typeB);
+    /* background-color: var(--color-typeB); */
     margin: 0.4rem;
     display: flex;
     align-items: center;
     justify-content: center; 
-    border-radius: 0.5rem;
+    /* border-radius: 0.5rem; */
     /* box-shadow: var(--color-lightgrey) 0px -50px 36px -28px inset; */
+    background-image: url("../img/button_yellow.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    background-position: center;
+    font-weight: bold;
+    border: none;
+    width: 8rem;
+    height: 4rem;
 }
 
 .spanDayButton {
@@ -103,7 +112,8 @@ body {
 
 #iSpotifyLogo {
     font-size: var(--font-size-spotify-logo);
-    margin-left: 1rem;
+    /* margin-left: 1rem; */
+    margin-left: 0.8rem;
 }
 
 #spanDaySpotifyText {
@@ -111,8 +121,10 @@ body {
 }
 
 button.buttonActive {
-    background-color: var(--color-typeC);
-    font-weight: bold;
+    /* background-color: var(--color-typeC); */
+    /* font-weight: bold; */
+    background-image: url("../img/button_grey.png");
+    /* text-shadow: 1px 1px 1px var(--color-black); */
 }
 
 .fixedHeader {
@@ -254,7 +266,7 @@ button.buttonActive {
     display: flex;
     align-items: center;
     padding-left: 0.25rem;
-    text-shadow: 1px 1px 3px #b1b1b1;
+    /* text-shadow: 1px 1px 3px #b1b1b1; */
 }
 .divEventDescr {
     padding-top: 0.75rem;
@@ -267,6 +279,13 @@ span {
     font-family:Arial, Helvetica, sans-serif;
     white-space: pre-line;
     font-size: var(--font-size);
+}
+
+span.spanDayButton {
+    font-size: 1.3rem;
+}
+span.spanSpotifyButton {
+    font-size: 1.4rem;
 }
 
 .spanEventTitle {
