@@ -71,6 +71,7 @@ function processData(response, initialRun) {
             let descrLong = sourceData[i][3];
             let spotifyUrl = sourceData[i][5];
             let id = sourceData[i][6];
+            let genre = sourceData[i][7];
             let favorite = false;
 
             // get "favorite"
@@ -97,7 +98,8 @@ function processData(response, initialRun) {
                     "description": descrLong,
                     "spotUrl": spotifyUrl,
                     "favorite": favorite,
-                    "id": id
+                    "id": id,
+                    "genre": genre
                 });		
             }					
         }
@@ -395,7 +397,13 @@ function createNewEvent( eventData, prevDate ) {
     descrBlock.classList.add("divEventDescr");
     descrText = document.createElement("span");
     descrText.classList.add("spanEventDescr");
-    descrText.textContent = eventData.shortDescription;
+    if(eventData.genre) {
+        descrText.textContent = eventData.shortDescription + "\n" + eventData.genre;
+    } else {
+        descrText.textContent = eventData.shortDescription;
+    }
+    console.log(eventData.genre);
+    console.log(descrText.textContent);
     descrBlock.appendChild(descrText);
 
     topLineBlock.appendChild(favBlock);

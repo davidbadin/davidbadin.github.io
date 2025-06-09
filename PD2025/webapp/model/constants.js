@@ -45,7 +45,7 @@ const con = {
     apiUri: "https://sheets.googleapis.com/v4/spreadsheets/",
     sheetId: "1VvLnbTEg61lK6h6aib0O8wTEuWpGaYieLCCQ4qfUg5U",
     apiKey: "AIzaSyBIHleeVgn137sWxmlCGvFQjewrv-ueXMI",
-    sheetRangeData: "'PD2025'!A2:G100",
+    sheetRangeData: "'PD2025'!A2:H100",
 
     // Spotify playlist
     spotifyPlaylist: "https://open.spotify.com/playlist/6xLDXTKkGWlNS2Ky2enHuI",
