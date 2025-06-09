@@ -1,6 +1,6 @@
 
 // First day of festival
-let festivalStartDate = new Date(2024, 7, 29);
+let festivalStartDate = new Date(2025, 7, 28);
 
 const con = {
     // title 
@@ -8,7 +8,7 @@ const con = {
     titleShort: "PD2025",
 
     // dates & times
-    schedStartHour: 11,
+    schedStartHour: 12,
     schedEndHour: 2,
     firstDay: festivalStartDate,
     firstDayHourFocus: 16,
