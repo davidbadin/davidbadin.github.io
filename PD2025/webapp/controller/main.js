@@ -402,8 +402,6 @@ function createNewEvent( eventData, prevDate ) {
     } else {
         descrText.textContent = eventData.shortDescription;
     }
-    console.log(eventData.genre);
-    console.log(descrText.textContent);
     descrBlock.appendChild(descrText);
 
     topLineBlock.appendChild(favBlock);
