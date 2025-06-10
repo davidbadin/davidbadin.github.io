@@ -413,7 +413,6 @@ function createNewEvent( eventData, prevDate ) {
     eventBlock.appendChild(headerBlock);
     eventBlock.appendChild(eventSubBlock);
     eventBlock.appendChild(footerBlock);
-    
 
     return eventBlock;
 };
