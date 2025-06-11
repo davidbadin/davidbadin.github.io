@@ -30,12 +30,12 @@ const con = {
     // stages
     stage: [
         {
-            name: "Main Open Air Stage",
+            name: "Punk For Children Stage",
             id: "A",
             style: "stageA"
         },
         {
-            name: "Punk For Children Stage",
+            name: "United Stage",
             id: "B",
             style: "stageB"
         }
