@@ -35,7 +35,7 @@ const con = {
             style: "stageA"
         },
         {
-            name: "United Stage",
+            name: "Punk For Children Stage",
             id: "B",
             style: "stageB"
         }
