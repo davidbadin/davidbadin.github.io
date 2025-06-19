@@ -125,12 +125,12 @@ function onClickFav() {
     }
 };
 
-function onClickPlay() {
-    let eventId = document.getElementById("divPopupEvent").getAttribute("data-id");
-    let eventIndex = aDataEvents.findIndex( o => o.id == eventId );
-    let url = "https://open.spotify.com/artist/" + aDataEvents[eventIndex].spotUrl;
-    window.open(url);
-};
+// function onClickPlay() {
+//     let eventId = document.getElementById("divPopupEvent").getAttribute("data-id");
+//     let eventIndex = aDataEvents.findIndex( o => o.id == eventId );
+//     let url = "https://open.spotify.com/artist/" + aDataEvents[eventIndex].spotUrl;
+//     window.open(url);
+// };
 
 function onClickClose() {
     destroyPlayer();
