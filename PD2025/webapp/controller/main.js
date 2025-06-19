@@ -69,7 +69,7 @@ function processData(response, initialRun) {
             let endDate = formatDate( sourceData[i][1] );
             let descrShort = formatShortDescr( stage.name, startDate, endDate ); 
             let descrLong = sourceData[i][3];
-            let spotifyUrl = sourceData[i][5];
+            let spotifyUrl = "https://open.spotify.com/artist/" + sourceData[i][5];
             let id = sourceData[i][6];
             let genre = sourceData[i][7];
             let favorite = false;
