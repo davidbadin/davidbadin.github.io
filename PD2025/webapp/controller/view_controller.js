@@ -88,9 +88,10 @@ function onClickEvent(eventId) {
         }
         // Spotify button
         if (eventData.spotUrl) {
-            document.getElementById("buttonPopupPlay").style.display = "flex";
-        } else {
-            document.getElementById("buttonPopupPlay").style.display = "none";
+            // document.getElementById("buttonPopupPlay").style.display = "flex";
+            displayPlayer(eventData.spotUrl);
+        // } else {
+            // document.getElementById("buttonPopupPlay").style.display = "none";
         }
     
     }
@@ -127,10 +128,12 @@ function onClickFav() {
 function onClickPlay() {
     let eventId = document.getElementById("divPopupEvent").getAttribute("data-id");
     let eventIndex = aDataEvents.findIndex( o => o.id == eventId );
-    window.open(aDataEvents[eventIndex].spotUrl);
+    let url = "https://open.spotify.com/artist/" + aDataEvents[eventIndex].spotUrl;
+    window.open(url);
 };
 
 function onClickClose() {
+    destroyPlayer();
     const popDialog = document.getElementById("divPopupEvent");    
     popDialog.setAttribute("data-id", "0");
     popDialog.style.visibility = "hidden";
@@ -138,4 +141,35 @@ function onClickClose() {
 
 function onClickSpotifyPlaylist() {
     window.open(con.spotifyPlaylist);
+};
+
+function displayPlayer(url) {
+
+    let iframePlayer = {};
+    let urlSpotify;
+
+    // destroy existing player (if exists)
+    destroyPlayer();
+
+    // create Spotify player
+    iframePlayer = document.createElement("iframe");
+    urlSpotify = "https://open.spotify.com/embed/artist/" + url + "?utm_source=generator&theme=0";
+    iframePlayer.setAttribute("id", "iframePlayer");
+    iframePlayer.setAttribute("src", urlSpotify);
+    iframePlayer.setAttribute("frameBorder", "0");
+	iframePlayer.setAttribute("allowfullscreen", ""); 
+	iframePlayer.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
+	iframePlayer.setAttribute("loading", "lazy");
+    iframePlayer.setAttribute("class", "iframePlayer");
+
+    const divPlayer = document.getElementById("divPopupSpotifyPlayer");
+    divPlayer.appendChild(iframePlayer);
+
+};
+
+function destroyPlayer() {
+    const player = document.getElementById("iframePlayer");
+    if(player) {
+        player.remove();
+    }
 };

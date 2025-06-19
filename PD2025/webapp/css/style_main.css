@@ -373,16 +373,17 @@ span.spanSpotifyButton {
 
 .divPopupEventSubtitle {
     color: var(--color-lightgrey);
-    margin-bottom: 5rem;
+    margin-bottom: 3rem;
 }
 
 .divPopupEventBody {
     color: var(--color-lightgrey);
+    margin-bottom: 2rem;
 }
 
 .divPopupEventButtons {
     justify-content: flex-end;
-    margin-top: 8rem;
+    margin-top: 2rem;
 }
 
 button.buttonPopup {
@@ -406,4 +407,10 @@ button.buttonPopup {
 
 .spanPopupDescr {
     font-size: var(--font-size-popup-descr);
+}
+
+.iframePlayer {
+    border-radius: 12px;
+	width: 100%; 
+	height: 152px;
 }
