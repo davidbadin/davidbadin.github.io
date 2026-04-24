@@ -226,6 +226,7 @@ a{color:var(--accent);text-decoration:none}
     <div class="header-sub">Board game collection tracker</div>
     <div class="header-badges">
       <span class="hbadge" id="hb-count">Loading…</span>
+      <span class="hbadge" id="hb-owners"></span>
     </div>
   </div>
 </div>
@@ -365,7 +366,7 @@ function hexSVG(rating){
     <svg viewBox="0 0 52 58" xmlns="http://www.w3.org/2000/svg">
       <polygon points="${pts}" fill="${col}" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
     </svg>
-    <div class="hex-val">${val}</div>
+    <div class="hex-val">${val}<small>BGG</small></div>
   </div></div>`;
 }
 
