@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Board Game Collection</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Syne:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #111115;
+  --bg2: #1a1a20;
+  --bg3: #22222a;
+  --bg4: #2a2a34;
+  --bg5: #32323e;
+  --border: #2c2c38;
+  --border2: #3c3c4c;
+  --text: #ededf5;
+  --text2: #9898b8;
+  --text3: #55556a;
+  --accent: #8b7cf8;
+  --accent-dim: rgba(139,124,248,0.15);
+  --accent-border: rgba(139,124,248,0.35);
+  --green: #4cc88a;
+  --amber: #f5a623;
+  --red: #e05c5c;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--bg5); border-radius: 3px; }
+
+.app { max-width: 1400px; margin: 0 auto; padding: 36px 28px 60px; }
+
+.header { margin-bottom: 32px; }
+.header-top { display: flex; align-items: baseline; gap: 14px; margin-bottom: 6px; }
+.header h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.5px; }
+.header h1 em { font-style: normal; color: var(--accent); }
+.game-count { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text3); background: var(--bg3); border: 1px solid var(--border); padding: 3px 10px; border-radius: 20px; }
+.header-sub { font-size: 13px; color: var(--text3); }
+
+.controls { display: flex; gap: 10px; margin-bottom: 14px; align-items: center; flex-wrap: wrap; }
+.search-wrap { flex: 1; min-width: 200px; position: relative; }
+.search-wrap input { width: 100%; background: var(--bg2); border: 1px solid var(--border); color: var(--text); padding: 9px 14px 9px 36px; border-radius: var(--radius); font-size: 13px; font-family: 'Syne', sans-serif; outline: none; transition: border-color 0.15s; }
+.search-wrap input:focus { border-color: var(--accent); }
+.search-wrap input::placeholder { color: var(--text3); }
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 15px; pointer-events: none; }
+.btn { background: var(--bg2); border: 1px solid var(--border); color: var(--text2); padding: 8px 14px; border-radius: var(--radius); cursor: pointer; font-size: 12px; font-family: 'Syne', sans-serif; transition: all 0.15s; white-space: nowrap; }
+.btn:hover { border-color: var(--border2); color: var(--text); background: var(--bg3); }
+.btn.active { background: var(--accent-dim); border-color: var(--accent-border); color: var(--accent); }
+
+.filters { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 16px; display: none; }
+.filters.open { display: block; }
+.filters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px 24px; }
+.filter-group { display: flex; flex-direction: column; gap: 7px; }
+.filter-group label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; }
+.filter-group select { background: var(--bg3); border: 1px solid var(--border); color: var(--text); padding: 7px 10px; border-radius: var(--radius); font-size: 13px; font-family: 'Syne', sans-serif; outline: none; transition: border-color 0.15s; cursor: pointer; }
+.filter-group select:focus { border-color: var(--accent); }
+.range-row { display: flex; align-items: center; gap: 6px; }
+.range-row input { flex: 1; background: var(--bg3); border: 1px solid var(--border); color: var(--text); padding: 7px 8px; border-radius: var(--radius); font-size: 13px; font-family: 'DM Mono', monospace; outline: none; transition: border-color 0.15s; min-width: 0; }
+.range-row input:focus { border-color: var(--accent); }
+.range-sep { color: var(--text3); font-size: 12px; flex-shrink: 0; font-family: 'DM Mono', monospace; }
+.owner-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.owner-chip { font-size: 11px; padding: 4px 10px; border-radius: 20px; cursor: pointer; background: var(--bg3); border: 1px solid var(--border); color: var(--text2); transition: all 0.15s; font-family: 'Syne', sans-serif; }
+.owner-chip:hover { border-color: var(--border2); color: var(--text); }
+.owner-chip.active { background: var(--accent-dim); border-color: var(--accent-border); color: var(--accent); }
+.filters-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
+.result-info { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text3); }
+
+.table-wrap { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.table-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: var(--bg2); border-bottom: 1px solid var(--border2); }
+th { padding: 10px 12px; text-align: left; font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.9px; color: var(--text3); white-space: nowrap; cursor: pointer; user-select: none; transition: color 0.15s; }
+th:hover { color: var(--text2); }
+th.sorted { color: var(--accent); }
+tbody tr { border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.1s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--bg3); }
+tbody tr:hover .game-name { color: var(--accent); }
+td { padding: 10px 12px; font-size: 13px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+td.game-name { color: var(--text); font-weight: 500; max-width: 260px; transition: color 0.1s; }
+td.mono { font-family: 'DM Mono', monospace; font-size: 12px; }
+.rating-cell { display: flex; align-items: center; gap: 7px; }
+.rating-val { font-family: 'DM Mono', monospace; font-size: 12px; min-width: 32px; }
+.rbar { width: 52px; height: 3px; background: var(--bg5); border-radius: 2px; flex-shrink: 0; }
+.rbar-fill { height: 100%; border-radius: 2px; }
+.badge-owner { display: inline-block; font-size: 10px; font-family: 'DM Mono', monospace; background: var(--bg4); border: 1px solid var(--border); color: var(--text3); padding: 2px 7px; border-radius: 20px; max-width: 120px; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
+.empty { text-align: center; padding: 60px 20px; color: var(--text3); font-size: 14px; }
+
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+.overlay.show { display: flex; }
+.modal { background: var(--bg2); border: 1px solid var(--border2); border-radius: var(--radius-xl); width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; position: relative; animation: slideUp 0.2s ease; }
+@keyframes slideUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal-close-btn { position: sticky; top: 16px; float: right; margin: 16px 16px 0 0; background: var(--bg4); border: 1px solid var(--border); color: var(--text2); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 15px; z-index: 10; transition: all 0.15s; flex-shrink: 0; }
+.modal-close-btn:hover { background: var(--bg5); color: var(--text); }
+.modal-hero { display: flex; gap: 20px; padding: 24px 24px 0; }
+.modal-img { width: 110px; height: 110px; border-radius: var(--radius-lg); object-fit: cover; background: var(--bg4); border: 1px solid var(--border); flex-shrink: 0; }
+.modal-img-ph { width: 110px; height: 110px; border-radius: var(--radius-lg); background: var(--bg4); border: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 32px; color: var(--text3); }
+.modal-title-area { flex: 1; min-width: 0; }
+.modal-title { font-size: 20px; font-weight: 600; color: var(--text); line-height: 1.3; margin-bottom: 4px; }
+.modal-year { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text3); margin-bottom: 12px; }
+.modal-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.mtag { font-size: 11px; font-family: 'DM Mono', monospace; background: var(--bg4); border: 1px solid var(--border); color: var(--text2); padding: 3px 9px; border-radius: 20px; }
+.mtag.hi { background: var(--accent-dim); border-color: var(--accent-border); color: var(--accent); }
+.bgg-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--accent); background: var(--accent-dim); border: 1px solid var(--accent-border); padding: 5px 12px; border-radius: 20px; text-decoration: none; font-family: 'Syne', sans-serif; transition: background 0.15s; }
+.bgg-btn:hover { background: rgba(139,124,248,0.25); text-decoration: none; }
+.modal-body { padding: 20px 24px 28px; }
+.modal-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+.mstat { background: var(--bg3); border-radius: var(--radius); padding: 13px 10px; text-align: center; }
+.mstat-val { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 500; color: var(--text); }
+.mstat-lbl { font-family: 'DM Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text3); margin-top: 4px; }
+.modal-desc { font-size: 13px; color: var(--text2); line-height: 1.75; margin-bottom: 20px; }
+.section-lbl { font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-bottom: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 18px; }
+.chip { font-size: 12px; background: var(--bg3); border: 1px solid var(--border); color: var(--text2); padding: 4px 10px; border-radius: var(--radius); }
+.modal-loading { text-align: center; padding: 50px 20px; color: var(--text3); font-size: 13px; font-family: 'DM Mono', monospace; }
+.modal-err { text-align: center; padding: 10px 0 0; color: var(--text3); font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="header-top">
+      <h1>🎲 <em>RVFBGNSC</em> Games</h1>
+      <span class="game-count" id="game-count">— games</span>
+    </div>
+    <div class="header-sub">Board game collection — click any game for full BGG details</div>
+  </div>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="search" placeholder="Search games…" oninput="applyFilters()">
+    </div>
+    <button class="btn" id="filter-btn" onclick="toggleFilters()">⚙ Filters</button>
+    <button class="btn" onclick="clearFilters()">✕ Clear</button>
+  </div>
+
+  <div class="filters" id="filters-panel">
+    <div class="filters-grid">
+      <div class="filter-group" style="grid-column: 1 / -1;">
+        <label>Owner</label>
+        <div class="owner-chips" id="owner-chips"></div>
+      </div>
+      <div class="filter-group">
+        <label>Playtime (min)</label>
+        <div class="range-row">
+          <input type="number" id="f-play-min" placeholder="0" min="0" oninput="applyFilters()">
+          <span class="range-sep">—</span>
+          <input type="number" id="f-play-max" placeholder="∞" min="0" oninput="applyFilters()">
+        </div>
+      </div>
+      <div class="filter-group">
+        <label>Weight (1–5)</label>
+        <div class="range-row">
+          <input type="number" id="f-w-min" placeholder="1.0" min="1" max="5" step="0.1" oninput="applyFilters()">
+          <span class="range-sep">—</span>
+          <input type="number" id="f-w-max" placeholder="5.0" min="1" max="5" step="0.1" oninput="applyFilters()">
+        </div>
+      </div>
+      <div class="filter-group">
+        <label>Players (range fits)</label>
+        <div class="range-row">
+          <input type="number" id="f-p-min" placeholder="1" min="1" oninput="applyFilters()">
+          <span class="range-sep">—</span>
+          <input type="number" id="f-p-max" placeholder="∞" min="1" oninput="applyFilters()">
+        </div>
+      </div>
+    </div>
+    <div class="filters-footer">
+      <span class="result-info" id="result-info"></span>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <div class="table-scroll">
+      <table id="gtable">
+        <thead>
+          <tr>
+            <th onclick="sortBy('Game')" data-col="Game">Game <span class="arr">↕</span></th>
+            <th onclick="sortBy('Year')" data-col="Year">Year <span class="arr">↕</span></th>
+            <th onclick="sortBy('Owned by')" data-col="Owned by">Owner <span class="arr">↕</span></th>
+            <th onclick="sortBy('BGG Rating')" data-col="BGG Rating">BGG Rating <span class="arr">↑</span></th>
+            <th onclick="sortBy('BGG Rank')" data-col="BGG Rank" class="sorted">BGG Rank <span class="arr">↑</span></th>
+            <th onclick="sortBy('Playtime')" data-col="Playtime">Playtime <span class="arr">↕</span></th>
+            <th onclick="sortBy('Weight')" data-col="Weight">Weight <span class="arr">↕</span></th>
+            <th onclick="sortBy('Min')" data-col="Min">Min ♟ <span class="arr">↕</span></th>
+            <th onclick="sortBy('Max')" data-col="Max">Max ♟ <span class="arr">↕</span></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeOverlay(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close-btn" onclick="closeModal()">✕</button>
+    <div id="modal-inner"><div class="modal-loading">Loading…</div></div>
+  </div>
+</div>
+
+<script>
+const COLS = ["ID","Game","Year","Owned by","BGG Rating","BGG Rank","Playtime","Weight","Min","Max","Best with","Recommended with"];
+const RAW = [
+["224517","Brass: Birmingham","2018","Dávid","8.6","1","120","3.86","2","4","3–4 players","2–4 players"],
+["316554","Dune: Imperium","2020","Dávid","8.4","6","120","3.08","1","4","3–4 players","1–4 players"],
+["115746","War of the Ring: Second Edition","2011","Dávid","8.6","8","240","4.22","2","4","2 players","2 players"],
+["162886","Spirit Island","2017","Dávid","8.3","11","120","4.08","1","4","2 players","1–4 players"],
+["418059","SETI: Search for Extraterrestrial Intelligence","2024","Karči","8.4","16","160","3.83","1","4","3 players","1–4 players"],
+["182028","Through the Ages: A New Story of Civilization","2015","KC Kláštor","8.2","18","120","4.44","2","4","3 players","2–4 players"],
+["421006","The Lord of the Rings: Duel for Middle-earth","2024","Dávid, Maťa","8.4","19","30","2.07","2","2","2 players","2 players"],
+["167355","Nemesis","2018","Karči","8.3","25","180","3.49","1","5","4–5 players","1–5 players"],
+["169786","Scythe","2016","Dávid","8.1","26","115","3.45","1","5","4 players","1–5 players"],
+["205637","Arkham Horror: The Card Game","2016","Dávid","8.1","32","120","3.57","1","2","2 players","1–2+ players"],
+["266192","Wingspan","2019","Karči","8.0","38","70","2.48","1","5","3 players","1–4 players"],
+["96848","Mage Knight Board Game","2011","Miro","8.1","39","240","4.38","1","4","1–2 players","1–3 players"],
+["251247","Barrage","2019","Dávid","8.1","40","180","4.11","1","4","4 players","2–4 players"],
+["321608","Hegemony: Lead Your Class to Victory","2023","Karči","8.4","41","180","4.26","2","4","4 players","2–4 players"],
+["199792","Everdell","2018","Dávid","8.0","42","80","2.83","1","4","3 players","1–4 players"],
+["324856","The Crew: Mission Deep Sea","2021","Dávid","8.1","43","20","2.05","2","5","4 players","3–5 players"],
+["183394","Viticulture Essential Edition","2015","Fašo","8.0","44","90","2.90","1","6","3–4 players","1–5 players"],
+["253344","Cthulhu: Death May Die","2019","Dávid","8.2","54","120","2.50","1","5","3 players","1–4 players"],
+["31260","Agricola","2007","Dávid","7.9","64","150","3.64","1","5","3–4 players","1–5 players"],
+["371942","The White Castle","2023","Karči","8.0","72","80","3.05","1","4","3 players","1–4 players"],
+["126163","Tzolk'in: The Mayan Calendar","2012","Karči","7.8","73","90","3.66","2","4","4 players","2–4 players"],
+["266810","Paladins of the West Kingdom","2019","Dávid","8.0","79","120","3.71","1","4","2 players","1–3 players"],
+["332772","Revive","2022","Lucka","8.1","91","120","3.46","1","4","3 players","1–4 players"],
+["230802","Azul","2017","Fašo, KC Kláštor","7.7","96","45","1.77","2","4","2 players","2–4 players"],
+["436217","The Lord of the Rings: Fate of the Fellowship","2025","Dávid","8.3","105","150","3.08","1","5","3 players","1–4 players"],
+["229853","Teotihuacan: City of Gods","2018","Dávid","7.8","109","120","3.78","1","4","4 players","1–4 players"],
+["68448","7 Wonders","2010","Dávid","7.7","116","30","2.31","2","7","4–5 players","3–7 players"],
+["225694","Decrypto","2018","Maťa","7.8","117","45","1.83","3","8","4, 6 players","4–8 players"],
+["121921","Robinson Crusoe: Adventures on the Cursed Island","2012","Dávid","7.7","119","120","3.83","1","4","1–2 players","1–4 players"],
+["410201","Wyrmspan","2024","Karči","8.0","123","90","2.82","1","5","3 players","1–4 players"],
+["271055","Dwellings of Eldervale","2020","Lucka","8.1","128","150","3.24","1","5","3 players","1–5 players"],
+["205896","Rising Sun","2018","Dávid","7.8","153","120","3.30","3","5","4–5 players","3–5+ players"],
+["196340","Yokohama","2016","Dávid","7.8","155","90","3.28","2","4","3 players","2–4 players"],
+["178900","Codenames","2015","Karči","7.5","161","15","1.26","2","8","6, 8 players","4–8+ players"],
+["266524","PARKS","2019","KC Kláštor","7.6","175","60","2.12","1","5","3 players","1–4 players"],
+["271324","It's a Wonderful World","2019","Karči, Fašo","7.6","184","45","2.32","1","5","4 players","1–5 players"],
+["77423","The Lord of the Rings: The Card Game","2011","Dávid","7.7","185","60","3.22","1","2","2 players","1–2+ players"],
+["328871","Terraforming Mars: Ares Expedition","2021","Dávid","7.6","189","60","2.92","1","4","3 players","1–4 players"],
+["294484","Unmatched: Cobble & Fog","2020","Emil","7.9","190","40","1.97","2","4","2 players","2, 4 players"],
+["350184","Earth","2023","Lucka","7.6","209","90","2.91","1","5","2–3 players","1–4 players"],
+["299659","Clash of Cultures: Monumental Edition","2021","KC Kláštor","8.3","232","240","3.74","2","4","3–4 players","2–4 players"],
+["155426","Castles of Mad King Ludwig","2014","Fašo","7.5","233","90","2.65","1","4","4 players","2–4 players"],
+["822","Carcassonne","2000","Karči, Dávid","7.4","239","45","1.89","2","5","2 players","2–5 players"],
+["351913","Tiletum","2022","Fašo","7.9","284","100","3.38","1","4","2–3 players","1–3 players"],
+["176494","Isle of Skye: From Chieftain to King","2015","Dávid","7.4","291","50","2.26","2","5","3–4 players","2–5 players"],
+["323612","Bitoku","2021","Dávid","7.8","305","120","3.77","1","4","3 players","1–4 players"],
+["350316","Wayfarers of the South Tigris","2022","Lucka","7.8","345","90","3.81","1","4","2 players","1–3 players"],
+["92828","Dixit: Odyssey","2011","Dávid","7.4","350","30","1.16","3","12","6 players","4–12 players"],
+["129622","Love Letter","2012","Karči","7.2","367","20","1.19","2","4","4 players","3–4 players"],
+["345972","Cat in the Box: Deluxe Edition","2022","Fašo","7.4","372","40","2.04","2","5","4 players","3–5 players"],
+["209685","Century: Spice Road","2017","KC Kláštor","7.3","384","45","1.80","2","5","3–4 players","2–5 players"],
+["379078","Expeditions","2023","Dávid","7.6","385","90","3.06","1","5","3 players","1–3 players"],
+["301880","Raiders of Scythia","2020","Karči","7.7","397","80","2.77","1","4","3 players","1–4 players"],
+["274638","Unmatched: Robin Hood vs. Bigfoot","2019","Emil","7.9","421","20","1.94","2","2","2 players","2 players"],
+["436126","Finspan","2025","Lucka","7.7","468","60","2.33","1","5","2–3 players","1–4 players"],
+["15987","Arkham Horror","2005","Dávid","7.2","475","240","3.59","1","8","4 players","1–6 players"],
+["286751","Zombicide: 2nd Edition","2021","Dávid","7.9","498","60","2.38","1","6","3 players","1–6 players"],
+["258210","Blitzkrieg!: World War Two in 20 Minutes","2019","Dávid, KC Kláštor","7.5","499","45","1.91","1","2","2 players","1–2 players"],
+["256226","Azul: Stained Glass of Sintra","2018","Fašo","7.3","510","45","2.01","2","4","3 players","2–4 players"],
+["292375","The Great Wall","2021","Karči","7.8","518","180","3.91","1","4","3 players","1–4 players"],
+["325635","Unmatched: Little Red Riding Hood vs. Beowulf","2020","KC Kláštor","8.1","528","20","2.00","2","2","2 players","2 players"],
+["192153","Reign of Cthulhu","2016","Dávid","7.4","552","40","2.16","2","4","4 players","1–4 players"],
+["290236","Canvas","2021","Dávid","7.2","593","30","1.73","1","5","3–4 players","1–5 players"],
+["136063","Forbidden Desert","2013","Dávid, KC Kláštor","7.1","602","45","2.04","2","5","4 players","1–5 players"],
+["340466","Unfathomable","2021","Fašo","7.5","606","240","3.12","3","6","5 players","4–6 players"],
+["13","Catan","1995","Fašo","7.1","616","120","2.28","3","4","4 players","3–4 players"],
+["341945","La Granja: Deluxe Master Set","2023","Fašo","8.2","667","120","3.47","1","4","3 players","1–4 players"],
+["346965","Azul: Queen's Garden","2021","Fašo","7.4","670","60","2.93","2","4","2 players","2–4 players"],
+["133848","Euphoria: Build a Better Dystopia","2013","Dávid","7.2","687","60","3.11","2","6","4–5 players","2–6 players"],
+["213460","Unlock!: Escape Adventures","2017","Dávid","7.3","697","75","2.12","2","6","2 players","1–4 players"],
+["380619","Cyclades: Legendary Edition","2024","Emil","8.1","718","90","2.85","2","6","4 players","3–6 players"],
+["369880","Beer & Bread","2022","KC Kláštor","7.3","728","45","2.35","2","2","2 players","2 players"],
+["273330","Bloodborne: The Board Game","2021","Fašo","7.7","760","75","3.07","1","4","1–2 players","1–3 players"],
+["258036","Between Two Castles of Mad King Ludwig","2018","Fašo","7.2","775","60","2.19","2","7","6 players","3–7 players"],
+["233247","Civilization: A New Dawn","2017","Fašo","7.2","787","120","3.20","2","4","4 players","2–4 players"],
+["143741","BANG! The Dice Game","2013","Dávid","6.9","875","15","1.28","3","8","6–7 players","5–8 players"],
+["373600","Cthulhu: Death May Die - Fear of the Unknown","2024","Dávid","8.7","881","90","2.70","1","5","3 players","1–4 players"],
+["368058","The Wolves","2022","Dávid","7.3","1055","75","2.82","2","5","3 players","2–4 players"],
+["396989","Evenfall","2023","Lucka","7.6","1060","120","3.10","1","4","2–3 players","1–4 players"],
+["11971","Cockroach Poker","2004","Dávid","6.8","1086","20","1.10","2","6","5 players","3–6 players"],
+["238992","Call to Adventure","2019","Miro","7.1","1106","60","2.01","1","4","3 players","1–4 players"],
+["393165","Inferno","2024","Karči","7.9","1130","120","3.61","1","4","3–4 players","1–4 players"],
+["434367","Nippon: Zaibatsu","2026","Dávid","8.6","1261","120","3.57","1","4","4 players","1–4 players"],
+["274124","Northgard: Uncharted Lands","2022","Fašo","7.6","1271","90","2.79","2","5","4 players","2–5 players"],
+["351526","Encyclopedia","2022","Lucka","7.3","1317","120","3.04","1","4","3 players","1–4 players"],
+["143884","Machi Koro","2012","KC Kláštor","6.6","1379","30","1.52","2","4","4 players","2–4 players"],
+["323156","Stroganov","2021","Karči","7.3","1605","90","3.34","1","4","3 players","1–4 players"],
+["297978","Mariposas","2020","Lucka, KC Kláštor","6.7","1693","75","2.20","2","5","3–4 players","2–5 players"],
+["429405","Orloj: The Prague Astronomical Clock","2025","Karči","8.0","1741","120","3.55","1","4","3 players","1–4 players"],
+["422042","Tea Garden","2024","Karči","7.6","1761","120","3.03","2","4","3 players","2–4 players"],
+["3955","BANG!","2002","Karči","6.5","1792","40","1.63","4","7","7 players","5–7 players"],
+["319807","Shogun no Katana","2023","Dávid","7.7","1875","180","3.76","1","4","3 players","1–4 players"],
+["383469","Unmatched: Sun's Origin","2024","Dávid","8.3","1878","40","2.00","2","2","2 players","2 players"],
+["410991","Looot","2024","Karči","7.1","1884","35","2.06","2","4","3 players","2–4 players"],
+["360206","Discordia","2022","Karči","7.4","1923","90","3.01","1","4","2 players","1–4 players"],
+["195856","Bloodborne: The Card Game","2016","Karči","6.8","1949","45","2.04","3","5","4–5 players","3–5 players"],
+["360899","Harrow County: The Game of Gothic Conflict","2024","Lucka","7.8","3160","90","3.71","1","3","2 players","1–3+ players"],
+["419199","Reef Project","2024","Karči","7.5","3260","90","2.95","1","4","3 players","1–4 players"],
+["172225","Exploding Kittens","2015","Maťa","6.1","3968","15","1.08","2","5","4–5 players","3–5 players"],
+["383496","Zombicide: White Death","2025","Maťa","7.9","4483","180","2.46","1","6","3 players","1–4, 6 players"],
+["230765","Side Effects","2017","Karči","6.7","4714","30","1.12","2","8","5–6 players","2–8 players"],
+["354307","Crown of Ash","2024","Lucka","7.5","4725","120","2.53","1","4","4 players","1–4 players"],
+["257001","Munchkin Dungeon","2020","Emil","6.5","6368","90","2.24","2","5","3 players","2–4 players"],
+["310885","Belaad: The Land of Swords and Quills","2020","Lucka","7.6","7336","60","2.47","2","6","3 players","2–6 players"],
+["373421","Tour de France Board Game","2022","Fašo","9.1","999999","120","3.00","2","6","","(no votes)"]
+];
+
+const games = RAW.map(r => { const o={}; COLS.forEach((c,i)=>o[c]=r[i]); return o; });
+
+const ownerSet = new Set();
+games.forEach(g => g['Owned by'].split(',').forEach(o => { const t=o.trim(); if(t) ownerSet.add(t); }));
+const owners = [...ownerSet].sort();
+
+let filtered = [...games];
+let sortCol = 'BGG Rank';
+let sortAsc = true;
+let selectedOwners = new Set();
+let filtersOpen = false;
+
+const chipsEl = document.getElementById('owner-chips');
+owners.forEach(o => {
+  const chip = document.createElement('span');
+  chip.className = 'owner-chip';
+  chip.textContent = o;
+  chip.onclick = () => { selectedOwners.has(o) ? (selectedOwners.delete(o), chip.classList.remove('active')) : (selectedOwners.add(o), chip.classList.add('active')); applyFilters(); };
+  chipsEl.appendChild(chip);
+});
+
+document.getElementById('game-count').textContent = games.length + ' games';
+document.getElementById('result-info').textContent = games.length + ' of ' + games.length + ' games';
+sortAndRender();
+
+function toggleFilters() {
+  filtersOpen = !filtersOpen;
+  document.getElementById('filters-panel').classList.toggle('open', filtersOpen);
+  document.getElementById('filter-btn').classList.toggle('active', filtersOpen);
+}
+
+function n(v) { const x = parseFloat((v||'').replace(',','.')); return isNaN(x) ? null : x; }
+
+function applyFilters() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const pMin = n(document.getElementById('f-play-min').value);
+  const pMax = n(document.getElementById('f-play-max').value);
+  const wMin = n(document.getElementById('f-w-min').value);
+  const wMax = n(document.getElementById('f-w-max').value);
+  const plMin = n(document.getElementById('f-p-min').value);
+  const plMax = n(document.getElementById('f-p-max').value);
+
+  filtered = games.filter(g => {
+    if (q && !g['Game'].toLowerCase().includes(q)) return false;
+    if (selectedOwners.size > 0) {
+      const ow = g['Owned by'].split(',').map(o=>o.trim());
+      if (!ow.some(o => selectedOwners.has(o))) return false;
+    }
+    const play = n(g['Playtime']);
+    if (pMin !== null && play !== null && play < pMin) return false;
+    if (pMax !== null && play !== null && play > pMax) return false;
+    const w = n(g['Weight']);
+    if (wMin !== null && w !== null && w < wMin) return false;
+    if (wMax !== null && w !== null && w > wMax) return false;
+    const mn = n(g['Min']), mx = n(g['Max']);
+    if (plMin !== null && mx !== null && mx < plMin) return false;
+    if (plMax !== null && mn !== null && mn > plMax) return false;
+    return true;
+  });
+  document.getElementById('result-info').textContent = filtered.length + ' of ' + games.length + ' games';
+  sortAndRender();
+}
+
+function clearFilters() {
+  document.getElementById('search').value = '';
+  ['f-play-min','f-play-max','f-w-min','f-w-max','f-p-min','f-p-max'].forEach(id => document.getElementById(id).value = '');
+  selectedOwners.clear();
+  document.querySelectorAll('.owner-chip').forEach(c => c.classList.remove('active'));
+  applyFilters();
+}
+
+function sortBy(col) {
+  sortAsc = (sortCol === col) ? !sortAsc : true;
+  sortCol = col;
+  document.querySelectorAll('th').forEach(th => {
+    th.classList.toggle('sorted', th.dataset.col === col);
+    th.querySelector('.arr').textContent = th.dataset.col === col ? (sortAsc ? '↑' : '↓') : '↕';
+  });
+  sortAndRender();
+}
+
+function rColor(r) {
+  if (r >= 8.0) return '#4cc88a';
+  if (r >= 7.5) return '#8b7cf8';
+  if (r >= 7.0) return '#f5a623';
+  return '#9898b8';
+}
+
+function sortAndRender() {
+  const sorted = [...filtered].sort((a,b) => {
+    if (sortCol === 'BGG Rank') {
+      const an = parseInt(a[sortCol])||999999, bn = parseInt(b[sortCol])||999999;
+      return sortAsc ? an-bn : bn-an;
+    }
+    const av = a[sortCol], bv = b[sortCol];
+    const an = parseFloat((av||'').replace(',','.')), bn = parseFloat((bv||'').replace(',','.'));
+    if (!isNaN(an) && !isNaN(bn)) return sortAsc ? an-bn : bn-an;
+    return sortAsc ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
+  });
+
+  const tbody = document.getElementById('tbody');
+  if (!sorted.length) { tbody.innerHTML = '<tr><td colspan="9" class="empty">No games match your filters.</td></tr>'; return; }
+
+  tbody.innerHTML = sorted.map(g => {
+    const rating = parseFloat(g['BGG Rating']);
+    const rankRaw = parseInt(g['BGG Rank']);
+    const rankDisplay = (!rankRaw || rankRaw >= 999999) ? '—' : '#' + rankRaw.toLocaleString();
+    const barW = rating ? Math.min(100, Math.round((rating/10)*100)) : 0;
+    const col = rating ? rColor(rating) : '#55556a';
+    const play = g['Playtime'] ? g['Playtime']+' min' : '—';
+    const w = g['Weight'] ? parseFloat(g['Weight']).toFixed(2) : '—';
+    const owner = g['Owned by'] || '—';
+    const gJson = JSON.stringify(g).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    return `<tr onclick="openGame('${gJson}')">
+      <td class="game-name" title="${g['Game'].replace(/"/g,'&quot;')}">${g['Game']}</td>
+      <td class="mono">${g['Year']||'—'}</td>
+      <td><span class="badge-owner" title="${owner}">${owner}</span></td>
+      <td><div class="rating-cell"><span class="rating-val" style="color:${col}">${rating ? rating.toFixed(1) : '—'}</span><div class="rbar"><div class="rbar-fill" style="width:${barW}%;background:${col}"></div></div></div></td>
+      <td class="mono">${rankDisplay}</td>
+      <td class="mono">${play}</td>
+      <td class="mono">${w}</td>
+      <td class="mono">${g['Min']||'—'}</td>
+      <td class="mono">${g['Max']||'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function openGame(gJson) {
+  const g = JSON.parse(gJson);
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('modal-inner').innerHTML = '<div class="modal-loading">Loading from BoardGameGeek…</div>';
+  fetchBGG(g['ID'], g);
+}
+
+async function fetchBGG(id, g) {
+  try {
+    const res = await fetch(`https://boardgamegeek.com/xmlapi2/thing?id=${id}&stats=1`);
+    if (!res.ok) throw 0;
+    const xml = new DOMParser().parseFromString(await res.text(), 'text/xml');
+    const item = xml.querySelector('item');
+    if (!item) throw 0;
+    const get = (sel, attr='value') => { const el=item.querySelector(sel); return el?(attr?el.getAttribute(attr):el.textContent):null; };
+    const getAll = (sel, attr='value') => [...item.querySelectorAll(sel)].map(el=>attr?el.getAttribute(attr):el.textContent);
+    const name = get('name[type="primary"]') || g['Game'];
+    const year = get('yearpublished') || g['Year'];
+    const thumb = get('thumbnail', null);
+    const desc = get('description', null);
+    const minp = get('minplayers') || g['Min'];
+    const maxp = get('maxplayers') || g['Max'];
+    const time = get('playingtime') || g['Playtime'];
+    const minage = get('minage');
+    const avgR = get('statistics > ratings > average');
+    const bggRankEl = item.querySelector('rank[name="boardgame"]');
+    const bggRank = bggRankEl ? bggRankEl.getAttribute('value') : null;
+    const avgW = get('statistics > ratings > averageweight');
+    const cats = getAll('link[type="boardgamecategory"]').slice(0,8);
+    const mechs = getAll('link[type="boardgamemechanic"]').slice(0,8);
+    const designers = getAll('link[type="boardgamedesigner"]').filter(d=>d!=='(Uncredited)').slice(0,4);
+    const descClean = desc ? decodeHTML(desc).replace(/<[^>]+>/g,'').slice(0,500)+'…' : '';
+    const ratingNum = avgR ? parseFloat(avgR) : null;
+    const weightNum = avgW ? parseFloat(avgW) : null;
+    const rankDisplay = (bggRank && bggRank !== 'Not Ranked') ? '#'+parseInt(bggRank).toLocaleString() : null;
+    document.getElementById('modal-inner').innerHTML = `
+      <div class="modal-hero">
+        ${thumb ? `<img class="modal-img" src="${thumb}" alt="" onerror="this.outerHTML='<div class=modal-img-ph>🎲</div>'">` : '<div class="modal-img-ph">🎲</div>'}
+        <div class="modal-title-area">
+          <div class="modal-title">${name}</div>
+          <div class="modal-year">${year}${designers.length?' · '+designers.join(', '):''}</div>
+          <div class="modal-tags">
+            ${ratingNum ? `<span class="mtag hi">⭐ ${ratingNum.toFixed(2)}</span>` : ''}
+            ${rankDisplay ? `<span class="mtag">${rankDisplay} BGG</span>` : ''}
+            ${weightNum ? `<span class="mtag">⚙ ${weightNum.toFixed(2)}</span>` : ''}
+          </div>
+          <a class="bgg-btn" href="https://boardgamegeek.com/boardgame/${id}" target="_blank">View on BoardGameGeek ↗</a>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-stats">
+          <div class="mstat"><div class="mstat-val">${minp}–${maxp}</div><div class="mstat-lbl">Players</div></div>
+          <div class="mstat"><div class="mstat-val">${time} min</div><div class="mstat-lbl">Playtime</div></div>
+          <div class="mstat"><div class="mstat-val">${minage ? minage+'+' : '—'}</div><div class="mstat-lbl">Age</div></div>
+          <div class="mstat"><div class="mstat-val" style="font-size:12px;line-height:1.3;padding-top:4px">${g['Owned by']}</div><div class="mstat-lbl">Owner</div></div>
+        </div>
+        ${descClean ? `<p class="modal-desc">${descClean}</p>` : ''}
+        ${g['Best with'] ? `<div class="section-lbl">Best with</div><div class="chips"><span class="chip">${g['Best with']}</span></div>` : ''}
+        ${designers.length ? `<div class="section-lbl">Designers</div><div class="chips">${designers.map(d=>`<span class="chip">${d}</span>`).join('')}</div>` : ''}
+        ${cats.length ? `<div class="section-lbl">Categories</div><div class="chips">${cats.map(c=>`<span class="chip">${c}</span>`).join('')}</div>` : ''}
+        ${mechs.length ? `<div class="section-lbl">Mechanics</div><div class="chips">${mechs.map(m=>`<span class="chip">${m}</span>`).join('')}</div>` : ''}
+      </div>`;
+  } catch(e) { renderBasic(g); }
+}
+
+function decodeHTML(s) { const t=document.createElement('textarea'); t.innerHTML=s; return t.value; }
+
+function renderBasic(g) {
+  const rn = parseFloat(g['BGG Rating']);
+  document.getElementById('modal-inner').innerHTML = `
+    <div class="modal-hero">
+      <div class="modal-img-ph">🎲</div>
+      <div class="modal-title-area">
+        <div class="modal-title">${g['Game']}</div>
+        <div class="modal-year">${g['Year']||''}</div>
+        <div class="modal-tags">${!isNaN(rn)?`<span class="mtag hi">⭐ ${rn.toFixed(1)}</span>`:''}</div>
+        <a class="bgg-btn" href="https://boardgamegeek.com/boardgame/${g['ID']}" target="_blank">View on BoardGameGeek ↗</a>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-stats">
+        <div class="mstat"><div class="mstat-val">${g['Min']}–${g['Max']}</div><div class="mstat-lbl">Players</div></div>
+        <div class="mstat"><div class="mstat-val">${g['Playtime']} min</div><div class="mstat-lbl">Playtime</div></div>
+        <div class="mstat"><div class="mstat-val">${parseFloat(g['Weight']).toFixed(2)}</div><div class="mstat-lbl">Weight</div></div>
+        <div class="mstat"><div class="mstat-val" style="font-size:12px;line-height:1.3;padding-top:4px">${g['Owned by']}</div><div class="mstat-lbl">Owner</div></div>
+      </div>
+      <p class="modal-err">BGG details could not be loaded — check your internet connection.</p>
+    </div>`;
+}
+
+function closeOverlay(e) { if (e.target===document.getElementById('overlay')) closeModal(); }
+function closeModal() { document.getElementById('overlay').classList.remove('show'); }
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+</script>
+</body>
+</html>
