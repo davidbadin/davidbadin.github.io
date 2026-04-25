@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <!-- Header: Banner -->
+    <ImageView
+        android:id="@+id/imgBanner"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/banner"
+        android:adjustViewBounds="true" />
+
+    <!-- Day buttons row -->
+    <LinearLayout
+        android:id="@+id/dayButtonsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="6dp"
+        android:background="@color/header_bg" />
+
+    <!-- Spotify playlist button -->
+    <Button
+        android:id="@+id/btnSpotifyPlaylist"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_gravity="end"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="4dp"
+        android:text="  Spotify"
+        android:textSize="13sp"
+        android:textColor="@color/white"
+        android:drawableStart="@drawable/spotify32"
+        android:drawablePadding="4dp"
+        android:backgroundTint="@color/spotify_green"
+        android:paddingHorizontal="12dp" />
+
+    <!-- Stage labels header -->
+    <LinearLayout
+        android:id="@+id/stageLabelsRow"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:orientation="horizontal"
+        android:background="@color/header_bg">
+
+        <!-- Hours column spacer -->
+        <View
+            android:layout_width="32dp"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Punk For Children Stage"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="@color/stage_a_label"
+            android:gravity="center"
+            android:background="@color/stage_a_header" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="United Stage"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="@color/stage_b_label"
+            android:gravity="center"
+            android:background="@color/stage_b_header" />
+    </LinearLayout>
+
+    <!-- Loading indicator -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
+
+    <!-- Schedule scroll area -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerSchedule"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false" />
+
+</LinearLayout>

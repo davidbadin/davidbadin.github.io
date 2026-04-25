@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <!-- Hours column -->
+    <LinearLayout
+        android:id="@+id/columnHours"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/hours_bg" />
+
+    <!-- Stage A column -->
+    <LinearLayout
+        android:id="@+id/columnStageA"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingHorizontal="2dp" />
+
+    <!-- Stage B column -->
+    <LinearLayout
+        android:id="@+id/columnStageB"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingHorizontal="2dp" />
+
+</LinearLayout>
