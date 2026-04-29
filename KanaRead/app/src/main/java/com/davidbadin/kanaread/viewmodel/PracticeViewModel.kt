@@ -3,6 +3,7 @@ package com.davidbadin.kanaread.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.davidbadin.kanaread.data.BestRecordsRepository
 import com.davidbadin.kanaread.data.KanaDatabase
 import com.davidbadin.kanaread.data.WordEntity
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,10 +30,12 @@ data class PracticeState(
 
 /**
  * Owns the practice session: loads words, tracks input, checks answers,
- * updates session statistics, and times correct answers.
+ * updates session statistics, times correct answers, and persists the
+ * personal best to [BestRecordsRepository] when criteria are met.
  */
 class PracticeViewModel(
-    private val database: KanaDatabase
+    private val database: KanaDatabase,
+    private val bestRecords: BestRecordsRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(PracticeState())
@@ -104,8 +107,8 @@ class PracticeViewModel(
 
     /**
      * Compare trimmed lowercase user input to the romaji of the current word,
-     * update session stats, and (for correct answers) include the elapsed
-     * seconds in the running average.
+     * update session stats, time correct answers into the running average,
+     * and update the personal best for this mode if it qualifies.
      */
     fun checkAnswer() {
         val current = _state.value
@@ -136,6 +139,11 @@ class PracticeViewModel(
             totalCorrectTimeSeconds / newCorrectCount.toFloat()
         } else 0f
 
+        // Persist a new personal best if this session has at least 10 correct
+        // answers AND the running avg is faster than any previous record.
+        // Repository enforces the same rules.
+        bestRecords.saveIfBest(current.selectedMode, avgTime, newCorrectCount)
+
         _state.update {
             it.copy(
                 isAnswerChecked = true,
@@ -149,12 +157,15 @@ class PracticeViewModel(
     }
 
     /**
-     * Factory that wires the database into the ViewModel.
+     * Factory that wires the database + records repository into the ViewModel.
      */
-    class Factory(private val database: KanaDatabase) : ViewModelProvider.Factory {
+    class Factory(
+        private val database: KanaDatabase,
+        private val bestRecords: BestRecordsRepository
+    ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return PracticeViewModel(database) as T
+            return PracticeViewModel(database, bestRecords) as T
         }
     }
 }

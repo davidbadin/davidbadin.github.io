@@ -27,6 +27,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.davidbadin.kanaread.data.BestRecordsRepository
 import com.davidbadin.kanaread.data.DatabaseSeeder
 import com.davidbadin.kanaread.data.KanaDatabase
 import com.davidbadin.kanaread.ui.PracticeScreen
@@ -40,7 +41,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val database = (application as KanaReadApplication).database
+        val app = application as KanaReadApplication
+        val database = app.database
+        val bestRecords = app.bestRecords
 
         setContent {
             KanaReadTheme {
@@ -48,7 +51,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.surface
                 ) {
-                    AppRoot(database = database)
+                    AppRoot(
+                        database = database,
+                        bestRecords = bestRecords
+                    )
                 }
             }
         }
@@ -60,7 +66,10 @@ class MainActivity : ComponentActivity() {
  * then hosts the NavHost.
  */
 @Composable
-private fun AppRoot(database: KanaDatabase) {
+private fun AppRoot(
+    database: KanaDatabase,
+    bestRecords: BestRecordsRepository
+) {
     var seeded by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -73,7 +82,7 @@ private fun AppRoot(database: KanaDatabase) {
     if (!seeded) {
         LoadingScreen()
     } else {
-        AppNavHost(database = database)
+        AppNavHost(database = database, bestRecords = bestRecords)
     }
 }
 
@@ -95,7 +104,10 @@ private fun LoadingScreen() {
 }
 
 @Composable
-private fun AppNavHost(database: KanaDatabase) {
+private fun AppNavHost(
+    database: KanaDatabase,
+    bestRecords: BestRecordsRepository
+) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "selection") {
@@ -104,7 +116,8 @@ private fun AppNavHost(database: KanaDatabase) {
             SelectionScreen(
                 onSelectMode = { mode ->
                     navController.navigate("practice/$mode")
-                }
+                },
+                bestRecords = bestRecords
             )
         }
 
@@ -114,7 +127,7 @@ private fun AppNavHost(database: KanaDatabase) {
         ) { backStack ->
             val mode = backStack.arguments?.getString("mode") ?: "hiragana"
             val practiceViewModel: PracticeViewModel = viewModel(
-                factory = PracticeViewModel.Factory(database)
+                factory = PracticeViewModel.Factory(database, bestRecords)
             )
             PracticeScreen(
                 mode = mode,

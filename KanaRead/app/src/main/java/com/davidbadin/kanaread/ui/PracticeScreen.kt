@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -26,11 +28,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,18 +48,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.runtime.collectAsState
-import com.davidbadin.kanaread.viewmodel.PracticeViewModel
-import com.davidbadin.kanaread.ui.theme.SuccessGreen
+import androidx.compose.foundation.isSystemInDarkTheme
 import com.davidbadin.kanaread.ui.theme.ErrorRed
+import com.davidbadin.kanaread.ui.theme.ErrorRedDark
+import com.davidbadin.kanaread.ui.theme.SuccessGreen
+import com.davidbadin.kanaread.ui.theme.SuccessGreenDark
+import com.davidbadin.kanaread.viewmodel.PracticeViewModel
 
 /**
- * Practice screen — shows a kana word, accepts romaji input,
- * checks the answer, and tracks session stats.
+ * Practice screen — shows a kana word, accepts romaji input, checks the
+ * answer, and tracks session stats.
+ *
+ * Back navigation (icon or system gesture) leaves immediately, no
+ * confirmation dialog.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,7 +79,7 @@ fun PracticeScreen(
         viewModel.startNewSession(mode)
     }
 
-    var showEndDialog by remember { mutableStateOf(false) }
+    var showHelp by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -87,25 +93,8 @@ fun PracticeScreen(
         }
     }
 
-    if (showEndDialog) {
-        AlertDialog(
-            onDismissRequest = { showEndDialog = false },
-            title = { Text("End session?") },
-            text = { Text("You will lose your current progress.") },
-            confirmButton = {
-                TextButton(onClick = {
-                    showEndDialog = false
-                    onBack()
-                }) {
-                    Text("Yes")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showEndDialog = false }) {
-                    Text("No")
-                }
-            }
-        )
+    if (showHelp) {
+        HelpDialog(onDismiss = { showHelp = false })
     }
 
     Surface(
@@ -132,10 +121,18 @@ fun PracticeScreen(
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { showEndDialog = true }) {
+                    IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { showHelp = true }) {
+                        Icon(
+                            imageVector = Icons.Filled.HelpOutline,
+                            contentDescription = "Help"
                         )
                     }
                 },
@@ -242,6 +239,24 @@ private fun StatChip(label: String, value: String) {
     }
 }
 
+/**
+ * Picks a font size based on the kana length so the word always fits on
+ * one line. Tuned for the 24dp screen padding + 16dp card padding used
+ * around the card. Long compound kana like "プレゼンテーション" (9 chars)
+ * shrink to ~36sp; short words like "あ" can grow to 88sp.
+ */
+private fun fontSizeFor(text: String): TextUnit = when (text.length) {
+    0 -> 60.sp
+    1, 2, 3 -> 88.sp
+    4 -> 76.sp
+    5 -> 64.sp
+    6 -> 56.sp
+    7 -> 48.sp
+    8 -> 42.sp
+    9 -> 36.sp
+    else -> 32.sp
+}
+
 @Composable
 private fun KanaCard(text: String) {
     Card(
@@ -261,10 +276,12 @@ private fun KanaCard(text: String) {
         ) {
             Text(
                 text = text,
-                fontSize = 60.sp,
+                fontSize = fontSizeFor(text),
                 fontWeight = FontWeight.Medium,
                 textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                softWrap = false
             )
         }
     }
@@ -277,7 +294,13 @@ private fun FeedbackBlock(
     correctRomaji: String,
     showRomaji: Boolean
 ) {
-    val color: Color = if (isCorrect) SuccessGreen else ErrorRed
+    val dark = isSystemInDarkTheme()
+    val color: Color = when {
+        isCorrect && dark -> SuccessGreenDark
+        isCorrect -> SuccessGreen
+        dark -> ErrorRedDark
+        else -> ErrorRed
+    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
