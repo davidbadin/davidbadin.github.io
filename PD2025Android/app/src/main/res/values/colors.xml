@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General -->
+    <color name="background">#1A1A1A</color>
+    <color name="header_bg">#111111</color>
+    <color name="hours_bg">#222222</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#AAAAAA</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- Stage A - Yellow (Punk For Children Stage) -->
+    <color name="stage_a_header">#2A2200</color>
+    <color name="stage_a_label">#D4C84A</color>
+    <color name="stage_a_text">#1A1A00</color>
+
+    <!-- Stage B - Grey (United Stage) -->
+    <color name="stage_b_header">#2A2A2A</color>
+    <color name="stage_b_label">#CCCCCC</color>
+    <color name="stage_b_text">#111111</color>
+
+    <!-- Spotify -->
+    <color name="spotify_green">#1DB954</color>
+
+    <!-- Day buttons -->
+    <color name="day_button_active_text">#1A1A00</color>
+    <color name="day_button_text">#CCCCCC</color>
+
+    <!-- Currently playing highlight -->
+    <color name="highlight_current">#33D4C84A</color>
+
+    <!-- Popup -->
+    <color name="popup_bg">#222222</color>
+    <color name="drag_handle">#555555</color>
+    <color name="button_bg">#333333</color>
+</resources>
