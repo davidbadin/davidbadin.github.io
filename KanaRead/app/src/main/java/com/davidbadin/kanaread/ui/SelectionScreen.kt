@@ -12,8 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BrightnessAuto
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.HelpOutline
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,18 +40,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.davidbadin.kanaread.data.BestRecordsRepository
+import com.davidbadin.kanaread.data.ThemeMode
 
 /**
  * First screen — picks a practice mode.
  *
- * Top bar exposes the Help dialog and the Best Records dialog.
+ * Top bar exposes:
+ *  - the theme cycle button (System / Light / Dark)
+ *  - the Best Records dialog
+ *  - the Help dialog
+ *
  * onSelectMode receives "hiragana", "katakana", or "both".
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectionScreen(
     onSelectMode: (String) -> Unit,
-    bestRecords: BestRecordsRepository
+    bestRecords: BestRecordsRepository,
+    themeMode: ThemeMode,
+    onCycleThemeMode: () -> Unit
 ) {
     var showHelp by remember { mutableStateOf(false) }
     var showRecords by remember { mutableStateOf(false) }
@@ -70,6 +80,21 @@ fun SelectionScreen(
             TopAppBar(
                 title = { },
                 actions = {
+                    IconButton(onClick = onCycleThemeMode) {
+                        Icon(
+                            imageVector = when (themeMode) {
+                                ThemeMode.SYSTEM -> Icons.Filled.BrightnessAuto
+                                ThemeMode.LIGHT -> Icons.Filled.LightMode
+                                ThemeMode.DARK -> Icons.Filled.DarkMode
+                            },
+                            contentDescription = when (themeMode) {
+                                ThemeMode.SYSTEM -> "Theme: follow system"
+                                ThemeMode.LIGHT -> "Theme: light"
+                                ThemeMode.DARK -> "Theme: dark"
+                            },
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                     IconButton(onClick = { showRecords = true }) {
                         Icon(
                             imageVector = Icons.Filled.EmojiEvents,

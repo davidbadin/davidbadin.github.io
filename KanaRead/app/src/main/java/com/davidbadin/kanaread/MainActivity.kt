@@ -3,6 +3,7 @@ package com.davidbadin.kanaread
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,14 +23,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.davidbadin.kanaread.data.BestRecordsRepository
 import com.davidbadin.kanaread.data.DatabaseSeeder
 import com.davidbadin.kanaread.data.KanaDatabase
+import com.davidbadin.kanaread.data.ThemeMode
+import com.davidbadin.kanaread.data.ThemeRepository
 import com.davidbadin.kanaread.ui.PracticeScreen
 import com.davidbadin.kanaread.ui.SelectionScreen
 import com.davidbadin.kanaread.ui.theme.KanaReadTheme
@@ -44,16 +47,32 @@ class MainActivity : ComponentActivity() {
         val app = application as KanaReadApplication
         val database = app.database
         val bestRecords = app.bestRecords
+        val themeRepository = app.themeRepository
 
         setContent {
-            KanaReadTheme {
+            // Manual theme toggle, persisted across launches.
+            var themeMode by remember { mutableStateOf(themeRepository.getMode()) }
+            val systemDark = isSystemInDarkTheme()
+            val resolvedDark = when (themeMode) {
+                ThemeMode.SYSTEM -> systemDark
+                ThemeMode.LIGHT -> false
+                ThemeMode.DARK -> true
+            }
+
+            KanaReadTheme(darkTheme = resolvedDark) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.surface
                 ) {
                     AppRoot(
                         database = database,
-                        bestRecords = bestRecords
+                        bestRecords = bestRecords,
+                        themeMode = themeMode,
+                        onCycleThemeMode = {
+                            val next = themeRepository.cycle(themeMode)
+                            themeRepository.setMode(next)
+                            themeMode = next
+                        }
                     )
                 }
             }
@@ -68,7 +87,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun AppRoot(
     database: KanaDatabase,
-    bestRecords: BestRecordsRepository
+    bestRecords: BestRecordsRepository,
+    themeMode: ThemeMode,
+    onCycleThemeMode: () -> Unit
 ) {
     var seeded by remember { mutableStateOf(false) }
 
@@ -82,7 +103,12 @@ private fun AppRoot(
     if (!seeded) {
         LoadingScreen()
     } else {
-        AppNavHost(database = database, bestRecords = bestRecords)
+        AppNavHost(
+            database = database,
+            bestRecords = bestRecords,
+            themeMode = themeMode,
+            onCycleThemeMode = onCycleThemeMode
+        )
     }
 }
 
@@ -106,7 +132,9 @@ private fun LoadingScreen() {
 @Composable
 private fun AppNavHost(
     database: KanaDatabase,
-    bestRecords: BestRecordsRepository
+    bestRecords: BestRecordsRepository,
+    themeMode: ThemeMode,
+    onCycleThemeMode: () -> Unit
 ) {
     val navController = rememberNavController()
 
@@ -117,7 +145,9 @@ private fun AppNavHost(
                 onSelectMode = { mode ->
                     navController.navigate("practice/$mode")
                 },
-                bestRecords = bestRecords
+                bestRecords = bestRecords,
+                themeMode = themeMode,
+                onCycleThemeMode = onCycleThemeMode
             )
         }
 
