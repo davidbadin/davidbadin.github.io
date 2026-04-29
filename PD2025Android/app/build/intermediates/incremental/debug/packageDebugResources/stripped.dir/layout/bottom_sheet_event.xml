@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/popup_bg"
+    android:paddingBottom="24dp">
+
+    <!-- Drag handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/drag_handle" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvPopupTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:paddingBottom="4dp"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary" />
+
+    <!-- Subtitle: time + stage -->
+    <TextView
+        android:id="@+id/tvPopupSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:paddingBottom="8dp"
+        android:textSize="14sp"
+        android:textColor="@color/text_secondary" />
+
+    <!-- Body: description -->
+    <TextView
+        android:id="@+id/tvPopupBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:paddingBottom="12dp"
+        android:textSize="14sp"
+        android:textColor="@color/text_primary" />
+
+    <!-- Spotify embedded player -->
+    <WebView
+        android:id="@+id/webViewSpotify"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="12dp"
+        android:visibility="gone" />
+
+    <!-- Action buttons: Favourite + Close -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:paddingHorizontal="16dp">
+
+        <Button
+            android:id="@+id/btnFavorite"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:textSize="24sp"
+            android:text="♡"
+            android:backgroundTint="@color/button_bg"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnClose"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:textSize="20sp"
+            android:text="✕"
+            android:textColor="@color/text_primary"
+            android:backgroundTint="@color/button_bg" />
+
+    </LinearLayout>
+
+</LinearLayout>
