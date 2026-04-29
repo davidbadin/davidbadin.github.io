@@ -1,0 +1,31 @@
+R_DEF: Internal format may change without notice
+local
+color black
+color white
+drawable ic_launcher_background
+drawable ic_launcher_foreground
+mipmap ic_launcher
+mipmap ic_launcher_round
+string app_name
+string button_back
+string button_check
+string button_next
+string dialog_end_message
+string dialog_end_title
+string dialog_no
+string dialog_yes
+string label_avg_time
+string label_correct
+string label_incorrect
+string label_score
+string label_words
+string loading_database
+string mode_both
+string mode_hiragana
+string mode_katakana
+string placeholder_input
+string subtitle_main
+string title_main
+style Theme.KanaRead
+xml backup_rules
+xml data_extraction_rules
