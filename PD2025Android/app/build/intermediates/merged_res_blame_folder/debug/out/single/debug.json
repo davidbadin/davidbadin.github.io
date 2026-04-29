@@ -1,0 +1,78 @@
+[
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "com.pd2025.festival.app-main-37:/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/drawable_spotify32.png.flat",
+        "source": "com.pd2025.festival.app-main-37:/drawable/spotify32.png"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/drawable_event_grey_mid.png.flat",
+        "source": "com.pd2025.festival.app-main-37:/drawable/event_grey_mid.png"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/drawable_event_yellow_bot.png.flat",
+        "source": "com.pd2025.festival.app-main-37:/drawable/event_yellow_bot.png"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "com.pd2025.festival.app-main-37:/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/drawable_button_grey.png.flat",
+        "source": "com.pd2025.festival.app-main-37:/drawable/button_grey.png"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/layout_activity_main.xml.flat",
+        "source": "com.pd2025.festival.app-main-37:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/layout_item_event.xml.flat",
+        "source": "com.pd2025.festival.app-main-37:/layout/item_event.xml"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/drawable_event_grey_top.png.flat",
+        "source": "com.pd2025.festival.app-main-37:/drawable/event_grey_top.png"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "com.pd2025.festival.app-main-37:/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/drawable_banner.png.flat",
+        "source": "com.pd2025.festival.app-main-37:/drawable/banner.png"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/drawable_event_yellow_mid.png.flat",
+        "source": "com.pd2025.festival.app-main-37:/drawable/event_yellow_mid.png"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/layout_item_schedule.xml.flat",
+        "source": "com.pd2025.festival.app-main-37:/layout/item_schedule.xml"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "com.pd2025.festival.app-main-37:/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "com.pd2025.festival.app-main-37:/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/drawable_event_yellow_top.png.flat",
+        "source": "com.pd2025.festival.app-main-37:/drawable/event_yellow_top.png"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/layout_bottom_sheet_event.xml.flat",
+        "source": "com.pd2025.festival.app-main-37:/layout/bottom_sheet_event.xml"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/drawable_event_grey_bot.png.flat",
+        "source": "com.pd2025.festival.app-main-37:/drawable/event_grey_bot.png"
+    },
+    {
+        "merged": "com.pd2025.festival.app-merged_res-35:/drawable_button_yellow.png.flat",
+        "source": "com.pd2025.festival.app-main-37:/drawable/button_yellow.png"
+    }
+]
