@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="app_name">KanaRead</string>
+    <string name="button_back">Back</string>
+    <string name="button_check">Check</string>
+    <string name="button_next">Next word →</string>
+    <string name="dialog_end_message">You will lose your current progress.</string>
+    <string name="dialog_end_title">End session?</string>
+    <string name="dialog_no">No</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="label_avg_time">Avg time</string>
+    <string name="label_correct">Correct! ✓</string>
+    <string name="label_incorrect">Incorrect ✗</string>
+    <string name="label_score">Score</string>
+    <string name="label_words">Words</string>
+    <string name="loading_database">Preparing word database…</string>
+    <string name="mode_both">Both</string>
+    <string name="mode_hiragana">Hiragana</string>
+    <string name="mode_katakana">Katakana</string>
+    <string name="placeholder_input">Type the reading...</string>
+    <string name="subtitle_main">Choose what to practice</string>
+    <string name="title_main">Kana Practice</string>
+    <style name="Theme.KanaRead" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>
