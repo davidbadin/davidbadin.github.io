@@ -1,0 +1,281 @@
+<boardgames termsofuse="https://boardgamegeek.com/xmlapi/termsofuse">
+			<boardgame objectid="123">
+   <yearpublished>1996</yearpublished>
+   <minplayers>2</minplayers>
+   <maxplayers>5</maxplayers>
+   <playingtime>45</playingtime>
+   <minplaytime>45</minplaytime>
+   <maxplaytime>45</maxplaytime>
+   <age>7</age>
+
+   	   <name primary="true" sortindex="1">Green Thumb Cards</name>
+   
+   <description>In this card game players are competing gardeners, attempting to collect sets of various plants in order to put them into their stacks.  In the meantime their incomplete sets are vulnerable to various event cards and other players.  Players have a number of attack cards at their disposal which they can use to wreak havoc on opponents' gardens.  These cards range from bugs and pests to kids tromping through the garden, and even animals that chew up or pee all over the plants.
+
+</description>
+
+   	   <thumbnail>https://cf.geekdo-images.com/eH99Of7TbWZZ0jrPstm8Yw__small/img/SnIOGkNSIq3HV_gtIkNiMA2tmkA=/fit-in/200x150/filters:strip_icc()/pic6303221.png</thumbnail>
+	   <image>https://cf.geekdo-images.com/eH99Of7TbWZZ0jrPstm8Yw__original/img/9Cv1ZOgv41TK4s2hBSH2eXKOELA=/0x0/filters:format(png)/pic6303221.png</image>
+   
+   	   		   <cardset objectid="87774"></cardset>
+      	   		   <boardgamedesigner objectid="3">(Uncredited)</boardgamedesigner>
+      	   		   <boardgameartist objectid="3">(Uncredited)</boardgameartist>
+      	   		   <boardgamecategory objectid="1002">Card Game</boardgamecategory>
+      	   		   <boardgameversion objectid="255522">English edition</boardgameversion>
+      	   		   <boardgamepublisher objectid="2330">Playful Minds</boardgamepublisher>
+      	   		   <boardgamemechanic objectid="2004">Set Collection</boardgamemechanic>
+      	   		   <boardgamemechanic objectid="2686">Take That</boardgamemechanic>
+      	   		   <boardgamefamily objectid="48865">Theme: Gardening</boardgamefamily>
+      
+   <poll name="suggested_numplayers" title="User Suggested Number of Players" totalvotes="1">
+			
+		<results numplayers="1">		
+					<result value="Best" numvotes="0" />
+					<result value="Recommended" numvotes="0" />
+					<result value="Not Recommended" numvotes="1" />
+				</results>					
+			
+		<results numplayers="2">		
+					<result value="Best" numvotes="0" />
+					<result value="Recommended" numvotes="0" />
+					<result value="Not Recommended" numvotes="0" />
+				</results>					
+			
+		<results numplayers="3">		
+					<result value="Best" numvotes="0" />
+					<result value="Recommended" numvotes="1" />
+					<result value="Not Recommended" numvotes="0" />
+				</results>					
+			
+		<results numplayers="4">		
+					<result value="Best" numvotes="1" />
+					<result value="Recommended" numvotes="0" />
+					<result value="Not Recommended" numvotes="0" />
+				</results>					
+			
+		<results numplayers="5">		
+					<result value="Best" numvotes="0" />
+					<result value="Recommended" numvotes="1" />
+					<result value="Not Recommended" numvotes="0" />
+				</results>					
+			
+		<results numplayers="5+">		
+					<result value="Best" numvotes="0" />
+					<result value="Recommended" numvotes="0" />
+					<result value="Not Recommended" numvotes="1" />
+				</results>					
+	</poll>
+<poll-summary name="suggested_numplayers"  title="User Suggested Number of Players">
+  <result name="bestwith" value="Best with 4 players" />
+  <result name="recommmendedwith" value="Recommended with 3–5 players" />
+</poll-summary>
+
+   <poll name="language_dependence" title="Language Dependence" totalvotes="2">
+			
+		<results>		
+					<result level="1" value="No necessary in-game text" numvotes="1" />
+					<result level="2" value="Some necessary text - easily memorized or small crib sheet" numvotes="1" />
+					<result level="3" value="Moderate in-game text - needs crib sheet or paste ups" numvotes="0" />
+					<result level="4" value="Extensive use of text - massive conversion needed to be playable" numvotes="0" />
+					<result level="5" value="Unplayable in another language" numvotes="0" />
+				</results>					
+	</poll>
+
+   <poll name="suggested_playerage" title="User Suggested Player Age" totalvotes="1">
+			<results>		
+					<result value="2" numvotes="0" />
+					<result value="3" numvotes="0" />
+					<result value="4" numvotes="0" />
+					<result value="5" numvotes="0" />
+					<result value="6" numvotes="0" />
+					<result value="8" numvotes="1" />
+					<result value="10" numvotes="0" />
+					<result value="12" numvotes="0" />
+					<result value="14" numvotes="0" />
+					<result value="16" numvotes="0" />
+					<result value="18" numvotes="0" />
+					<result value="21 and up" numvotes="0" />
+				</results>					
+	</poll>
+
+
+   
+
+      <statistics>
+	   <ratings>
+		   <usersrated>29</usersrated>
+		   <average>7.31034</average>
+		   <bayesaverage>0</bayesaverage>
+
+		   <ranks>
+			   				   				   <rank type="subtype" id="1" name="boardgame" friendlyname="Board Game Rank" value="Not Ranked" bayesaverage="Not Ranked" />
+				   			   		   </ranks>
+
+		   <stddev>2.06537</stddev>
+		   <median>0</median>
+		   <owned>54</owned>
+		   <trading>2</trading>
+		   <wanting>4</wanting>
+		   <wishing>11</wishing>
+		   <numcomments>14</numcomments>
+		   <numweights>5</numweights>
+		   <averageweight>1.2</averageweight>
+	   </ratings>
+   </statistics>
+
+
+</boardgame>
+
+<boardgame objectid="124">
+   <yearpublished>1997</yearpublished>
+   <minplayers>3</minplayers>
+   <maxplayers>4</maxplayers>
+   <playingtime>90</playingtime>
+   <minplaytime>90</minplaytime>
+   <maxplaytime>90</maxplaytime>
+   <age>12</age>
+
+   	   <name primary="true" sortindex="1">Primordial Soup</name>
+   	   <name  sortindex="1">Ursuppe</name>
+   
+   <description>In Primordial Soup each player controls a species of primitive "amoeboid" organisms. Together these species form an ecosystem where each feeds on the excreta of the others. To win a player must guide the evolution of their species to increase their population and the sophistication of their genes.
+
+Each round consists of various phases. Firstly each organism must move (either by drifting or under its own power) and then feed. Then the environment undergoes a random change which changes the direction of drift and may force some organisms to give up genes. Then the species may buy new genes, and then may reproduce. At this point some organisms will die and finally each species is scored. This is repeated until either a species gets at least 42 points or the environment cards are exhausted.
+
+The possible genes include genes for enhanced control of movement, more efficient metabolism, more efficient reproduction, attack and defence.
+
+Expanded by:
+
+    Primordial Soup: Freshly Spiced
+
+
+</description>
+
+   	   <thumbnail>https://cf.geekdo-images.com/92He_gRx-E9sZLJwP6lsgA__small/img/ydWCjArE9Cw-WOQLjlVMpbl8wCg=/fit-in/200x150/filters:strip_icc()/pic294731.jpg</thumbnail>
+	   <image>https://cf.geekdo-images.com/92He_gRx-E9sZLJwP6lsgA__original/img/qNhNoko5aTtSNK7T3A7XonECNN8=/0x0/filters:format(jpeg)/pic294731.jpg</image>
+   
+   	   		   <cardset objectid="91925"></cardset>
+      	   		   <boardgamehonor objectid="107544">1997 Meeples Choice Award Nominee</boardgamehonor>
+      	   		   <boardgamehonor objectid="19860">1998 Deutscher Spiele Preis Best Family/Adult Game 2nd Place</boardgamehonor>
+      	   		   <boardgamehonor objectid="20036">2006 Games Magazine Best New Family Strategy Game Winner</boardgamehonor>
+      	      	   		   <boardgamemechanic objectid="2957">Bias</boardgamemechanic>
+      	      	   		   <boardgamemechanic objectid="2072">Dice Rolling</boardgamemechanic>
+      	   		   <boardgamepublisher objectid="54">Doris &amp; Frank</boardgamepublisher>
+      	   		   <boardgameversion objectid="24591">Doris &amp; Frank German fourth edition</boardgameversion>
+      	   		   <boardgameversion objectid="69792">Doris &amp; Frank German/English edition with Deutsche Spiele Preis (German packaging)</boardgameversion>
+      	   		   <boardgameversion objectid="32403">Doris &amp; Frank third edition</boardgameversion>
+      	      	      	      	      	   		   <boardgamepodcastepisode objectid="108270">Episode 10: Cosmic Encounter/Why We Play</boardgamepodcastepisode>
+      	   		   <boardgamepodcastepisode objectid="80521">Essen 2011 parte 1</boardgamepodcastepisode>
+      	      	      	      	      	      	      	      	      	      	      	      	      	      	      	      	      	   		   <boardgamemechanic objectid="2676">Grid Movement</boardgamemechanic>
+      	      	      	   		   <boardgamedesigner objectid="74">Doris Matthäus</boardgamedesigner>
+      	   		   <boardgameartist objectid="74">Doris Matthäus</boardgameartist>
+      	   		   <boardgamedesigner objectid="75">Frank Nestel</boardgamedesigner>
+      	   		   <boardgamecategory objectid="1036">Prehistoric</boardgamecategory>
+      	   		   <boardgamepodcastepisode objectid="463781">Primordial Soup</boardgamepodcastepisode>
+      	   		   <boardgameexpansion objectid="2005">Primordial Soup: Freshly Spiced</boardgameexpansion>
+      	      	      	      	      	      	   		   <boardgamesubdomain objectid="5497">Strategy Games</boardgamesubdomain>
+      	   		   <boardgamepodcastepisode objectid="5576">The Spiel #68 - That&#039;s A Wrap - 2008 Holiday Gift Guide</boardgamepodcastepisode>
+      	   		   <boardgamefamily objectid="41487">Theme: Bacteria</boardgamefamily>
+      	   		   <boardgamefamily objectid="59442">Theme: Biology</boardgamefamily>
+      	   		   <boardgamefamily objectid="16886">Theme: Evolution</boardgamefamily>
+      	   		   <boardgamefamily objectid="48871">Theme: Nature</boardgamefamily>
+      	   		   <boardgamefamily objectid="66167">Theme: Science</boardgamefamily>
+      	   		   <boardgamemechanic objectid="2015">Variable Player Powers</boardgamemechanic>
+      	      	   		   <boardgameversion objectid="26601">Z-man edition with DSP logo</boardgameversion>
+      	   		   <boardgamepublisher objectid="538">Z-Man Games</boardgamepublisher>
+      
+   <poll name="suggested_numplayers" title="User Suggested Number of Players" totalvotes="72">
+			
+		<results numplayers="1">		
+					<result value="Best" numvotes="0" />
+					<result value="Recommended" numvotes="0" />
+					<result value="Not Recommended" numvotes="37" />
+				</results>					
+			
+		<results numplayers="2">		
+					<result value="Best" numvotes="0" />
+					<result value="Recommended" numvotes="6" />
+					<result value="Not Recommended" numvotes="35" />
+				</results>					
+			
+		<results numplayers="3">		
+					<result value="Best" numvotes="13" />
+					<result value="Recommended" numvotes="42" />
+					<result value="Not Recommended" numvotes="8" />
+				</results>					
+			
+		<results numplayers="4">		
+					<result value="Best" numvotes="58" />
+					<result value="Recommended" numvotes="9" />
+					<result value="Not Recommended" numvotes="0" />
+				</results>					
+			
+		<results numplayers="4+">		
+					<result value="Best" numvotes="1" />
+					<result value="Recommended" numvotes="6" />
+					<result value="Not Recommended" numvotes="26" />
+				</results>					
+	</poll>
+<poll-summary name="suggested_numplayers"  title="User Suggested Number of Players">
+  <result name="bestwith" value="Best with 4 players" />
+  <result name="recommmendedwith" value="Recommended with 3–4 players" />
+</poll-summary>
+
+   <poll name="language_dependence" title="Language Dependence" totalvotes="20">
+			
+		<results>		
+					<result level="1" value="No necessary in-game text" numvotes="0" />
+					<result level="2" value="Some necessary text - easily memorized or small crib sheet" numvotes="0" />
+					<result level="3" value="Moderate in-game text - needs crib sheet or paste ups" numvotes="20" />
+					<result level="4" value="Extensive use of text - massive conversion needed to be playable" numvotes="0" />
+					<result level="5" value="Unplayable in another language" numvotes="0" />
+				</results>					
+	</poll>
+
+   <poll name="suggested_playerage" title="User Suggested Player Age" totalvotes="17">
+			<results>		
+					<result value="2" numvotes="0" />
+					<result value="3" numvotes="0" />
+					<result value="4" numvotes="0" />
+					<result value="5" numvotes="0" />
+					<result value="6" numvotes="0" />
+					<result value="8" numvotes="0" />
+					<result value="10" numvotes="4" />
+					<result value="12" numvotes="11" />
+					<result value="14" numvotes="1" />
+					<result value="16" numvotes="1" />
+					<result value="18" numvotes="0" />
+					<result value="21 and up" numvotes="0" />
+				</results>					
+	</poll>
+
+
+   
+
+      <statistics>
+	   <ratings>
+		   <usersrated>4782</usersrated>
+		   <average>6.91664</average>
+		   <bayesaverage>6.43992</bayesaverage>
+
+		   <ranks>
+			   				   				   <rank type="subtype" id="1" name="boardgame" friendlyname="Board Game Rank" value="1470" bayesaverage="6.43992" />
+				   			   				   				   <rank type="family" id="5497" name="strategygames" friendlyname="Strategy Game Rank" value="844" bayesaverage="6.53921" />
+				   			   		   </ranks>
+
+		   <stddev>1.32166</stddev>
+		   <median>0</median>
+		   <owned>5785</owned>
+		   <trading>241</trading>
+		   <wanting>224</wanting>
+		   <wishing>939</wishing>
+		   <numcomments>1522</numcomments>
+		   <numweights>477</numweights>
+		   <averageweight>2.7358</averageweight>
+	   </ratings>
+   </statistics>
+
+
+</boardgame>
+
+</boardgames>

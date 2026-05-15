@@ -1,0 +1,23 @@
+# --- Android Studio / Gradle build output ---
+/build/
+/app/build/
+/captures/
+/.gradle/
+/local.properties
+
+# --- IDE files (keep some shared, ignore user-specific) ---
+/.idea/
+*.iml
+
+# --- Signing keys & secrets — NEVER commit these ---
+*.jks
+*.keystore
+keystore.properties
+
+# --- macOS / Linux junk ---
+.DS_Store
+Thumbs.db
+
+# --- Logs & temp ---
+*.log
+/.kotlin/
