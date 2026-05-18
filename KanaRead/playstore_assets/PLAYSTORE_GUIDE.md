@@ -108,64 +108,79 @@ Desktop there and click **Fetch origin → Pull**. That brings the new
 > force-push. Easier in your case: just don't put real secrets in the repo
 > in the first place. The current `.gitignore` ensures that.
 
-### 1.2 👉 YOU DO NOW: generate the keystore (in your Distrobox terminal)
+### 1.2 👉 YOU DO NOW: generate the keystore (Android Studio GUI wizard)
 
-Android Studio bundles `keytool` inside its JDK. Run this command — it creates a
-keystore file outside the project directory so it can never accidentally get
-committed:
+You'll use Android Studio's built-in dialog to create the signing key. No
+terminal needed.
 
-```bash
-mkdir -p ~/.android-keystores
-keytool -genkey -v \
-  -keystore ~/.android-keystores/kanaread-upload.jks \
-  -keyalg RSA -keysize 2048 -validity 10000 \
-  -alias kanaread-upload
-```
+1. In Android Studio top menu: **Build → Generate Signed App Bundle / APK…**
+2. Choose **Android App Bundle**, click **Next**.
+3. Under "Key store path", click **Create new…**.
+4. Fill in the dialog:
+   - **Key store path:** click the small folder icon on the right. In the file
+     chooser, navigate to your **home folder**, create a new folder named
+     `.android-keystores` (the leading dot is intentional — it makes the folder
+     hidden so it doesn't clutter your home view), then type the filename
+     `kanaread-upload.jks` and click OK.
+   - **Password** and **Confirm:** pick a strong keystore password. **Write it
+     down somewhere safe — you cannot recover it.**
+   - Below, in the **Key** section:
+     - **Alias:** `kanaread-upload`
+     - **Password** and **Confirm:** the same password as above (using one
+       password for both keeps things simple).
+     - **Validity (years):** `25` or higher (Google Play requires the cert to
+       remain valid past Oct 22, 2033).
+     - Under **Certificate**, fill **First and Last Name:** `David Badin`. The
+       other fields (Organization, City, State, Country code) are optional but
+       you can fill in `KanaRead`, `Bratislava`, `SK` to keep things tidy.
+5. Click **OK**. The dialog creates `kanaread-upload.jks` at the path you
+   chose.
+6. You can dismiss the rest of the wizard now (no need to actually build the
+   AAB yet — we'll do that in step 1.5 after we set up the properties file).
 
-You'll be prompted for:
-
-- A **keystore password** (write it down — you cannot recover it).
-- A **key password** (use the same one as the keystore password — simpler).
-- "First and last name" — put `David Badin`. The rest can be `KanaRead`,
-  `Bratislava`, `SK` etc.
-
-The result is a single file: `~/.android-keystores/kanaread-upload.jks`.
-
-> **Back up that file right now.** Copy it to a USB stick, an encrypted cloud
-> folder, or both. If you lose it you will not be able to ship updates.
+> **Back up that `.jks` file right now.** Copy it to a USB stick, an encrypted
+> cloud folder, or both. If you lose it you will not be able to ship updates
+> to KanaRead, ever.
 >
 > If you build KanaRead on more than one PC, you also need to copy this `.jks`
-> manually to each PC (it intentionally won't sync via GitHub). See section 1.5.
+> manually to each PC (it intentionally won't sync via GitHub). See section 1.7.
 
 ### 1.3 👉 YOU DO NOW: create your local `keystore.properties`
 
-I've already added `keystore.properties.example` to the project. Copy it to
-the real filename and fill in your values:
+I've already added `keystore.properties.example` to the project. You're going
+to copy it, rename the copy, and fill in your real values. All from inside
+Android Studio.
 
-```bash
-cd /path/to/KanaRead
-cp keystore.properties.example keystore.properties
-# then open keystore.properties in your editor of choice (VS Code, nano…)
-# and replace the placeholders with the real path + passwords from step 1.2.
-```
+1. In Android Studio's **Project** panel on the left (set the dropdown at the
+   top to **Project** view, not Android view, so you see the raw folders),
+   expand the `KanaRead` root.
+2. Right-click `keystore.properties.example` → **Copy**.
+3. Right-click the `KanaRead` root folder → **Paste**. A dialog asks for the
+   new name → change it to `keystore.properties` (drop the `.example`) → OK.
+4. Double-click the new `keystore.properties` to open it in the editor.
+5. Replace the placeholder values with the real ones from step 1.2:
 
-The final file should look like this (with your real values):
+   ```
+   storeFile=/home/deck/.android-keystores/kanaread-upload.jks
+   storePassword=THE_PASSWORD_YOU_SET_IN_THE_WIZARD
+   keyAlias=kanaread-upload
+   keyPassword=THE_PASSWORD_YOU_SET_IN_THE_WIZARD
+   ```
 
-```
-storeFile=/home/deck/.android-keystores/kanaread-upload.jks
-storePassword=THE_PASSWORD_YOU_TYPED_IN_KEYTOOL
-keyAlias=kanaread-upload
-keyPassword=THE_PASSWORD_YOU_TYPED_IN_KEYTOOL
-```
+   Adjust `/home/deck/...` to your real home directory. Easy way to find it:
+   open the wizard from step 1.2 again, click "Choose existing" next to "Key
+   store path", and the file picker will be sitting in whichever folder you
+   created the keystore in — copy the path from the address bar at the top of
+   that dialog. Cancel the wizard once you have the path.
 
-Adjust `/home/deck/...` to your real home directory inside Distrobox
-(`echo $HOME` will tell you).
+6. Save the file (Ctrl+S).
 
-**Verification in GitHub Desktop:** after creating `keystore.properties`,
+**Verification in GitHub Desktop:** after saving `keystore.properties`,
 switch to GitHub Desktop and look at the "Changes" tab. It should **NOT**
 show `keystore.properties` as a change. If it does, the `.gitignore` rule
 isn't matching — most likely the file ended up outside the `KanaRead/` folder.
-Double-check it's in the project root next to `settings.gradle.kts`.
+Double-check in Android Studio that it sits at the same level as
+`settings.gradle.kts`, not inside `app/` or anywhere else.
 
 ### 1.4 ✅ DONE: signing config wired into `app/build.gradle.kts`
 
@@ -262,22 +277,34 @@ release build needs the keystore.
 
 ### 1.5 👉 YOU DO NOW: build the signed Android App Bundle (.aab)
 
-In Android Studio: **Build → Generate Signed App Bundle / APK → Android App
-Bundle → use existing key store → Release**.
+This is the file you'll upload to Google Play. Build it from the same dialog
+you used in step 1.2:
 
-Or from the terminal, inside Distrobox, in the project root:
+1. Android Studio top menu: **Build → Generate Signed App Bundle / APK…**
+2. Choose **Android App Bundle** → **Next**.
+3. Under "Key store path", click **Choose existing**, navigate to your
+   `.android-keystores/kanaread-upload.jks` and select it.
+4. Fill in **Key store password**, pick **kanaread-upload** as the **Key
+   alias**, and fill in the **Key password** (same password if you used one
+   for both). Tick **Remember passwords** so Android Studio doesn't ask again
+   on next builds.
+5. Click **Next**.
+6. Build variant: **release** (NOT debug). Click **Create**.
+7. Wait for the build (1–3 minutes the first time, less afterwards). When it
+   finishes, Android Studio shows a notification in the bottom-right with two
+   links: **locate** and **analyze**. Click **locate** — your file manager
+   opens at the folder containing `app-release.aab`.
 
-```bash
-./gradlew clean bundleRelease
+The file lives at:
+
+```
+KanaRead/app/release/app-release.aab
 ```
 
-The signed bundle ends up at:
+(or `KanaRead/app/build/outputs/bundle/release/app-release.aab` on some setups
+— the **locate** link from the notification will take you to the right one).
 
-```
-app/build/outputs/bundle/release/app-release.aab
-```
-
-This `.aab` is what you upload to Google Play.
+That `.aab` file is what you'll upload to Play Console in step 5.
 
 > Why AAB and not APK? Google Play requires AAB for new apps since 2021. The
 > store generates per-device APKs from the bundle, which makes downloads
@@ -296,8 +323,8 @@ picture:
 
 | File | Synced via GitHub? | Why ignored | What you do |
 |---|---|---|---|
-| Source code (`.kt`, `.xml`, `build.gradle.kts`, etc.) | ✅ Yes | not in `.gitignore` | Nothing — `git pull` brings it. |
-| `.gitignore` itself | ✅ Yes | not in `.gitignore` | Nothing — `git pull` brings it. |
+| Source code (`.kt`, `.xml`, `build.gradle.kts`, etc.) | ✅ Yes | not in `.gitignore` | Nothing — GitHub Desktop's **Pull origin** brings it. |
+| `.gitignore` itself | ✅ Yes | not in `.gitignore` | Nothing — **Pull origin** brings it. |
 | `app/build/`, `/build/`, `/.gradle/` | ❌ No | Build cache, regenerated locally on each PC | Nothing — Gradle rebuilds them on first run. |
 | `/.idea/`, `*.iml` | ❌ No | IDE settings are per-PC (different SDK paths, themes…) | Nothing — Android Studio recreates them. |
 | `local.properties` | ❌ No | Holds the absolute path to the Android SDK on *this* PC | Android Studio creates it automatically when you open the project. |
@@ -316,36 +343,33 @@ GitHub.
 
 When you sit down at your second PC for the first time:
 
-```bash
-# 1. Pull the latest source code (including the .gitignore)
-cd /path/to/davidbadin.github.io/KanaRead
-git pull
-```
+1. **Pull the latest code.** Open GitHub Desktop, select the
+   `davidbadin.github.io` repo → click **Fetch origin** → then **Pull origin**.
+   This brings the `.gitignore`, `app/build.gradle.kts`, and
+   `keystore.properties.example` to this PC.
 
-Then transfer the keystore manually. Pick **one** of these:
+2. **Transfer the keystore manually.** GitHub will never sync it for you (by
+   design). Pick one of:
+   - **USB stick** — copy `kanaread-upload.jks` from PC 1 (it's in your hidden
+     `.android-keystores` folder under your home directory), paste it into the
+     same location on PC 2. Create the `.android-keystores` folder on PC 2
+     first if it doesn't exist.
+   - **Encrypted cloud folder** — e.g. a Cryptomator vault, or a
+     password-protected 7-Zip stored in OneDrive/Dropbox. Avoid plain
+     unencrypted cloud folders for the keystore file itself.
 
-- **USB stick** — copy `kanaread-upload.jks` and `keystore.properties`
-  from PC 1, paste into the same locations on PC 2.
-- **Encrypted cloud folder** — e.g. a Cryptomator vault, or a password-protected
-  7-Zip in OneDrive/Dropbox. Avoid plain unencrypted cloud folders for the
-  keystore.
-- **Secure file transfer** — `scp`, Syncthing with an encrypted folder, etc.
+3. **Create `keystore.properties` on PC 2** following step 1.3 above (the
+   exact same procedure: copy `keystore.properties.example` in Android
+   Studio's Project panel, rename to `keystore.properties`, fill in your
+   passwords). The only thing that might be different on PC 2 is the
+   `storeFile=` path if the home directory is different
+   (e.g. `/home/deck/...` on PC 1 vs `/home/david/...` on PC 2).
 
-On PC 2, place the files like this:
-
-```
-~/.android-keystores/kanaread-upload.jks    # the binary keystore
-KanaRead/keystore.properties                # the passwords + path
-```
-
-Edit `keystore.properties` on PC 2 if the absolute path to the keystore
-differs (e.g. `/home/deck/...` on PC 1 vs `/home/david/...` on PC 2). The
-path on each line is local to that PC and won't sync — that's by design.
-
-After that, both PCs can run `./gradlew bundleRelease` and produce identical,
-correctly-signed AABs. Just remember: only build a *release* AAB on one PC at
-a time and upload that single file to Play Console. Building twice with
-different `versionCode` values would conflict on upload.
+After that, both PCs can produce identical, correctly-signed AABs via
+**Build → Generate Signed App Bundle** (step 1.5). Just remember: only build
+a *release* AAB on one PC at a time and upload that single file to Play
+Console. Building on both PCs with the same `versionCode` would create
+conflicting bundles.
 
 ---
 
@@ -416,20 +440,22 @@ Specs Google accepts:
 - Aspect ratio between 16:9 and 9:16. Portrait phone screenshots (e.g.
   1080×2400) are the obvious choice.
 
-**Best way to capture them — from inside Distrobox:**
+**Easiest way — capture from the Android Studio emulator (no terminal):**
 
-```bash
-# 1. Start an emulator (or plug in a real phone with USB debugging)
-adb devices
-
-# 2. Run the app from Android Studio in release mode (or install your AAB
-#    via bundletool — but for screenshots, debug build is fine)
-# 3. Navigate to a screen, then:
-adb exec-out screencap -p > kanaread_01_selection.png
-adb exec-out screencap -p > kanaread_02_practice.png
-adb exec-out screencap -p > kanaread_03_correct.png
-adb exec-out screencap -p > kanaread_04_records.png
-```
+1. In Android Studio: **Device Manager** (right sidebar, or **View → Tool
+   Windows → Device Manager**). If you don't have an emulator yet, click the
+   **+** icon and create one — a **Pixel 7** profile is ideal (1080×2400
+   portrait, perfect aspect ratio for the Play Store).
+2. Click the **▶ Play** button next to the emulator to launch it.
+3. Once the emulator is running, click the **▶ Run 'app'** button at the top
+   of Android Studio (the green triangle) to install and start KanaRead on
+   the emulator.
+4. Navigate to the screen you want to capture inside the emulator.
+5. In the emulator's vertical toolbar on the right, click the **camera
+   icon** (📷, labelled "Take screenshot"). The screenshot is saved
+   automatically — by default to your Desktop or `~/Pictures/`. Android
+   Studio shows a notification with the file path.
+6. Repeat for each screen you want.
 
 Suggested screens to capture for KanaRead:
 
