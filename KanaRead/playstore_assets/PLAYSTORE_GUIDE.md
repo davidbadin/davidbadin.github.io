@@ -21,7 +21,7 @@ Pre-existing project state (verified by reading your files):
 
 - `applicationId = "com.davidbadin.kanaread"` ✅
 - `versionCode = 1`, `versionName = "1.0"` ✅
-- `minSdk = 26`, `targetSdk = 34`, `compileSdk = 34` ✅ (targetSdk 34 is required for new submissions)
+- `minSdk = 26`, `targetSdk = 35`, `compileSdk = 35` ✅ (targetSdk 35 is required for new submissions since Aug 2025; AGP bumped to 8.7.3 to match)
 - No `INTERNET` or other permissions in `AndroidManifest.xml` ✅ (matches the privacy policy)
 - `app/src/main/res/mipmap-*` icons are generated ✅
 
