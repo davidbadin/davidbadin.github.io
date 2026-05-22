@@ -43,7 +43,7 @@ KanaRead does not teach grammar or vocabulary meaning. It focuses on one thing �
 PRIVACY-FIRST
 KanaRead works completely offline. There is no analytics, no ads, no cloud sync. Your scores stay on your phone.
 
-Have a suggestion or found a typo? Reach out at david.badin@fpt.com.
+Have a suggestion or found a typo? Reach out at badin.david@gmail.com.
 
 がんばって！(Ganbatte! — Good luck!)
 
@@ -99,7 +99,7 @@ Máš nápad alebo si našiel preklep? Napíš na david.badin@fpt.com.
 |---|---|
 | Category (Apps) | Education |
 | Tags | Language learning, Education, Japanese |
-| Contact email | david.badin@fpt.com |
+| Contact email | badin.david@gmail.com |
 | Website (optional) | https://davidbadin.github.io |
 | Privacy policy URL | https://davidbadin.github.io/KanaRead/privacy.html |
 
