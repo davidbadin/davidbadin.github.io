@@ -19,7 +19,7 @@ object CsvParser {
             if (i > chars.lastIndex) break
 
             while (i <= chars.lastIndex && chars[i] != '\n' && chars[i] != '\r') {
-                row.add(parseField(chars, i).also { (_, end) -> i = end })
+                parseField(chars, i).let { (field, end) -> row.add(field); i = end }
                 if (i <= chars.lastIndex && chars[i] == ',') i++ // consume comma
             }
             if (row.isNotEmpty()) rows.add(row)
