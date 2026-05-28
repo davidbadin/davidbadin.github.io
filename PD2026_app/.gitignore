@@ -23,5 +23,8 @@ libs/spotify-auth-release-*.aar
 .DS_Store
 Thumbs.db
 
+# Claude Code local settings (machine-specific permission grants)
+.claude/settings.local.json
+
 # Generated
 app/src/main/java/
