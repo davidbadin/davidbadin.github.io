@@ -38,7 +38,7 @@ Edit `local.properties`:
 
 ```properties
 # Android SDK path (auto-set by Android Studio)
-sdk.dir=/path/to/your/Android/sdk
+# sdk.dir=/path/to/your/Android/sdk
 
 # Google Sheet — already has the real values as defaults
 SHEET_ID=1ClI4BqoEIWRudAnckKxY8hBg768NCVuD6YF-m6EVm24
