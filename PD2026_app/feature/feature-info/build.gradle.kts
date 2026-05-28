@@ -20,6 +20,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:core-model"))
     implementation(project(":core:core-ui"))
     implementation(project(":core:core-data"))
     implementation(libs.androidx.core.ktx)
