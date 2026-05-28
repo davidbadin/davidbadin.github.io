@@ -17,16 +17,17 @@ class BandSortTest {
     )
 
     private fun sort(bands: List<Band>): List<Band> =
-        bands.sortedWith(compareBy<Band> { it.sortingPriority }.thenBy { it.name })
-            .sortedWith(Comparator { a, b ->
-                when {
-                    a.sortingPriority == null && b.sortingPriority == null -> a.name.compareTo(b.name)
-                    a.sortingPriority == null -> 1
-                    b.sortingPriority == null -> -1
-                    a.sortingPriority != b.sortingPriority -> a.sortingPriority.compareTo(b.sortingPriority)
-                    else -> a.name.compareTo(b.name)
-                }
-            })
+        bands.sortedWith(Comparator { a, b ->
+            val pa = a.sortingPriority
+            val pb = b.sortingPriority
+            when {
+                pa == null && pb == null -> a.name.compareTo(b.name)
+                pa == null -> 1
+                pb == null -> -1
+                pa != pb -> pa.compareTo(pb)
+                else -> a.name.compareTo(b.name)
+            }
+        })
 
     @Test fun priority_ascending_nulls_last() {
         val bands = listOf(
