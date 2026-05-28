@@ -10,21 +10,21 @@
     "See guide.md §3.1 for full Firebase setup instructions."
   ],
   "project_info": {
-    "project_number": "<PLACEHOLDER_FIREBASE_PROJECT_NUMBER>",
-    "project_id": "<PLACEHOLDER_FIREBASE_PROJECT_ID>",
-    "storage_bucket": "<PLACEHOLDER_FIREBASE_PROJECT_ID>.firebasestorage.app"
+    "project_number": "000000000000",
+    "project_id": "placeholder-project-id",
+    "storage_bucket": "placeholder-project-id.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "<PLACEHOLDER_FIREBASE_APP_ID>",
+        "mobilesdk_app_id": "1:000000000000:android:0000000000000000",
         "android_client_info": {
           "package_name": "sk.punkacidetom.pd2026"
         }
       },
       "api_key": [
         {
-          "current_key": "<PLACEHOLDER_FIREBASE_API_KEY>"
+          "current_key": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
         }
       ],
       "services": {}
