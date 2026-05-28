@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_btn_news">Novinky</string>
+    <string name="home_btn_bands">Kapely</string>
+    <string name="home_btn_timetable">Program</string>
+    <string name="home_btn_info">Info</string>
+    <string name="home_btn_tickets">Vstupenky &amp; Eshop</string>
+    <string name="home_social_facebook">Facebook</string>
+    <string name="home_social_instagram">Instagram</string>
+    <string name="home_countdown_until">Do štartu festivalu</string>
+    <string name="home_countdown_days">dní</string>
+    <string name="home_countdown_hours">hodín</string>
+    <string name="home_countdown_minutes">minút</string>
+    <string name="home_countdown_seconds">sekúnd</string>
+    <string name="home_spotify_playlist">Festival playlist</string>
+    <string name="home_spotify_open">Otvoriť v Spotify</string>
+</resources>

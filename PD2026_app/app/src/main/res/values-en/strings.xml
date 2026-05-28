@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- English locale — edit values inside >…< only, not the name="" attributes -->
+<resources>
+    <string name="app_name">Punkáči deťom 2026</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_timetable">Schedule</string>
+    <string name="nav_spotify">Spotify</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Home screen -->
+    <string name="home_countdown_label">Festival starts in</string>
+    <string name="home_countdown_days">days</string>
+    <string name="home_countdown_hours">hours</string>
+    <string name="home_countdown_minutes">minutes</string>
+    <string name="home_countdown_seconds">seconds</string>
+    <string name="home_btn_news">News</string>
+    <string name="home_btn_bands">Bands</string>
+    <string name="home_btn_timetable">Schedule</string>
+    <string name="home_btn_info">Info</string>
+    <string name="home_btn_tickets">Tickets &amp; Eshop</string>
+    <string name="home_social_facebook">Facebook</string>
+    <string name="home_social_instagram">Instagram</string>
+
+    <!-- Timetable screen -->
+    <string name="timetable_title">Schedule</string>
+    <string name="timetable_no_data">Loading schedule…</string>
+
+    <!-- Bands screen -->
+    <string name="bands_title">Bands</string>
+    <string name="bands_no_data">Loading band list…</string>
+
+    <!-- Band detail screen -->
+    <string name="band_detail_genre">Genre</string>
+    <string name="band_detail_stage">Stage</string>
+    <string name="band_detail_time">Time</string>
+    <string name="band_detail_favourite">Favourite</string>
+    <string name="band_detail_spotify">Listen on Spotify</string>
+    <string name="band_detail_open_spotify">Open in Spotify</string>
+    <string name="band_detail_description_source">Description (Slovak original)</string>
+
+    <!-- News screen -->
+    <string name="news_title">News</string>
+    <string name="news_offline">News not available offline.</string>
+    <string name="news_open_facebook">Open Facebook</string>
+
+    <!-- Info screen -->
+    <string name="info_title">Info</string>
+
+    <!-- Tickets screen -->
+    <string name="tickets_title">Tickets &amp; Eshop</string>
+    <string name="tickets_buy">Buy tickets</string>
+    <string name="tickets_goout">Tickets (GoOut)</string>
+    <string name="tickets_eshop">Eshop</string>
+
+    <!-- Settings screen -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_sk">Slovenčina</string>
+    <string name="settings_language_en">English</string>
+    <string name="settings_font_size">Font size</string>
+    <string name="settings_font_normal">Normal</string>
+    <string name="settings_font_large">Large</string>
+    <string name="settings_update_data">Update data</string>
+    <string name="settings_updating">Updating…</string>
+    <string name="settings_update_success">Data updated.</string>
+    <string name="settings_update_error">Update failed. Please try again later.</string>
+    <string name="settings_credit">Created by David Badin</string>
+
+    <!-- Spotify screen -->
+    <string name="spotify_title">Spotify</string>
+    <string name="spotify_playlist_label">Festival playlist</string>
+    <string name="spotify_open_app">Open in Spotify</string>
+    <string name="spotify_install_prompt">Install Spotify to play music</string>
+
+    <!-- Shared / generic -->
+    <string name="loading">Loading…</string>
+    <string name="error_generic">Something went wrong.</string>
+    <string name="back">Back</string>
+    <string name="favourite_add">Add to favourites</string>
+    <string name="favourite_remove">Remove from favourites</string>
+    <string name="open_external">Open in browser</string>
+</resources>

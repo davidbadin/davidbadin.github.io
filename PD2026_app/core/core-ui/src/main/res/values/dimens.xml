@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Spacing / sizing tokens — edit values only, not names. Mirrored in Dimens.kt. -->
+<resources>
+    <dimen name="spacing_xs">4dp</dimen>
+    <dimen name="spacing_sm">8dp</dimen>
+    <dimen name="spacing_md">16dp</dimen>
+    <dimen name="spacing_lg">24dp</dimen>
+    <dimen name="spacing_xl">32dp</dimen>
+    <dimen name="spacing_xxl">48dp</dimen>
+
+    <dimen name="card_corner_radius">8dp</dimen>
+    <dimen name="button_min_height">48dp</dimen>
+    <dimen name="bottom_nav_height">64dp</dimen>
+    <dimen name="now_playing_header_height">56dp</dimen>
+    <dimen name="band_image_height">260dp</dimen>
+    <dimen name="home_button_min_height">56dp</dimen>
+
+    <dimen name="text_display">28sp</dimen>
+    <dimen name="text_title">22sp</dimen>
+    <dimen name="text_body_large">16sp</dimen>
+    <dimen name="text_body">14sp</dimen>
+    <dimen name="text_label">12sp</dimen>
+    <dimen name="text_caption">11sp</dimen>
+    <dimen name="icon_size_sm">16dp</dimen>
+    <dimen name="icon_size_md">20dp</dimen>
+    <dimen name="icon_size_lg">24dp</dimen>
+</resources>

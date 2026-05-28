@@ -1,0 +1,27 @@
+# Gradle
+.gradle/
+build/
+**/build/
+local.properties
+
+# Android secrets — DO NOT COMMIT
+keystore.properties
+*.jks
+*.keystore
+secrets.properties
+
+# Firebase — only the placeholder is committed; real file is excluded
+app/google-services.json
+
+# Spotify SDK AAR — download manually (see libs/README.md)
+libs/spotify-app-remote-release-*.aar
+libs/spotify-auth-release-*.aar
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Generated
+app/src/main/java/

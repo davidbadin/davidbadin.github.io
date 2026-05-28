@@ -1,0 +1,14 @@
+# Copy this file to local.properties (gitignored) and fill in the real values.
+# local.properties is read by Gradle at build time and exposed via BuildConfig.
+
+# Android SDK path — set automatically by Android Studio; edit only if building from CLI.
+# sdk.dir=/path/to/android/sdk
+
+# Google Sheets data source (do not change — these match the live PD2026 sheet)
+SHEET_ID=1ClI4BqoEIWRudAnckKxY8hBg768NCVuD6YF-m6EVm24
+SHEET_GID=968980279
+
+# Spotify — register at https://developer.spotify.com/dashboard
+# See guide.md §4 for the full setup steps (SHA-1 fingerprint registration etc.)
+SPOTIFY_CLIENT_ID=<PLACEHOLDER_SPOTIFY_CLIENT_ID>
+SPOTIFY_REDIRECT_URI=pd2026://callback

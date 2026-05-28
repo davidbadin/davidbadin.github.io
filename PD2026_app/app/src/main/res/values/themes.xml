@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme — used only for the splash/launch window. -->
+    <!-- All Compose theming is handled by PD2026Theme in core-ui. -->
+    <style name="Theme.PD2026" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/pd_navy</item>
+        <item name="android:statusBarColor">@color/pd_navy_dark</item>
+        <item name="android:navigationBarColor">@color/pd_navy_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

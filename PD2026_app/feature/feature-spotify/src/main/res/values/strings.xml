@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="spotify_title">Spotify</string>
+    <string name="spotify_playlist_label">Festivalový playlist</string>
+    <string name="spotify_open_app">Otvoriť v Spotify</string>
+    <string name="spotify_install_prompt">Nainštalujte Spotify pre prehrávanie</string>
+</resources>

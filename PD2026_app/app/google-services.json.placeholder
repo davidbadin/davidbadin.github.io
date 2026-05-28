@@ -1,0 +1,34 @@
+{
+  "_PLACEHOLDER_INSTRUCTIONS": [
+    "This file is a placeholder. DO NOT use it as-is.",
+    "Download the real google-services.json from the Firebase Console:",
+    "  1. Go to https://console.firebase.google.com",
+    "  2. Open project pd2026-app (or whatever you named it)",
+    "  3. Project settings -> Your apps -> Android app -> google-services.json",
+    "  4. Place the downloaded file at: PD2026_app/app/google-services.json",
+    "     (this path is gitignored — do NOT commit the real file)",
+    "See guide.md §3.1 for full Firebase setup instructions."
+  ],
+  "project_info": {
+    "project_number": "<PLACEHOLDER_FIREBASE_PROJECT_NUMBER>",
+    "project_id": "<PLACEHOLDER_FIREBASE_PROJECT_ID>",
+    "storage_bucket": "<PLACEHOLDER_FIREBASE_PROJECT_ID>.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "<PLACEHOLDER_FIREBASE_APP_ID>",
+        "android_client_info": {
+          "package_name": "sk.punkacidetom.pd2026"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": "<PLACEHOLDER_FIREBASE_API_KEY>"
+        }
+      ],
+      "services": {}
+    }
+  ],
+  "configuration_version": "1"
+}
