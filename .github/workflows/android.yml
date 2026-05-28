@@ -26,9 +26,14 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'gradle'
 
-      - name: Create local.properties placeholder
+      # gradle/actions/setup-gradle@v4 downloads Gradle directly — no gradle-wrapper.jar needed.
+      - name: Setup Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Create local.properties
         working-directory: PD2026_app
         run: |
           echo "SHEET_ID=1ClI4BqoEIWRudAnckKxY8hBg768NCVuD6YF-m6EVm24" >> local.properties
@@ -40,17 +45,13 @@ jobs:
         working-directory: PD2026_app
         run: cp app/google-services.json.placeholder app/google-services.json
 
-      - name: Grant execute permission for gradlew
-        working-directory: PD2026_app
-        run: chmod +x gradlew
-
       - name: Run unit tests
         working-directory: PD2026_app
-        run: ./gradlew test --no-daemon
+        run: gradle test --no-daemon
 
       - name: Assemble debug APK
         working-directory: PD2026_app
-        run: ./gradlew assembleDebug --no-daemon
+        run: gradle assembleDebug --no-daemon
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
