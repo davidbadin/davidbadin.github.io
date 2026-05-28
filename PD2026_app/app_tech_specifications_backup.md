@@ -23,7 +23,7 @@ PUSH - data for push notifications
 Spotify festival playlist link:
 https://open.spotify.com/playlist/5QL8HJ0cWaLGS2Qxby0xDG
 Spotify artist link:
-https://open.spotify.com/artist/ + value from the sheet (SPOTIFY URL)
+https://open.spotify.com/artist/ + value from the sheet (SPOTIFY_URL)
 
 :::::
 
@@ -88,7 +88,7 @@ Each block in the timeline contains:
 - genre
 
 BANDS screen
-List of all bands sorted by SORTING PRIORITY (lowest value of SORTING PRIORITY on top; if priority is initial, the it goes to the bottom) and then by NAME.
+List of all bands sorted by SORTING_PRIORITY (lowest value of SORTING_PRIORITY on top; if priority is initial, the it goes to the bottom) and then by NAME.
 
 BAND DETAIL screen
 Details about the band:

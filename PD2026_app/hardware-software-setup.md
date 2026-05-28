@@ -22,3 +22,7 @@
 
 - **Method:** GitHub
 - **Repository / folder name:** `davidbadin.github.io`
+
+## Android specs
+- **Min SDK:** 24
+- **Target / Compile SDK:** 35

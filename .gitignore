@@ -1,0 +1,75 @@
+# ============================================================
+# .gitignore for davidbadin.github.io
+# Lives at the repo root; rules apply to every subproject.
+# ============================================================
+
+# ----- Temp / scratch folders ----------------------------------
+# Anything under a "temp" folder is local scratch and must NOT
+# be committed. The PD2026_app/temp/ folder holds Firebase
+# service-account JSON, raw font files, and other secrets.
+temp/
+**/temp/
+PD2026_app/temp/
+
+# Explicitly ignore any Firebase service-account JSON anywhere
+# in the repo (in case it ever ends up outside temp/).
+**/google-services.json
+**/firebase-adminsdk*.json
+**/*-firebase-adminsdk-*.json
+
+# ----- Android / Gradle (PD2026_app and any other Android proj) -
+**/.gradle/
+**/build/
+**/captures/
+**/local.properties
+**/*.iml
+**/.cxx/
+
+# Android signing — keystores and credentials
+**/*.jks
+**/*.keystore
+**/keystore.properties
+**/secrets.properties
+**/signing.properties
+
+# Android Studio / IntelliJ
+.idea/
+**/.idea/
+*.iml
+
+# ----- Node / web tooling --------------------------------------
+node_modules/
+**/node_modules/
+.npm/
+.cache/
+dist/
+**/dist/
+
+# ----- Python --------------------------------------------------
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# ----- OS junk -------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+$RECYCLE.BIN/
+
+# ----- Editors -------------------------------------------------
+*.swp
+*.swo
+*~
+.vscode/*.log
+# (deliberately NOT ignoring .vscode/ entirely — the repo
+#  intentionally checks in shared settings under .vscode/.)
+
+# ----- Misc ----------------------------------------------------
+*.log
+*.bak
+*.orig
+*.tmp
