@@ -60,6 +60,10 @@ desktop.ini
 ehthumbs.db
 $RECYCLE.BIN/
 
+# ----- Claude Code ---------------------------------------------
+# Local permission grants — machine-specific, never commit
+**/.claude/settings.local.json
+
 # ----- Editors -------------------------------------------------
 *.swp
 *.swo
