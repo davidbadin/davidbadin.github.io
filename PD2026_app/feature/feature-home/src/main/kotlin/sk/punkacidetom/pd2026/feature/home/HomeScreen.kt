@@ -95,21 +95,25 @@ fun HomeScreen(
         )
 
         navButtons.chunked(2).forEach { rowItems ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(spacing.sm),
-            ) {
-                rowItems.forEach { (label, icon, onClick) ->
+            if (rowItems.size == 2) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(spacing.sm),
+                ) {
+                    rowItems.forEach { (label, icon, onClick) ->
+                        HomeNavButton(label = label, icon = icon, onClick = onClick, modifier = Modifier.weight(1f))
+                    }
+                }
+            } else {
+                // Single item — centered at half width
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    val (label, icon, onClick) = rowItems[0]
                     HomeNavButton(
                         label = label,
                         icon = icon,
                         onClick = onClick,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.fillMaxWidth(0.5f),
                     )
-                }
-                // Fill remaining slot in last row if odd count
-                if (rowItems.size < 2) {
-                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
             Spacer(modifier = Modifier.height(spacing.sm))

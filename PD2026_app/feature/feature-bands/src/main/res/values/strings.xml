@@ -3,6 +3,6 @@
     <string name="bands_title">Kapely</string>
     <string name="bands_empty">Žiadne kapely</string>
     <string name="band_detail_stage">Stage</string>
-    <string name="band_detail_no_description">Popis nie je k dispozícii.</string>
+
     <string name="band_detail_open_spotify">Otvoriť v Spotify</string>
 </resources>

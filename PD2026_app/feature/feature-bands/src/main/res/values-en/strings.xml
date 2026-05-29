@@ -3,6 +3,6 @@
     <string name="bands_title">Bands</string>
     <string name="bands_empty">No bands</string>
     <string name="band_detail_stage">Stage</string>
-    <string name="band_detail_no_description">No description available.</string>
+
     <string name="band_detail_open_spotify">Open in Spotify</string>
 </resources>
