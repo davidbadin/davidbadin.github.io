@@ -18,6 +18,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -185,14 +188,23 @@ fun BandDetailScreen(
 @Composable
 private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
     val spacing = LocalAppSpacing.current
+    // remember must be called unconditionally (Rules of Composables)
+    var usePng by remember(band?.imageName) { mutableStateOf(true) }
+    val imageUrl = when {
+        band == null || band.bandImagePngUrl.isBlank() -> ""
+        usePng -> band.bandImagePngUrl
+        else -> band.bandImageJpgUrl
+    }
+
     Box(modifier = modifier) {
-        if (band != null && band.bandImageUrl.isNotBlank()) {
+        if (imageUrl.isNotBlank()) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(band.bandImageUrl)
+                    .data(imageUrl)
+                    .listener(onError = { _, _ -> if (usePng) usePng = false })
                     .crossfade(true)
                     .build(),
-                contentDescription = band.name,
+                contentDescription = band?.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
             )

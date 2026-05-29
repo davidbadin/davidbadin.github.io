@@ -21,9 +21,14 @@ data class Band(
     fun description(locale: String): String =
         if (locale.startsWith("en") && descriptionEn.isNotBlank()) descriptionEn else description
 
-    val bandImageUrl: String
+    val bandImagePngUrl: String
         get() = if (imageName.isNotBlank())
-            "https://davidbadin.github.io/PD2026_app/pd_resources/bands/$imageName"
+            "https://davidbadin.github.io/PD2026_app/bands/$imageName.png"
+        else ""
+
+    val bandImageJpgUrl: String
+        get() = if (imageName.isNotBlank())
+            "https://davidbadin.github.io/PD2026_app/bands/$imageName.jpg"
         else ""
 
     val spotifyArtistUrl: String

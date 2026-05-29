@@ -12,6 +12,4 @@
     <string name="home_countdown_hours">hodín</string>
     <string name="home_countdown_minutes">minút</string>
     <string name="home_countdown_seconds">sekúnd</string>
-    <string name="home_spotify_playlist">Festival playlist</string>
-    <string name="home_spotify_open">Otvoriť v Spotify</string>
 </resources>
