@@ -1,0 +1,228 @@
+package sk.punkacidetom.pd2026.feature.bands
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import sk.punkacidetom.pd2026.core.model.Band
+import sk.punkacidetom.pd2026.core.model.Stages
+import sk.punkacidetom.pd2026.core.ui.icons.FaIcon
+import sk.punkacidetom.pd2026.core.ui.theme.Crimson
+import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
+import sk.punkacidetom.pd2026.core.ui.theme.Navy
+import sk.punkacidetom.pd2026.core.ui.theme.White
+import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
+import sk.punkacidetom.pd2026.feature.spotify.SpotifyPlayerComposable
+import sk.punkacidetom.pd2026.feature.spotify.spotifyArtistEmbedUrl
+import sk.punkacidetom.pd2026.feature.spotify.util.SpotifyLauncher
+import java.time.format.TextStyle
+import java.util.Locale
+
+@Composable
+fun BandDetailScreen(
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: BandDetailViewModel = hiltViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val spacing = LocalAppSpacing.current
+    val context = LocalContext.current
+    val band = uiState.band
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Navy)
+            .verticalScroll(rememberScrollState()),
+    ) {
+        // Back button over the image
+        Box {
+            // Header image with gradient fade
+            BandHeaderImage(
+                band = band,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(spacing.bandImageHeight),
+            )
+
+            IconButton(
+                onClick = onBack,
+                modifier = Modifier
+                    .padding(spacing.sm)
+                    .align(Alignment.TopStart),
+            ) {
+                FaIcon(name = "arrow-left", size = spacing.iconLg, tint = White)
+            }
+        }
+
+        if (band == null) {
+            Text(
+                text = "…",
+                color = WhiteAlpha60,
+                modifier = Modifier.padding(spacing.md),
+            )
+            return@Column
+        }
+
+        Column(modifier = Modifier.padding(horizontal = spacing.md)) {
+            Spacer(modifier = Modifier.height(spacing.sm))
+
+            // Name + favourite toggle
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = band.name,
+                    style = MaterialTheme.typography.displaySmall,
+                    color = White,
+                    modifier = Modifier.weight(1f),
+                )
+                IconButton(onClick = { viewModel.toggleFavourite() }) {
+                    FaIcon(
+                        name = "heart",
+                        size = spacing.iconLg,
+                        tint = if (uiState.isFavourite) Crimson else WhiteAlpha60,
+                    )
+                }
+            }
+
+            if (band.genre.isNotBlank()) {
+                Text(
+                    text = band.genre,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Crimson,
+                )
+            }
+
+            Spacer(modifier = Modifier.height(spacing.sm))
+
+            // Day, date, time
+            val dayName = band.startDate.dayOfWeek
+                .getDisplayName(TextStyle.FULL, Locale.forLanguageTag(uiState.language))
+                .replaceFirstChar { it.uppercase() }
+            val dateStr = "${band.startDate.dayOfMonth}. ${band.startDate.monthValue}. ${band.startDate.year}"
+            val timeStr = "${band.startTime.hour}:${band.startTime.minute.toString().padStart(2, '0')}" +
+                " – ${band.endTime.hour}:${band.endTime.minute.toString().padStart(2, '0')}"
+
+            Text(
+                text = "$dayName, $dateStr",
+                style = MaterialTheme.typography.bodyMedium,
+                color = WhiteAlpha60,
+            )
+            Text(
+                text = timeStr,
+                style = MaterialTheme.typography.titleSmall,
+                color = White,
+            )
+
+            Spacer(modifier = Modifier.height(spacing.xs))
+
+            Text(
+                text = stringResource(R.string.band_detail_stage) + ": " + Stages.displayName(band.stageCode),
+                style = MaterialTheme.typography.bodyMedium,
+                color = WhiteAlpha60,
+            )
+
+            Spacer(modifier = Modifier.height(spacing.md))
+
+            // Description
+            val description = band.description(uiState.language)
+            if (description.isNotBlank()) {
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = White,
+                )
+            } else {
+                Text(
+                    text = stringResource(R.string.band_detail_no_description),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = WhiteAlpha60,
+                )
+            }
+
+            // Spotify player (only for acts with a Spotify artist ID)
+            if (band.spotifyArtistId.isNotBlank()) {
+                Spacer(modifier = Modifier.height(spacing.md))
+                SpotifyPlayerComposable(
+                    embedUrl = spotifyArtistEmbedUrl(band.spotifyArtistId),
+                    openLabel = stringResource(R.string.band_detail_open_spotify),
+                    onOpenClick = { SpotifyLauncher.openArtist(context, band.spotifyArtistId) },
+                    embedHeight = 152,
+                )
+            }
+
+            Spacer(modifier = Modifier.height(spacing.xl))
+        }
+    }
+}
+
+@Composable
+private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
+    val spacing = LocalAppSpacing.current
+    Box(modifier = modifier) {
+        if (band != null && band.bandImageUrl.isNotBlank()) {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(band.bandImageUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = band.name,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
+            )
+        } else {
+            // Fallback: plain navy background with band initial
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Navy),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = band?.name?.take(1) ?: "",
+                    style = MaterialTheme.typography.displayLarge,
+                    color = Crimson,
+                )
+            }
+        }
+
+        // Gradient overlay fading into Navy at the bottom
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(spacing.bandImageHeight * 0.5f)
+                .align(Alignment.BottomCenter)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(androidx.compose.ui.graphics.Color.Transparent, Navy),
+                    )
+                ),
+        )
+    }
+}

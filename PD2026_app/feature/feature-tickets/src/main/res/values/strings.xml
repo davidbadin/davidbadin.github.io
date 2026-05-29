@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tickets_title">Vstupenky &amp; Eshop</string>
+    <string name="tickets_buy">Kúpiť vstupenky</string>
+    <string name="tickets_goout">Vstupenky (GoOut)</string>
+    <string name="tickets_eshop">Eshop</string>
+</resources>

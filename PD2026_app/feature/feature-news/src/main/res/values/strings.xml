@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="news_title">Novinky</string>
+    <string name="news_offline">Správy nie sú dostupné offline.</string>
+    <string name="news_open_facebook">Otvoriť na Facebooku</string>
+</resources>

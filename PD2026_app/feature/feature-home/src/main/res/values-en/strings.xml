@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_btn_news">News</string>
+    <string name="home_btn_bands">Bands</string>
+    <string name="home_btn_timetable">Timetable</string>
+    <string name="home_btn_info">Info</string>
+    <string name="home_btn_tickets">Tickets &amp; Eshop</string>
+    <string name="home_social_facebook">Facebook</string>
+    <string name="home_social_instagram">Instagram</string>
+    <string name="home_countdown_until">Until festival start</string>
+    <string name="home_countdown_days">days</string>
+    <string name="home_countdown_hours">hours</string>
+    <string name="home_countdown_minutes">minutes</string>
+    <string name="home_countdown_seconds">seconds</string>
+    <string name="home_spotify_playlist">Festival playlist</string>
+    <string name="home_spotify_open">Open in Spotify</string>
+</resources>

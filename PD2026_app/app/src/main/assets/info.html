@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Punkáči deťom 15 — info">
+    <title>Punkáči deťom 15 — INFO</title>
+    <style>
+        /* ============================================================
+           FONT FACES — files live in ./temp/fonts/.
+           When the fonts are moved into app/src/main/res/font/ with
+           Android-friendly names, update these URLs.
+           ============================================================ */
+        @font-face {
+            font-family: "ThirdMan";
+            src: url("fonts/third_man_regular.otf") format("opentype");
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "BebasNeue";
+            src: url("fonts/bebas_neue_regular.ttf") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Poppins";
+            src: url("fonts/poppins_regular.ttf") format("truetype");
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --bg:     #0B1338;   /* deep navy — background */
+            --accent: #AD1C24;   /* the only accent colour */
+            --fg:     #FFFFFF;
+            --muted:  rgba(255, 255, 255, 0.65);
+
+            --f-big:  "ThirdMan", "Anton", Impact, sans-serif;
+            --f-mid:  "BebasNeue", "Bebas Neue", "Anton", Impact, sans-serif;
+            --f-body: "Poppins", system-ui, -apple-system, "Segoe UI",
+                      Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--fg);
+            font-family: var(--f-body);
+            line-height: 1.55;
+            font-size: 16px;
+        }
+
+        .wrap {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 28px 18px 64px;
+        }
+
+        /* ============ FESTIVAL LOCKUP ============ */
+        .lockup {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-family: var(--f-big);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            line-height: 1;
+            font-size: clamp(2.2rem, 9vw, 3.6rem);
+        }
+        .lockup .heart {
+            color: var(--accent);
+            font-size: 0.85em;
+        }
+        .lockup .yr {
+            color: var(--accent);
+        }
+        .subline {
+            text-align: center;
+            font-family: var(--f-mid);
+            letter-spacing: 0.18em;
+            font-size: 1rem;
+            color: var(--muted);
+            margin: 6px 0 28px;
+        }
+        .subline .pipe { color: var(--accent); padding: 0 8px; }
+
+        /* ============ PAGE TITLE ============ */
+        h1 {
+            font-family: var(--f-big);
+            text-transform: uppercase;
+            font-size: clamp(3.4rem, 14vw, 5.6rem);
+            color: var(--fg);
+            text-align: center;
+            letter-spacing: 0.06em;
+            margin: 8px 0 4px;
+            line-height: 1;
+        }
+        .rule {
+            height: 4px;
+            background: var(--accent);
+            width: 80px;
+            margin: 0 auto 32px;
+        }
+
+        /* ============ SECTION TITLES (3rd Man) ============ */
+        h2 {
+            font-family: var(--f-big);
+            text-transform: uppercase;
+            font-size: clamp(1.8rem, 6vw, 2.4rem);
+            letter-spacing: 0.04em;
+            color: var(--fg);
+            margin: 40px 0 4px;
+            padding-bottom: 6px;
+            border-bottom: 3px solid var(--accent);
+        }
+
+        /* ============ SUB-SECTIONS (Bebas Neue) ============ */
+        h3 {
+            font-family: var(--f-mid);
+            text-transform: uppercase;
+            font-size: 1.35rem;
+            letter-spacing: 0.12em;
+            color: var(--accent);
+            margin: 22px 0 6px;
+        }
+
+        /* ============ BODY ============ */
+        p { margin: 8px 0 14px; }
+        strong { color: var(--fg); }
+        em { color: var(--muted); font-style: normal; text-transform: uppercase; letter-spacing: 0.05em; font-family: var(--f-mid); font-size: 0.92em; }
+
+        ul { padding-left: 20px; margin: 8px 0 14px; }
+        li { margin: 4px 0; }
+        ul.taxi { list-style: none; padding-left: 0; }
+        ul.taxi li {
+            padding: 4px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.15);
+            font-family: var(--f-mid);
+            letter-spacing: 0.08em;
+            font-size: 1.05rem;
+        }
+        ul.taxi li:last-child { border-bottom: none; }
+
+        a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--accent); }
+        a:hover { color: var(--accent); }
+
+        .coord {
+            display: inline-block;
+            font-family: var(--f-mid);
+            letter-spacing: 0.08em;
+            background: var(--accent);
+            color: var(--fg);
+            padding: 2px 10px;
+        }
+
+        figure { margin: 14px 0; text-align: center; }
+        figure img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid var(--accent);
+        }
+        figcaption {
+            font-family: var(--f-mid);
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-top: 6px;
+        }
+
+        .stamp {
+            margin-top: 56px;
+            font-family: var(--f-mid);
+            font-size: 0.9rem;
+            color: var(--muted);
+            text-align: center;
+            border-top: 1px dashed rgba(255,255,255,0.3);
+            padding-top: 14px;
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+<body>
+    <main class="wrap">
+
+        <div class="lockup" aria-label="Punkáči deťom 15">
+            <span>Punkáči</span>
+            <span class="heart" aria-hidden="true">♥</span>
+            <span>Deťom</span>
+            <span class="yr">15</span>
+        </div>
+        <div class="subline">
+            27.8. – 29.8.2026 <span class="pipe">|</span> Camping Opatovce, Slovakia
+        </div>
+
+        <h1>INFO</h1>
+        <div class="rule"></div>
+
+
+        <!-- =====================================================
+             RADY (from https://punkacidetom.sk/info/rady/)
+             ===================================================== -->
+        <h2>Rady</h2>
+
+        <h3>Doprava — Auto</h3>
+        <p>
+            <strong>Upozornenie pre návštevníkov, majiteľov jednodňových
+            vstupeniek a celofestivalových permanentiek!</strong>
+            Ak pôjdeš na festival autom, do navigácie si zadaj
+            <em>Dalitrans Veľké Bierovce</em>. Asi 150 metrov pred
+            Dalitrans odboč vľavo, následne prejdeš k areálu cez betónovú
+            plochu výkup paliet (tu je zákaz parkovania), parkuje sa až
+            ďalej priamo v areáli campingu.
+        </p>
+        <p>
+            Presné súradnice:
+            <span class="coord">48.856780, 17.963672</span>
+        </p>
+
+        <h3>Doprava — Taxi</h3>
+        <p>
+            Ak sa rozhodneš ísť taxíkom, povedz šoférovi, nech ťa vysadí
+            zo strany Dalitrans. Dbaj na to, aby ťa nevysadil pred VIP
+            bránou, pretože by si musel prejsť približne 1 km po
+            cyklotrase.
+        </p>
+
+        <h3>Doprava — Kapely / VIP</h3>
+        <p>
+            <strong>Upozornenie pre kapely a VIP návštevníkov</strong> —
+            do navigácie si zadajte <em>Chata na rybníku Opatovce</em>
+            a prídete až pred VIP bránu festivalu. Ak by ste zadali
+            <em>Farma ryby Opatovce</em>, zavedie vás to na druhú stranu
+            kanála — síce vedie k areálu, ale cca hodinu po poľnej ceste.
+        </p>
+
+        <h3>Platba</h3>
+        <p>
+            Na Punkáči deťom platíme prostredníctvom <strong>NFCtron</strong>.
+            Dobi si kredit online cez NFCtron Tickets a plať rýchlo,
+            bezpečne a s prehľadom o svojich výdavkoch. Viac nižšie
+            v sekcii <em>Platba online</em>.
+        </p>
+
+        <h3>Stanovanie</h3>
+        <p>
+            Stanovanie je v areáli festivalu a je <strong>bezplatné</strong>.
+            Návštevníci musia dodržiavať VOP organizátora, ktoré budú
+            zverejnené aj na vstupe areálu.
+        </p>
+
+        <h3>Deti</h3>
+        <p>
+            Deti do 15 rokov musia byť v sprievode rodiča. Každé dieťa
+            od veku 2 rokov musí mať zakúpenú vstupenku, ktorá je
+            v symbolickej cene. Na pásku dieťaťa bude napísaný telefónny
+            kontakt na rodiča, pre prípad, ak by sa dieťa v areáli
+            stratilo.
+        </p>
+
+        <h3>Taxi — zmluvné</h3>
+        <p>Využite zmluvné TAXI označené <strong>PUNKÁČI DEŤOM</strong>:</p>
+        <ul class="taxi">
+            <li>📞 0910 277 300</li>
+            <li>📞 0910 288 300</li>
+        </ul>
+        <p>Cenník (jednosmerná jazda):</p>
+        <ul class="taxi">
+            <li>Žel. stanica / TN Sihoť – Kemping Opatovce — 12 €</li>
+            <li>Tesco / Kaufland / Juh – Kemping Opatovce — 12 €</li>
+            <li>Lidl Zlatovce – Kemping Opatovce — 8 €</li>
+            <li>Žel. stanica Zlatovce – Kemping Opatovce — 8 €</li>
+        </ul>
+
+
+        <!-- =====================================================
+             MAPA AREÁLU (from https://punkacidetom.sk/info/mapa-arealu/)
+             ===================================================== -->
+        <h2>Mapa areálu</h2>
+        <figure>
+            <img src="https://punkacidetom.sk/wp-content/uploads/2025/08/pd-25-mapa-1024x686.png"
+                 alt="Mapa areálu festivalu Punkáči deťom">
+            <figcaption>Mapa areálu — Camping Opatovce</figcaption>
+        </figure>
+
+
+        <!-- =====================================================
+             PLATBA ONLINE — NFCtron
+             (from https://punkacidetom.sk/info/nfc-tron/)
+             ===================================================== -->
+        <h2>Platba online — NFCtron</h2>
+
+        <p>
+            Hotovosť na Punkáči deťom nepotrebuješ. Dobi si kredit online
+            cez NFCtron Tickets, plať priložením náramku s čipom
+            k zariadeniu na mieste predaja a sleduj svoje výdavky
+            jednoducho online. Platenie bude vďaka systému NFCtron
+            <strong>rýchlejšie, prehľadnejšie a bezpečnejšie</strong>.
+            Ak neutratíš všetko, o zvyšok kreditu neprídeš — zostatok si
+            môžeš bezplatne vyžiadať späť až do 14 dní po skončení
+            podujatia.
+        </p>
+        <p>
+            V areáli <strong>nebudú akceptované platby za služby
+            v hotovosti ani kartou</strong>; dobiť kredit si ale vieš aj
+            za hotovosť.
+        </p>
+
+        <h3>Mobilná aplikácia NFCtron</h3>
+        <p>
+            Pre lepší prehľad odporúčame stiahnuť si mobilnú aplikáciu
+            NFCtron pre
+            <a href="https://play.google.com/store/apps/details?id=com.nfctron.mobile&amp;pli=1">Android</a>
+            alebo
+            <a href="https://apps.apple.com/cz/app/nfctron/id1595341751">iOS</a>.
+            Po načítaní čipu pomocou NFC uvidíš všetky výdavky a aktuálny
+            zostatok, môžeš hodnotiť objednávky, dostávať upozornenia
+            o platbách a po skončení akcie pohodlne vrátiť zostávajúce
+            prostriedky na bankový účet.
+        </p>
+
+        <h3>Dobitie kreditu online (NFCtron Tickets)</h3>
+        <ul>
+            <li>Nezaplatíš nič naviac a na akciu budeš ready.</li>
+            <li>Nevytlačíme spoločne žiaden papier naviac, všetko nájdeš
+                jednoducho online.</li>
+            <li>Náramok s čipom dostaneš pri vstupe do areálu. Na
+                dobíjacom mieste stačí ukázať QR kód z NFCtron Tickets.</li>
+        </ul>
+
+        <h3>Dobitie kreditu na mieste</h3>
+        <ul>
+            <li>Dobiť kredit môžeš hotovosťou alebo kartou na označenom
+                dobíjacom mieste NFCtron.</li>
+            <li>Aktivačný poplatok za prvé dobitie je <strong>1,5 €</strong>.</li>
+            <li>Po dobití dostaneš papier s odkazom a QR kódom — odlož
+                si ho pre kontrolu zostatku a vrátenie zvyšného kreditu.</li>
+        </ul>
+
+        <h3>FAQ — ako zistím zostatok?</h3>
+        <p>
+            Po každej objednávke ti predajca zobrazí zostatok. Zostatok
+            vidíš aj v mobilnej aplikácii NFCtron — stačí načítať čip
+            (nezabudni si zapnúť NFC).
+        </p>
+
+        <h3>FAQ — vrátenie zostatku</h3>
+        <p>
+            Vrátenie kreditného zostatku je bezplatné a neobmedzené pre
+            účty v CZK a EUR. Stačí načítať čip do mobilnej aplikácie
+            NFCtron a 3 kliknutiami požiadať o vrátenie na bankový účet.
+            O vrátenie môžeš požiadať do <strong>14 dní</strong> po
+            skončení akcie. <em>Hotovosť nevraciame.</em>
+        </p>
+        <p>
+            Support NFCtron:
+            <a href="mailto:info@nfctron.com">info@nfctron.com</a>
+        </p>
+
+
+        <p class="stamp">
+            Zdroj: punkacidetom.sk
+        </p>
+    </main>
+</body>
+</html>

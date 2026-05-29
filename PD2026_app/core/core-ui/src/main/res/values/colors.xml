@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Design tokens — edit values only, not names. Used by Theme.kt and the View system. -->
+<resources>
+    <color name="pd_navy">#0B1338</color>
+    <color name="pd_navy_dark">#070D25</color>
+    <color name="pd_navy_light">#1A2550</color>
+    <color name="pd_crimson">#AD1C24</color>
+    <color name="pd_crimson_dark">#8B1620</color>
+    <color name="pd_crimson_light">#D42830</color>
+    <color name="pd_white">#FFFFFF</color>
+    <color name="pd_white_60">#99FFFFFF</color>
+    <color name="pd_white_30">#4DFFFFFF</color>
+</resources>

@@ -1,0 +1,61 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'PD2026_app/**'
+      - '.github/workflows/android.yml'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'PD2026_app/**'
+      - '.github/workflows/android.yml'
+
+jobs:
+  build:
+    name: Build & Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # gradle/actions/setup-gradle@v4 downloads Gradle directly — no gradle-wrapper.jar needed.
+      - name: Setup Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Create local.properties
+        working-directory: PD2026_app
+        run: |
+          echo "SHEET_ID=1ClI4BqoEIWRudAnckKxY8hBg768NCVuD6YF-m6EVm24" >> local.properties
+          echo "SHEET_GID=968980279" >> local.properties
+          echo "SPOTIFY_CLIENT_ID=PLACEHOLDER" >> local.properties
+          echo "SPOTIFY_REDIRECT_URI=pd2026://callback" >> local.properties
+
+      - name: Copy google-services placeholder
+        working-directory: PD2026_app
+        run: cp app/google-services.json.placeholder app/google-services.json
+
+      - name: Run unit tests
+        working-directory: PD2026_app
+        run: gradle test --no-daemon
+
+      - name: Assemble debug APK
+        working-directory: PD2026_app
+        run: gradle assembleDebug --no-daemon
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: pd2026-debug
+          path: PD2026_app/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 7

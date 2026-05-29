@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Slovak (default locale) — edit values inside >…< only, not the name="" attributes -->
+<resources>
+    <string name="app_name">Punkáči deťom 2026</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Domov</string>
+    <string name="nav_timetable">Program</string>
+    <string name="nav_spotify">Spotify</string>
+    <string name="nav_settings">Nastavenia</string>
+
+    <!-- Home screen -->
+    <string name="home_countdown_label">Do festivalu zostáva</string>
+    <string name="home_countdown_days">dní</string>
+    <string name="home_countdown_hours">hodín</string>
+    <string name="home_countdown_minutes">minút</string>
+    <string name="home_countdown_seconds">sekúnd</string>
+    <string name="home_btn_news">Novinky</string>
+    <string name="home_btn_bands">Kapely</string>
+    <string name="home_btn_timetable">Program</string>
+    <string name="home_btn_info">Info</string>
+    <string name="home_btn_tickets">Vstupenky &amp; Eshop</string>
+    <string name="home_social_facebook">Facebook</string>
+    <string name="home_social_instagram">Instagram</string>
+
+    <!-- Timetable screen -->
+    <string name="timetable_title">Program</string>
+    <string name="timetable_no_data">Program sa načítava…</string>
+
+    <!-- Bands screen -->
+    <string name="bands_title">Kapely</string>
+    <string name="bands_no_data">Zoznam kapiel sa načítava…</string>
+
+    <!-- Band detail screen -->
+    <string name="band_detail_genre">Žáner</string>
+    <string name="band_detail_stage">Pódium</string>
+    <string name="band_detail_time">Čas</string>
+    <string name="band_detail_favourite">Obľúbené</string>
+    <string name="band_detail_spotify">Počúvať na Spotify</string>
+    <string name="band_detail_open_spotify">Otvoriť v Spotify</string>
+    <string name="band_detail_description_source">Popis (slovenský originál)</string>
+
+    <!-- News screen -->
+    <string name="news_title">Novinky</string>
+    <string name="news_offline">Správy nie sú dostupné offline.</string>
+    <string name="news_open_facebook">Otvoriť Facebook</string>
+
+    <!-- Info screen -->
+    <string name="info_title">Info</string>
+
+    <!-- Tickets screen -->
+    <string name="tickets_title">Vstupenky &amp; Eshop</string>
+    <string name="tickets_buy">Kúpiť vstupenky</string>
+    <string name="tickets_goout">Vstupenky (GoOut)</string>
+    <string name="tickets_eshop">Eshop</string>
+
+    <!-- Settings screen -->
+    <string name="settings_title">Nastavenia</string>
+    <string name="settings_language">Jazyk</string>
+    <string name="settings_language_sk">Slovenčina</string>
+    <string name="settings_language_en">English</string>
+    <string name="settings_font_size">Veľkosť písma</string>
+    <string name="settings_font_normal">Normálna</string>
+    <string name="settings_font_large">Veľká</string>
+    <string name="settings_update_data">Aktualizovať dáta</string>
+    <string name="settings_updating">Aktualizujem…</string>
+    <string name="settings_update_success">Dáta boli aktualizované.</string>
+    <string name="settings_update_error">Chyba pri aktualizácii. Skúste neskôr.</string>
+    <string name="settings_credit">Vytvoril David Badin</string>
+
+    <!-- Spotify screen -->
+    <string name="spotify_title">Spotify</string>
+    <string name="spotify_playlist_label">Festivalový playlist</string>
+    <string name="spotify_open_app">Otvoriť v Spotify</string>
+    <string name="spotify_install_prompt">Nainštalujte Spotify pre prehrávanie</string>
+
+    <!-- Shared / generic -->
+    <string name="loading">Načítava sa…</string>
+    <string name="error_generic">Niečo sa pokazilo.</string>
+    <string name="back">Späť</string>
+    <string name="favourite_add">Pridať do obľúbených</string>
+    <string name="favourite_remove">Odobrať z obľúbených</string>
+    <string name="open_external">Otvoriť v prehliadači</string>
+</resources>

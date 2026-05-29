@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Nastavenia</string>
+    <string name="settings_language">Jazyk</string>
+    <string name="settings_language_sk">Slovenčina</string>
+    <string name="settings_language_en">English</string>
+    <string name="settings_font_size">Veľkosť písma</string>
+    <string name="settings_font_normal">Normálna</string>
+    <string name="settings_font_large">Veľká</string>
+    <string name="settings_update_data">Aktualizovať dáta</string>
+    <string name="settings_updating">Aktualizujem…</string>
+    <string name="settings_update_success">Dáta boli aktualizované.</string>
+    <string name="settings_update_error">Chyba pri aktualizácii. Skúste neskôr.</string>
+    <string name="settings_credit">Vytvoril David Badin</string>
+</resources>
