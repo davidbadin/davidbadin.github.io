@@ -12,6 +12,4 @@
     <string name="home_countdown_hours">hours</string>
     <string name="home_countdown_minutes">minutes</string>
     <string name="home_countdown_seconds">seconds</string>
-    <string name="home_spotify_playlist">Festival playlist</string>
-    <string name="home_spotify_open">Open in Spotify</string>
 </resources>

@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -42,7 +43,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val isFontLarge by userPrefs.isFontLarge.collectAsState(initial = false)
-            val fontScale = if (isFontLarge) 1.30f else 1.0f
+            val fontScale = if (isFontLarge) 1.40f else 1.12f
 
             // Collect bands for NowPlayingHeader + start-destination decision
             val bands by bandRepository.observeBands().collectAsState(initial = emptyList())
@@ -62,11 +63,13 @@ class MainActivity : ComponentActivity() {
                             sk.punkacidetom.pd2026.navigation.BandDetailRoute(bandId)
                         )
                     },
-                ) { _ ->
+                ) { innerPadding ->
                     AppNavHost(
                         navController = navController,
                         startDestination = startDestination,
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
                     )
                 }
             }

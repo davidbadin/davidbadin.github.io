@@ -51,9 +51,8 @@ fun AppBottomBar(navController: NavHostController) {
             isSelected = currentRoute?.contains("HomeRoute") == true,
             onClick = {
                 navController.navigate(HomeRoute) {
-                    popUpTo(navController.graph.startDestinationId) { saveState = true }
+                    popUpTo(0) { inclusive = true }
                     launchSingleTop = true
-                    restoreState = true
                 }
             },
         )

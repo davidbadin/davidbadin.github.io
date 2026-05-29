@@ -38,11 +38,6 @@ import sk.punkacidetom.pd2026.core.ui.theme.Navy
 import sk.punkacidetom.pd2026.core.ui.theme.NavyLight
 import sk.punkacidetom.pd2026.core.ui.theme.White
 import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
-import sk.punkacidetom.pd2026.feature.spotify.SpotifyPlayerComposable
-import sk.punkacidetom.pd2026.feature.spotify.spotifyPlaylistEmbedUrl
-import sk.punkacidetom.pd2026.feature.spotify.util.SpotifyLauncher
-
-private const val FESTIVAL_PLAYLIST_ID = "5QL8HJ0cWaLGS2Qxby0xDG"
 private const val URL_FACEBOOK = "https://www.facebook.com/punkacidetom"
 private const val URL_INSTAGRAM = "https://www.instagram.com/festival_punkaci_detom/"
 
@@ -119,23 +114,6 @@ fun HomeScreen(
             }
             Spacer(modifier = Modifier.height(spacing.sm))
         }
-
-        Spacer(modifier = Modifier.height(spacing.lg))
-
-        // Spotify playlist
-        Text(
-            text = stringResource(R.string.home_spotify_playlist),
-            style = MaterialTheme.typography.headlineSmall,
-            color = White,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        Spacer(modifier = Modifier.height(spacing.sm))
-        SpotifyPlayerComposable(
-            embedUrl = spotifyPlaylistEmbedUrl(FESTIVAL_PLAYLIST_ID),
-            openLabel = stringResource(R.string.home_spotify_open),
-            onOpenClick = { SpotifyLauncher.openPlaylist(context, FESTIVAL_PLAYLIST_ID) },
-            embedHeight = 352,
-        )
 
         Spacer(modifier = Modifier.height(spacing.lg))
 

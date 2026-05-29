@@ -3,9 +3,11 @@ package sk.punkacidetom.pd2026.feature.timetable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import sk.punkacidetom.pd2026.core.model.Band
@@ -37,8 +40,13 @@ import sk.punkacidetom.pd2026.core.ui.theme.Navy
 import sk.punkacidetom.pd2026.core.ui.theme.NavyLight
 import sk.punkacidetom.pd2026.core.ui.theme.White
 import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
+import java.time.Duration
+import java.time.LocalDateTime
 import java.time.format.TextStyle
 import java.util.Locale
+
+/** Height (dp) for each minute on the proportional timeline. */
+private const val MINUTE_HEIGHT_DP = 2f
 
 @Composable
 fun TimetableScreen(
@@ -117,8 +125,9 @@ fun TimetableScreen(
 
         Spacer(modifier = Modifier.height(spacing.xs))
 
-        // Two-column timetable
-        if (uiState.stageABands.isEmpty() && uiState.stageBBands.isEmpty()) {
+        // Two-column proportional timetable
+        val allBands = uiState.stageABands + uiState.stageBBands
+        if (allBands.isEmpty()) {
             Text(
                 text = stringResource(R.string.timetable_no_slots),
                 style = MaterialTheme.typography.bodyMedium,
@@ -126,6 +135,12 @@ fun TimetableScreen(
                 modifier = Modifier.padding(spacing.md),
             )
         } else {
+            // Compute timeline bounds with LocalDateTime to handle midnight crossover
+            val dayStartDt = allBands.minOf { LocalDateTime.of(it.startDate, it.startTime) }
+            val dayEndDt = allBands.maxOf { LocalDateTime.of(it.endDate, it.endTime) }
+            val totalMinutes = Duration.between(dayStartDt, dayEndDt).toMinutes()
+            val totalTimelineHeight = (totalMinutes * MINUTE_HEIGHT_DP).dp
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -133,28 +148,73 @@ fun TimetableScreen(
                     .padding(horizontal = spacing.md),
                 verticalAlignment = Alignment.Top,
             ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    uiState.stageABands.forEach { band ->
-                        SlotCard(
-                            band = band,
-                            isFavourite = uiState.favouriteIds.contains(band.id),
-                            onClick = { onBandClick(band.id) },
-                        )
-                        Spacer(modifier = Modifier.height(spacing.sm))
-                    }
-                }
+                ProportionalStageColumn(
+                    bands = uiState.stageABands,
+                    dayStartDt = dayStartDt,
+                    totalTimelineHeight = totalTimelineHeight,
+                    favouriteIds = uiState.favouriteIds,
+                    onBandClick = onBandClick,
+                    modifier = Modifier.weight(1f),
+                )
+
                 Spacer(modifier = Modifier.width(spacing.sm))
-                Column(modifier = Modifier.weight(1f)) {
-                    uiState.stageBBands.forEach { band ->
-                        SlotCard(
-                            band = band,
-                            isFavourite = uiState.favouriteIds.contains(band.id),
-                            onClick = { onBandClick(band.id) },
-                        )
-                        Spacer(modifier = Modifier.height(spacing.sm))
-                    }
-                }
+
+                ProportionalStageColumn(
+                    bands = uiState.stageBBands,
+                    dayStartDt = dayStartDt,
+                    totalTimelineHeight = totalTimelineHeight,
+                    favouriteIds = uiState.favouriteIds,
+                    onBandClick = onBandClick,
+                    modifier = Modifier.weight(1f),
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun ProportionalStageColumn(
+    bands: List<Band>,
+    dayStartDt: LocalDateTime,
+    totalTimelineHeight: Dp,
+    favouriteIds: Set<Int>,
+    onBandClick: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    // Remove overlapping bands within this column (keep earlier ones, skip later ones)
+    val dedupedBands: List<Band> = buildList {
+        var lastEndDt = LocalDateTime.MIN
+        for (band in bands.sortedWith(compareBy({ it.startDate }, { it.startTime }))) {
+            val bandStartDt = LocalDateTime.of(band.startDate, band.startTime)
+            if (bandStartDt >= lastEndDt) {
+                add(band)
+                lastEndDt = LocalDateTime.of(band.endDate, band.endTime)
+            }
+            // else: skip — overlapping entry in the same column
+        }
+    }
+
+    Box(modifier = modifier.height(totalTimelineHeight)) {
+        dedupedBands.forEach { band ->
+            val bandStartDt = LocalDateTime.of(band.startDate, band.startTime)
+            val bandEndDt = LocalDateTime.of(band.endDate, band.endTime)
+
+            val offsetMinutes = Duration.between(dayStartDt, bandStartDt).toMinutes()
+            val durationMinutes = Duration.between(bandStartDt, bandEndDt).toMinutes()
+                .coerceAtLeast(1L)
+
+            val offsetDp = (offsetMinutes * MINUTE_HEIGHT_DP).dp
+            val heightDp = (durationMinutes * MINUTE_HEIGHT_DP).dp
+
+            SlotCard(
+                band = band,
+                isFavourite = favouriteIds.contains(band.id),
+                onClick = { onBandClick(band.id) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .absoluteOffset(y = offsetDp)
+                    .height(heightDp),
+            )
         }
     }
 }
@@ -164,14 +224,14 @@ private fun SlotCard(
     band: Band,
     isFavourite: Boolean,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val spacing = LocalAppSpacing.current
     val timeStr = "${band.startTime.hour}:${band.startTime.minute.toString().padStart(2, '0')}" +
         " – ${band.endTime.hour}:${band.endTime.minute.toString().padStart(2, '0')}"
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
             .clip(RoundedCornerShape(spacing.cardCorner))
             .background(NavyLight)
             .clickable(onClick = onClick)
@@ -213,12 +273,6 @@ private fun SlotCard(
                 overflow = TextOverflow.Ellipsis,
             )
         }
-        Text(
-            text = Stages.displayName(band.stageCode),
-            style = MaterialTheme.typography.labelSmall,
-            color = WhiteAlpha60,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
+        // Stage name intentionally omitted — shown in the column header above
     }
 }
