@@ -8,6 +8,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -68,9 +73,10 @@ fun AppBottomBar(navController: NavHostController) {
             isSelected = currentRoute?.contains("TimetableRoute") == true,
             onClick = {
                 navController.navigate(TimetableRoute) {
-                    popUpTo(navController.graph.startDestinationId) { saveState = true }
+                    // Pop Timetable (inclusive) before re-navigating, so any BandDetail
+                    // sitting on top of it is cleared and a fresh TimetableScreen appears.
+                    popUpTo<TimetableRoute> { inclusive = true }
                     launchSingleTop = true
-                    restoreState = true
                 }
             },
         )
@@ -96,10 +102,11 @@ fun AppBottomBar(navController: NavHostController) {
         BottomNavItem(
             label = stringResource(R.string.nav_settings),
             icon = { isSelected ->
-                FaIcon(
-                    name = "gear",
-                    size = spacing.iconLg,
+                Icon(
+                    imageVector = if (isSelected) Icons.Filled.Settings else Icons.Outlined.Settings,
+                    contentDescription = null,
                     tint = if (isSelected) Crimson else WhiteAlpha60,
+                    modifier = Modifier.size(spacing.iconLg),
                 )
             },
             isSelected = currentRoute?.contains("SettingsRoute") == true,

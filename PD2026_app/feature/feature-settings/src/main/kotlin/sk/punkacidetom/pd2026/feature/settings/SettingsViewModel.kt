@@ -3,11 +3,13 @@ package sk.punkacidetom.pd2026.feature.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 import sk.punkacidetom.pd2026.core.data.repository.BandRepositoryImpl
 import sk.punkacidetom.pd2026.core.data.repository.UserPreferencesRepository
@@ -39,10 +41,20 @@ class SettingsViewModel @Inject constructor(
     private val _updateState = MutableStateFlow(UpdateState.IDLE)
     val updateState: StateFlow<UpdateState> = _updateState
 
+    /**
+     * Emits [Unit] after a language change so the screen can call
+     * [Activity.recreate()] to apply the new locale immediately on devices
+     * where [AppCompatDelegate.setApplicationLocales] alone doesn't trigger a
+     * configuration change in the same process lifecycle.
+     */
+    private val _recreateActivity = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val recreateActivity: SharedFlow<Unit> = _recreateActivity
+
     fun setLanguage(lang: String) {
         viewModelScope.launch {
             userPrefs.setLanguage(lang)
             localeHelper.applyLocale(lang)
+            _recreateActivity.tryEmit(Unit)
         }
     }
 

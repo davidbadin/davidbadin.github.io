@@ -16,7 +16,12 @@ fun NavGraphBuilder.homeNavGraph(navController: NavHostController) {
         HomeScreen(
             onNavigateToNews = { navController.navigate(NewsRoute) },
             onNavigateToBands = { navController.navigate(BandsRoute) },
-            onNavigateToTimetable = { navController.navigate(TimetableRoute) },
+            onNavigateToTimetable = {
+                navController.navigate(TimetableRoute) {
+                    popUpTo<TimetableRoute> { inclusive = true }
+                    launchSingleTop = true
+                }
+            },
             onNavigateToInfo = { navController.navigate(InfoRoute) },
             onNavigateToTickets = { navController.navigate(TicketsRoute) },
         )

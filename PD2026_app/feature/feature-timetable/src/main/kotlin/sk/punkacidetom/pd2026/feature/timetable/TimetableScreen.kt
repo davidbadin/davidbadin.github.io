@@ -1,6 +1,7 @@
 package sk.punkacidetom.pd2026.feature.timetable
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,8 +21,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +36,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.delay
 import sk.punkacidetom.pd2026.core.model.Band
 import sk.punkacidetom.pd2026.core.model.Stages
 import sk.punkacidetom.pd2026.core.ui.icons.FaIcon
@@ -56,6 +62,15 @@ fun TimetableScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val spacing = LocalAppSpacing.current
+
+    // Ticking clock for the "LIVE" indicator — updates every 60 seconds
+    var now by remember { mutableStateOf(LocalDateTime.now()) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(60_000L)
+            now = LocalDateTime.now()
+        }
+    }
 
     Column(
         modifier = modifier
@@ -153,6 +168,7 @@ fun TimetableScreen(
                     dayStartDt = dayStartDt,
                     totalTimelineHeight = totalTimelineHeight,
                     favouriteIds = uiState.favouriteIds,
+                    now = now,
                     onBandClick = onBandClick,
                     modifier = Modifier.weight(1f),
                 )
@@ -164,6 +180,7 @@ fun TimetableScreen(
                     dayStartDt = dayStartDt,
                     totalTimelineHeight = totalTimelineHeight,
                     favouriteIds = uiState.favouriteIds,
+                    now = now,
                     onBandClick = onBandClick,
                     modifier = Modifier.weight(1f),
                 )
@@ -178,6 +195,7 @@ private fun ProportionalStageColumn(
     dayStartDt: LocalDateTime,
     totalTimelineHeight: Dp,
     favouriteIds: Set<Int>,
+    now: LocalDateTime,
     onBandClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -190,7 +208,7 @@ private fun ProportionalStageColumn(
                 add(band)
                 lastEndDt = LocalDateTime.of(band.endDate, band.endTime)
             }
-            // else: skip — overlapping entry in the same column
+            // else: skip — overlapping entry in same column
         }
     }
 
@@ -206,9 +224,12 @@ private fun ProportionalStageColumn(
             val offsetDp = (offsetMinutes * MINUTE_HEIGHT_DP).dp
             val heightDp = (durationMinutes * MINUTE_HEIGHT_DP).dp
 
+            val isPlaying = !now.isBefore(bandStartDt) && now.isBefore(bandEndDt)
+
             SlotCard(
                 band = band,
                 isFavourite = favouriteIds.contains(band.id),
+                isPlaying = isPlaying,
                 onClick = { onBandClick(band.id) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -223,17 +244,23 @@ private fun ProportionalStageColumn(
 private fun SlotCard(
     band: Band,
     isFavourite: Boolean,
+    isPlaying: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val spacing = LocalAppSpacing.current
     val timeStr = "${band.startTime.hour}:${band.startTime.minute.toString().padStart(2, '0')}" +
         " – ${band.endTime.hour}:${band.endTime.minute.toString().padStart(2, '0')}"
+    val cornerShape = RoundedCornerShape(spacing.cardCorner)
 
     Column(
         modifier = modifier
-            .clip(RoundedCornerShape(spacing.cardCorner))
-            .background(NavyLight)
+            .clip(cornerShape)
+            .background(if (isPlaying) Crimson.copy(alpha = 0.85f) else NavyLight)
+            .then(
+                if (isPlaying) Modifier.border(2.dp, Crimson, cornerShape)
+                else Modifier
+            )
             .clickable(onClick = onClick)
             .padding(spacing.sm),
     ) {
@@ -249,7 +276,14 @@ private fun SlotCard(
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f),
             )
-            if (isFavourite) {
+            if (isPlaying) {
+                Text(
+                    text = "▶ LIVE",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = White,
+                    modifier = Modifier.padding(start = 4.dp),
+                )
+            } else if (isFavourite) {
                 FaIcon(
                     name = "heart",
                     size = spacing.iconSm,
@@ -262,13 +296,13 @@ private fun SlotCard(
         Text(
             text = timeStr,
             style = MaterialTheme.typography.labelSmall,
-            color = Crimson,
+            color = if (isPlaying) White.copy(alpha = 0.85f) else Crimson,
         )
         if (band.genre.isNotBlank()) {
             Text(
                 text = band.genre,
                 style = MaterialTheme.typography.labelSmall,
-                color = WhiteAlpha60,
+                color = if (isPlaying) White.copy(alpha = 0.7f) else WhiteAlpha60,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )

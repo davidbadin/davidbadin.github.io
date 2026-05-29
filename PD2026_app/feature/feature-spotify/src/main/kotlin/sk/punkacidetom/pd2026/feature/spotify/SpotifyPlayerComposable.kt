@@ -10,13 +10,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,8 +39,9 @@ import sk.punkacidetom.pd2026.feature.spotify.util.SpotifyLauncher
  * When the Spotify app is installed, the button deep-links directly into it.
  * When not installed, Chrome Custom Tabs opens the web player.
  *
- * The WebView height adapts dynamically to the embedded content height (min 80dp),
- * so the enclosing Box never wastes space when the compact player is shown.
+ * The WebView height adapts dynamically to the embedded content height (min 80dp).
+ * Playback is stopped and the WebView is destroyed when the composable leaves
+ * the composition so music does not continue in the background.
  */
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
@@ -53,6 +54,20 @@ fun SpotifyPlayerComposable(
 ) {
     val spacing = LocalAppSpacing.current
     var webHeight by remember { mutableStateOf(80) }
+    var webViewRef by remember { mutableStateOf<WebView?>(null) }
+
+    // Stop playback and release resources when the composable leaves composition
+    DisposableEffect(embedUrl) {
+        onDispose {
+            webViewRef?.let { wv ->
+                wv.onPause()
+                wv.pauseTimers()
+                wv.loadUrl("about:blank") // halts all media
+                wv.destroy()
+                webViewRef = null
+            }
+        }
+    }
 
     Column(modifier = modifier.fillMaxWidth()) {
         Box(
@@ -84,7 +99,7 @@ fun SpotifyPlayerComposable(
                             }
                         }
                         loadUrl(embedUrl)
-                    }
+                    }.also { webViewRef = it }
                 },
                 modifier = Modifier.fillMaxWidth(),
             )

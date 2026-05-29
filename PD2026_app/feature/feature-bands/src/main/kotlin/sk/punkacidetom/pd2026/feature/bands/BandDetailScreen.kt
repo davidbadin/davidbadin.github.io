@@ -153,19 +153,13 @@ fun BandDetailScreen(
 
             Spacer(modifier = Modifier.height(spacing.md))
 
-            // Description
+            // Description (show nothing when blank — no placeholder text)
             val description = band.description(uiState.language)
             if (description.isNotBlank()) {
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodyMedium,
                     color = White,
-                )
-            } else {
-                Text(
-                    text = stringResource(R.string.band_detail_no_description),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = WhiteAlpha60,
                 )
             }
 
