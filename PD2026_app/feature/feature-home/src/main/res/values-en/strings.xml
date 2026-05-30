@@ -5,6 +5,7 @@
     <string name="home_btn_timetable">Timetable</string>
     <string name="home_btn_info">Info</string>
     <string name="home_btn_tickets">Tickets &amp; Eshop</string>
+    <string name="home_social_heading">Social media</string>
     <string name="home_social_facebook">Facebook</string>
     <string name="home_social_instagram">Instagram</string>
     <string name="home_countdown_until">Until festival start</string>
