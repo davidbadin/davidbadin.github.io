@@ -42,9 +42,8 @@ class BandRepositoryImpl @Inject constructor(
             val cached = cache.loadBands()
             if (cached.isNotEmpty()) _bands.value = cached
 
-            // Auto-refresh on app start (ignores cooldown for initial load — but
-            // if cache is very fresh we skip the network hit)
-            backgroundRefreshIfStale(ignoreCooldown = false)
+            // App start always fetches fresh data regardless of cooldown
+            backgroundRefreshIfStale(ignoreCooldown = true)
         }
     }
 

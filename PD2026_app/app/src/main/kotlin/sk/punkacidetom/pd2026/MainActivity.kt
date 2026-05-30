@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             val isFontLarge by userPrefs.isFontLarge.collectAsState(initial = false)
-            val fontScale = if (isFontLarge) 1.40f else 1.12f
+            val fontScale = if (isFontLarge) 1.60f else 1.12f
 
             // Collect bands for NowPlayingHeader + start-destination decision
             val bands by bandRepository.observeBands().collectAsState(initial = emptyList())
