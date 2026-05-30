@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Punkáči Deťom 2026 — Zásady ochrany osobných údajov">
+    <title>Punkáči Deťom 2026 — Ochrana osobných údajov</title>
+    <style>
+        @font-face {
+            font-family: "ThirdMan";
+            src: url("fonts/third_man_regular.otf") format("opentype");
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "BebasNeue";
+            src: url("fonts/bebas_neue_regular.ttf") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Poppins";
+            src: url("fonts/poppins_regular.ttf") format("truetype");
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --bg:     #0B1338;
+            --accent: #AD1C24;
+            --fg:     #FFFFFF;
+            --muted:  rgba(255, 255, 255, 0.65);
+
+            --f-big:  "ThirdMan", "Anton", Impact, sans-serif;
+            --f-mid:  "BebasNeue", "Bebas Neue", "Anton", Impact, sans-serif;
+            --f-body: "Poppins", system-ui, -apple-system, "Segoe UI",
+                      Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--fg);
+            font-family: var(--f-body);
+            line-height: 1.55;
+            font-size: 16px;
+        }
+
+        .wrap {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 28px 18px 64px;
+        }
+
+        .lockup {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-family: var(--f-big);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            line-height: 1;
+            font-size: clamp(2.2rem, 9vw, 3.6rem);
+        }
+        .lockup .heart { color: var(--accent); font-size: 0.85em; }
+        .lockup .yr    { color: var(--accent); }
+
+        .subline {
+            text-align: center;
+            font-family: var(--f-mid);
+            letter-spacing: 0.18em;
+            font-size: 1rem;
+            color: var(--muted);
+            margin: 6px 0 28px;
+        }
+        .subline .pipe { color: var(--accent); padding: 0 8px; }
+
+        h1 {
+            font-family: var(--f-big);
+            font-weight: normal;
+            text-transform: uppercase;
+            font-size: clamp(2.4rem, 10vw, 4.2rem);
+            color: var(--fg);
+            text-align: center;
+            letter-spacing: 0.06em;
+            margin: 8px 0 4px;
+            line-height: 1;
+        }
+        .rule {
+            height: 4px;
+            background: var(--accent);
+            width: 80px;
+            margin: 0 auto 32px;
+        }
+
+        h2 {
+            font-family: var(--f-big);
+            font-weight: normal;
+            text-transform: uppercase;
+            font-size: clamp(1.6rem, 5vw, 2.1rem);
+            letter-spacing: 0.04em;
+            color: var(--fg);
+            margin: 40px 0 4px;
+            padding-bottom: 6px;
+            border-bottom: 3px solid var(--accent);
+        }
+
+        h3 {
+            font-family: var(--f-mid);
+            font-weight: normal;
+            text-transform: uppercase;
+            font-size: 1.25rem;
+            letter-spacing: 0.12em;
+            color: var(--accent);
+            margin: 22px 0 6px;
+        }
+
+        p  { margin: 8px 0 14px; }
+        ul { padding-left: 20px; margin: 8px 0 14px; }
+        li { margin: 4px 0; }
+
+        strong { color: var(--fg); }
+
+        a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--accent); }
+        a:hover { color: var(--accent); }
+
+        .stamp {
+            margin-top: 56px;
+            font-family: var(--f-mid);
+            font-size: 0.9rem;
+            color: var(--muted);
+            text-align: center;
+            border-top: 1px dashed rgba(255,255,255,0.3);
+            padding-top: 14px;
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+<body>
+    <main class="wrap">
+
+        <div class="lockup" aria-label="Punkáči deťom 2026">
+            <span>Punkáči</span>
+            <span class="heart" aria-hidden="true">♥</span>
+            <span>Deťom</span>
+            <span class="yr">2026</span>
+        </div>
+        <div class="subline">
+            27.8. – 29.8.2026 <span class="pipe">|</span> Camping Opatovce, Slovakia
+        </div>
+
+        <h1>Ochrana osobných údajov</h1>
+        <div class="rule"></div>
+
+        <p>
+            Tieto zásady ochrany osobných údajov sa vzťahujú na mobilnú aplikáciu
+            <strong>Punkáči Deťom 2026</strong> (ďalej len „aplikácia"), dostupnú
+            pre zariadenia so systémom Android. Aplikácia slúži na poskytovanie
+            informácií o festivale Punkáči Deťom 2026 — program, kapely, novinky
+            a praktické informácie pre návštevníkov.
+        </p>
+        <p>
+            Prevádzkovateľom aplikácie je organizátor festivalu Punkáči Deťom.
+            V prípade otázok nás kontaktuj na:
+            <a href="mailto:info@punkacidetom.sk">info@punkacidetom.sk</a>
+        </p>
+
+
+        <h2>Aké údaje zbierame</h2>
+
+        <h3>Údaje, ktoré nezbierame</h3>
+        <p>
+            Aplikácia <strong>nevyžaduje registráciu</strong> ani prihlásenie
+            (s výnimkou voliteľného prepojenia so Spotify). Nezhromažďujeme
+            meno, e-mailovú adresu, polohu, telefónne číslo ani žiadne iné
+            osobné identifikátory.
+        </p>
+
+        <h3>Technické údaje zariadenia</h3>
+        <p>
+            Na účely doručovania push notifikácií využívame službu
+            <strong>Firebase Cloud Messaging (FCM)</strong> od Google.
+            FCM môže spracúvať anonymný identifikátor zariadenia (FCM token),
+            ktorý sa neuchováva na našich serveroch a nie je priradený k žiadnej
+            konkrétnej osobe.
+        </p>
+
+        <h3>Spotify integrácia (voliteľná)</h3>
+        <p>
+            Ak sa rozhodneš prepojiť Spotify účet, aplikácia vyžiada od Spotify
+            prístup k verejnému profilu a možnosti prehrávania. Aplikácia
+            si uloží prístupový token lokálne na tvojom zariadení.
+            Spotify má vlastné
+            <a href="https://www.spotify.com/sk/legal/privacy-policy/" target="_blank" rel="noopener">
+                zásady ochrany osobných údajov
+            </a>.
+            Prepojenie so Spotify môžeš kedykoľvek odvolať v nastaveniach aplikácie.
+        </p>
+
+
+        <h2>Ako údaje používame</h2>
+        <p>Zhromaždené technické údaje používame výlučne na:</p>
+        <ul>
+            <li>doručovanie push notifikácií o zmenách programu a novinkách z festivalu,</li>
+            <li>správne fungovanie aplikácie (načítavanie obsahu zo serverov).</li>
+        </ul>
+        <p>
+            Údaje <strong>nepredávame, neprenajímame ani nezdieľame</strong>
+            s tretími stranami na marketingové účely.
+        </p>
+
+
+        <h2>Tretie strany</h2>
+        <p>Aplikácia využíva nasledujúce služby tretích strán:</p>
+        <ul>
+            <li>
+                <strong>Google Firebase / FCM</strong> — push notifikácie.
+                <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">
+                    Zásady ochrany údajov Google
+                </a>
+            </li>
+            <li>
+                <strong>Spotify</strong> — voliteľná integrácia na prehrávanie hudby
+                a objavovanie kapiel z line-upu.
+                <a href="https://www.spotify.com/sk/legal/privacy-policy/" target="_blank" rel="noopener">
+                    Zásady ochrany údajov Spotify
+                </a>
+            </li>
+        </ul>
+
+
+        <h2>Push notifikácie</h2>
+        <p>
+            Notifikácie posielame len v súvislosti s festivalom — zmeny programu,
+            dôležité oznamy, novinky. Na zariadeniach so systémom Android 13 a novším
+            aplikácia vyžiada povolenie pred prvým odoslaním notifikácie.
+            Notifikácie môžeš kedykoľvek vypnúť v nastaveniach systému Android.
+        </p>
+
+
+        <h2>Ukladanie údajov</h2>
+        <p>
+            Aplikácia ukladá nastavenia a dočasnú vyrovnávaciu pamäť (cache)
+            výlučne lokálne na tvojom zariadení. Tieto dáta sú automaticky
+            odstránené pri odinštalovaní aplikácie. Neprevádzkujeme vlastnú
+            databázu používateľov.
+        </p>
+
+
+        <h2>Bezpečnosť</h2>
+        <p>
+            Všetka komunikácia medzi aplikáciou a serverom prebieha cez
+            šifrované spojenie (HTTPS). Aplikácia nevyužíva nešifrovaný
+            prenos dát (cleartext traffic je zakázaný).
+        </p>
+
+
+        <h2>Deti</h2>
+        <p>
+            Aplikácia nie je určená deťom mladším ako 13 rokov a vedome
+            nezbiera žiadne údaje od detí.
+        </p>
+
+
+        <h2>Zmeny týchto zásad</h2>
+        <p>
+            Tieto zásady môžeme príležitostne aktualizovať. O zmenách budeme
+            informovať prostredníctvom tejto stránky. Dátum poslednej aktualizácie
+            je uvedený nižšie.
+        </p>
+
+
+        <h2>Kontakt</h2>
+        <p>
+            Ak máš otázky týkajúce sa ochrany osobných údajov, kontaktuj nás na:
+            <a href="mailto:info@punkacidetom.sk">info@punkacidetom.sk</a><br>
+            alebo navštív <a href="https://punkacidetom.sk/" target="_blank" rel="noopener">punkacidetom.sk</a>
+        </p>
+
+
+        <p class="stamp">
+            Posledná aktualizácia: máj 2026
+        </p>
+
+    </main>
+</body>
+</html>
