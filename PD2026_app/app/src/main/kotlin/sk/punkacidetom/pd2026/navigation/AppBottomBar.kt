@@ -93,9 +93,8 @@ fun AppBottomBar(navController: NavHostController) {
             isSelected = currentRoute?.contains("SpotifyRoute") == true,
             onClick = {
                 navController.navigate(SpotifyRoute) {
-                    popUpTo(navController.graph.startDestinationId) { saveState = true }
+                    popUpTo(0) { inclusive = true }
                     launchSingleTop = true
-                    restoreState = true
                 }
             },
         )
@@ -112,9 +111,8 @@ fun AppBottomBar(navController: NavHostController) {
             isSelected = currentRoute?.contains("SettingsRoute") == true,
             onClick = {
                 navController.navigate(SettingsRoute) {
-                    popUpTo(navController.graph.startDestinationId) { saveState = true }
+                    popUpTo(0) { inclusive = true }
                     launchSingleTop = true
-                    restoreState = true
                 }
             },
         )

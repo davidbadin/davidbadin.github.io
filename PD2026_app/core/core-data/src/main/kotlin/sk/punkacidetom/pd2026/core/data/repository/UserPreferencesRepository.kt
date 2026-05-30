@@ -25,6 +25,19 @@ class UserPreferencesRepository @Inject constructor(
         prefs[FAVOURITE_IDS_KEY]?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet()
     }
 
+    /**
+     * Seeds the language preference from the device locale on first launch only.
+     * If a value already exists (user has made a choice), this is a no-op.
+     * @param systemLanguage  Locale.getDefault().language — e.g. "sk", "en", "de"
+     */
+    suspend fun initLanguageIfAbsent(systemLanguage: String) {
+        dataStore.edit { prefs ->
+            if (!prefs.contains(LANGUAGE_KEY)) {
+                prefs[LANGUAGE_KEY] = if (systemLanguage == "sk") "sk" else "en"
+            }
+        }
+    }
+
     suspend fun setLanguage(lang: String) {
         dataStore.edit { it[LANGUAGE_KEY] = lang }
     }

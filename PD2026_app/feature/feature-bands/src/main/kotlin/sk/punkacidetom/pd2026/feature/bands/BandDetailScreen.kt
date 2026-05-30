@@ -146,7 +146,7 @@ fun BandDetailScreen(
             Spacer(modifier = Modifier.height(spacing.xs))
 
             Text(
-                text = stringResource(R.string.band_detail_stage) + ": " + Stages.displayName(band.stageCode),
+                text = Stages.displayName(band.stageCode),
                 style = MaterialTheme.typography.bodyMedium,
                 color = WhiteAlpha60,
             )
