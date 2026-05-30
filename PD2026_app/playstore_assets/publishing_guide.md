@@ -150,8 +150,7 @@ Click **Start** and go through the form:
 8. **Files and docs** — No
 9. **Calendar** — No
 10. **Contacts** — No
-11. **App activity** — **Yes**
-    - App interactions → collected, not shared, purpose: App functionality
+11. **App activity** — No
 12. **Web browsing** — No
 13. **App info and performance** — No
 14. **Device and other IDs** — **Yes**
