@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -56,47 +54,48 @@ fun BandDetailScreen(
     val context = LocalContext.current
     val band = uiState.band
 
-    Column(
+    LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .background(Navy)
-            .verticalScroll(rememberScrollState()),
+            .background(Navy),
     ) {
-        // Back button over the image
-        Box {
-            // Header image with gradient fade
-            BandHeaderImage(
-                band = band,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(spacing.bandImageHeight),
-            )
-
-            IconButton(
-                onClick = onBack,
-                modifier = Modifier
-                    .padding(spacing.sm)
-                    .align(Alignment.TopStart),
-            ) {
-                FaIcon(name = "arrow-left", size = spacing.iconLg, tint = White)
+        // Header image + back button
+        item(key = "header") {
+            Box {
+                BandHeaderImage(
+                    band = band,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(spacing.bandImageHeight),
+                )
+                IconButton(
+                    onClick = onBack,
+                    modifier = Modifier
+                        .padding(spacing.sm)
+                        .align(Alignment.TopStart),
+                ) {
+                    FaIcon(name = "arrow-left", size = spacing.iconLg, tint = White)
+                }
             }
         }
 
         if (band == null) {
-            Text(
-                text = "…",
-                color = WhiteAlpha60,
-                modifier = Modifier.padding(spacing.md),
-            )
-            return@Column
+            item(key = "loading") {
+                Text(
+                    text = "…",
+                    color = WhiteAlpha60,
+                    modifier = Modifier.padding(spacing.md),
+                )
+            }
+            return@LazyColumn
         }
 
-        Column(modifier = Modifier.padding(horizontal = spacing.md)) {
-            Spacer(modifier = Modifier.height(spacing.sm))
-
-            // Name + favourite toggle
+        // Name + favourite toggle
+        item(key = "name") {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = spacing.sm, start = spacing.md, end = spacing.md),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
@@ -113,67 +112,66 @@ fun BandDetailScreen(
                     )
                 }
             }
+        }
 
-            if (band.genre.isNotBlank()) {
+        // Genre
+        if (band.genre.isNotBlank()) {
+            item(key = "genre") {
                 Text(
                     text = band.genre,
                     style = MaterialTheme.typography.titleMedium,
                     color = Crimson,
+                    modifier = Modifier.padding(horizontal = spacing.md),
                 )
             }
+        }
 
-            Spacer(modifier = Modifier.height(spacing.sm))
-
-            // Day, date, time
+        // Day / time / stage
+        item(key = "datetime") {
             val dayName = band.startDate.dayOfWeek
                 .getDisplayName(TextStyle.FULL, Locale.forLanguageTag(uiState.language))
                 .replaceFirstChar { it.uppercase() }
             val dateStr = "${band.startDate.dayOfMonth}. ${band.startDate.monthValue}. ${band.startDate.year}"
             val timeStr = "${band.startTime.hour}:${band.startTime.minute.toString().padStart(2, '0')}" +
                 " – ${band.endTime.hour}:${band.endTime.minute.toString().padStart(2, '0')}"
+            Column(modifier = Modifier.padding(horizontal = spacing.md)) {
+                Spacer(modifier = Modifier.height(spacing.sm))
+                Text(text = "$dayName, $dateStr", style = MaterialTheme.typography.bodyMedium, color = WhiteAlpha60)
+                Text(text = timeStr, style = MaterialTheme.typography.titleSmall, color = White)
+                Spacer(modifier = Modifier.height(spacing.xs))
+                Text(text = Stages.displayName(band.stageCode), style = MaterialTheme.typography.bodyMedium, color = WhiteAlpha60)
+                Spacer(modifier = Modifier.height(spacing.md))
+            }
+        }
 
-            Text(
-                text = "$dayName, $dateStr",
-                style = MaterialTheme.typography.bodyMedium,
-                color = WhiteAlpha60,
-            )
-            Text(
-                text = timeStr,
-                style = MaterialTheme.typography.titleSmall,
-                color = White,
-            )
-
-            Spacer(modifier = Modifier.height(spacing.xs))
-
-            Text(
-                text = Stages.displayName(band.stageCode),
-                style = MaterialTheme.typography.bodyMedium,
-                color = WhiteAlpha60,
-            )
-
-            Spacer(modifier = Modifier.height(spacing.md))
-
-            // Description (show nothing when blank — no placeholder text)
-            val description = band.description(uiState.language)
-            if (description.isNotBlank()) {
+        // Description — in its own item so long text never bloats a shared layer
+        val description = band.description(uiState.language)
+        if (description.isNotBlank()) {
+            item(key = "description") {
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodyMedium,
                     color = White,
+                    modifier = Modifier.padding(horizontal = spacing.md),
                 )
             }
+        }
 
-            // Spotify player (only for acts with a Spotify artist ID)
-            if (band.spotifyArtistId.isNotBlank()) {
+        // Spotify player
+        if (band.spotifyArtistId.isNotBlank()) {
+            item(key = "spotify") {
                 Spacer(modifier = Modifier.height(spacing.md))
                 SpotifyPlayerComposable(
                     embedUrl = spotifyArtistEmbedUrl(band.spotifyArtistId),
                     openLabel = stringResource(R.string.band_detail_open_spotify),
                     onOpenClick = { SpotifyLauncher.openArtist(context, band.spotifyArtistId) },
                     embedHeight = 152,
+                    modifier = Modifier.padding(horizontal = spacing.md),
                 )
             }
+        }
 
+        item(key = "bottom_spacer") {
             Spacer(modifier = Modifier.height(spacing.xl))
         }
     }
@@ -182,7 +180,6 @@ fun BandDetailScreen(
 @Composable
 private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
     val spacing = LocalAppSpacing.current
-    // remember must be called unconditionally (Rules of Composables)
     var usePng by remember(band?.imageName) { mutableStateOf(true) }
     val imageUrl = when {
         band == null || band.bandImagePngUrl.isBlank() -> ""
@@ -203,7 +200,6 @@ private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxSize(),
             )
         } else {
-            // Fallback: plain navy background with band initial
             Box(
                 modifier = Modifier
                     .fillMaxSize()

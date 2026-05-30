@@ -88,9 +88,9 @@ fun HomeScreen(
 
         // Navigation buttons — single column, full width
         val navButtons = listOf(
-            Triple(stringResource(R.string.home_btn_news), "newspaper", onNavigateToNews),
-            Triple(stringResource(R.string.home_btn_bands), "music", onNavigateToBands),
+            // Triple(stringResource(R.string.home_btn_news), "newspaper", onNavigateToNews),  // hidden until News is ready
             Triple(stringResource(R.string.home_btn_timetable), "calendar", onNavigateToTimetable),
+            Triple(stringResource(R.string.home_btn_bands), "music", onNavigateToBands),
             Triple(stringResource(R.string.home_btn_info), "circle-info", onNavigateToInfo),
             Triple(stringResource(R.string.home_btn_tickets), "ticket", onNavigateToTickets),
         )
