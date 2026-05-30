@@ -111,7 +111,7 @@ private fun NowPlayingRow(slot: NowPlayingSlot, onClick: () -> Unit) {
             modifier = Modifier.fillMaxWidth(),
         ) {
             FaIcon(
-                name = "music",
+                name = "play",
                 size = spacing.iconSm,
                 tint = Crimson,
                 modifier = Modifier.padding(end = spacing.sm),

@@ -38,6 +38,7 @@ import sk.punkacidetom.pd2026.core.ui.theme.Navy
 import sk.punkacidetom.pd2026.core.ui.theme.NavyLight
 import sk.punkacidetom.pd2026.core.ui.theme.White
 import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
+
 private const val URL_FACEBOOK = "https://www.facebook.com/punkacidetom"
 private const val URL_INSTAGRAM = "https://www.instagram.com/festival_punkaci_detom/"
 
@@ -85,7 +86,7 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(spacing.lg))
 
-        // Navigation buttons (2 per row)
+        // Navigation buttons — single column, full width
         val navButtons = listOf(
             Triple(stringResource(R.string.home_btn_news), "newspaper", onNavigateToNews),
             Triple(stringResource(R.string.home_btn_bands), "music", onNavigateToBands),
@@ -94,63 +95,43 @@ fun HomeScreen(
             Triple(stringResource(R.string.home_btn_tickets), "ticket", onNavigateToTickets),
         )
 
-        navButtons.chunked(2).forEach { rowItems ->
-            if (rowItems.size == 2) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(spacing.sm),
-                ) {
-                    rowItems.forEach { (label, icon, onClick) ->
-                        HomeNavButton(label = label, icon = icon, onClick = onClick, modifier = Modifier.weight(1f))
-                    }
-                }
-            } else {
-                // Single item — occupies left half, right half is empty space
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    val (label, icon, onClick) = rowItems[0]
-                    HomeNavButton(
-                        label = label,
-                        icon = icon,
-                        onClick = onClick,
-                        modifier = Modifier.weight(1f),
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-            }
+        navButtons.forEach { (label, icon, onClick) ->
+            HomeNavButton(
+                label = label,
+                icon = icon,
+                onClick = onClick,
+                modifier = Modifier.fillMaxWidth(),
+            )
             Spacer(modifier = Modifier.height(spacing.sm))
         }
 
         Spacer(modifier = Modifier.height(spacing.lg))
 
-        // Social links
+        // Social links — stacked full width
         Text(
-            text = "Social",
+            text = stringResource(R.string.home_social_heading),
             style = MaterialTheme.typography.headlineSmall,
             color = White,
             modifier = Modifier.fillMaxWidth(),
         )
         Spacer(modifier = Modifier.height(spacing.sm))
-        Row(
+        SocialButton(
+            label = stringResource(R.string.home_social_facebook),
+            icon = "facebook",
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(spacing.sm),
-        ) {
-            SocialButton(
-                label = stringResource(R.string.home_social_facebook),
-                icon = "facebook",
-                modifier = Modifier.weight(1f),
-                onClick = {
-                    CustomTabsIntent.Builder().build().launchUrl(context, Uri.parse(URL_FACEBOOK))
-                },
-            )
-            SocialButton(
-                label = stringResource(R.string.home_social_instagram),
-                icon = "instagram",
-                modifier = Modifier.weight(1f),
-                onClick = {
-                    CustomTabsIntent.Builder().build().launchUrl(context, Uri.parse(URL_INSTAGRAM))
-                },
-            )
-        }
+            onClick = {
+                CustomTabsIntent.Builder().build().launchUrl(context, Uri.parse(URL_FACEBOOK))
+            },
+        )
+        Spacer(modifier = Modifier.height(spacing.sm))
+        SocialButton(
+            label = stringResource(R.string.home_social_instagram),
+            icon = "instagram",
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                CustomTabsIntent.Builder().build().launchUrl(context, Uri.parse(URL_INSTAGRAM))
+            },
+        )
 
         Spacer(modifier = Modifier.height(spacing.xl))
     }
@@ -251,7 +232,13 @@ private fun SocialButton(
         modifier = modifier.height(spacing.buttonMinHeight),
         colors = ButtonDefaults.buttonColors(containerColor = NavyLight),
     ) {
-        FaIcon(name = icon, family = FaFamily.Brands, size = spacing.iconMd, tint = White, modifier = Modifier.padding(end = 6.dp))
+        FaIcon(
+            name = icon,
+            family = FaFamily.Brands,
+            size = spacing.iconMd,
+            tint = Crimson,   // was White
+            modifier = Modifier.padding(end = 6.dp),
+        )
         Text(
             text = label,
             style = MaterialTheme.typography.labelMedium,

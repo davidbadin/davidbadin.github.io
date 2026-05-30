@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -129,6 +130,7 @@ fun TimetableScreen(
             Text(
                 text = Stages.displayName("A"),
                 style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
                 color = Crimson,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.weight(1f),
@@ -137,6 +139,7 @@ fun TimetableScreen(
             Text(
                 text = Stages.displayName("B"),
                 style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
                 color = Crimson,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.weight(1f),
