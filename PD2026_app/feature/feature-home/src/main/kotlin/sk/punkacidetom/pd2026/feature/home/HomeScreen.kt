@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import sk.punkacidetom.pd2026.core.model.FestivalInfo
@@ -105,15 +106,16 @@ fun HomeScreen(
                     }
                 }
             } else {
-                // Single item — centered at half width
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                // Single item — occupies left half, right half is empty space
+                Row(modifier = Modifier.fillMaxWidth()) {
                     val (label, icon, onClick) = rowItems[0]
                     HomeNavButton(
                         label = label,
                         icon = icon,
                         onClick = onClick,
-                        modifier = Modifier.fillMaxWidth(0.5f),
+                        modifier = Modifier.weight(1f),
                     )
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
             Spacer(modifier = Modifier.height(spacing.sm))
@@ -252,6 +254,12 @@ private fun SocialButton(
         colors = ButtonDefaults.buttonColors(containerColor = NavyLight),
     ) {
         FaIcon(name = icon, family = FaFamily.Brands, size = spacing.iconMd, tint = White, modifier = Modifier.padding(end = 6.dp))
-        Text(text = label, style = MaterialTheme.typography.labelLarge, color = White)
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = White,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }

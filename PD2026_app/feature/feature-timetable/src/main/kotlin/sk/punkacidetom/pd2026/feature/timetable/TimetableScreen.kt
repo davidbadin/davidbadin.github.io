@@ -42,6 +42,7 @@ import sk.punkacidetom.pd2026.core.model.Stages
 import sk.punkacidetom.pd2026.core.ui.icons.FaIcon
 import sk.punkacidetom.pd2026.core.ui.theme.Crimson
 import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
+import sk.punkacidetom.pd2026.core.ui.theme.LocalFontScaleMultiplier
 import sk.punkacidetom.pd2026.core.ui.theme.Navy
 import sk.punkacidetom.pd2026.core.ui.theme.NavyLight
 import sk.punkacidetom.pd2026.core.ui.theme.White
@@ -51,9 +52,6 @@ import java.time.LocalDateTime
 import java.time.format.TextStyle
 import java.util.Locale
 
-/** Height (dp) for each minute on the proportional timeline. */
-private const val MINUTE_HEIGHT_DP = 2f
-
 @Composable
 fun TimetableScreen(
     onBandClick: (Int) -> Unit,
@@ -62,6 +60,10 @@ fun TimetableScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val spacing = LocalAppSpacing.current
+
+    // Scale card height with font size — 50% taller at all scales so text fits
+    val fontScale = LocalFontScaleMultiplier.current
+    val minuteHeightDp = 2f * 1.5f * fontScale   // dp per timeline-minute
 
     // Ticking clock for the "LIVE" indicator — updates every 60 seconds
     var now by remember { mutableStateOf(LocalDateTime.now()) }
@@ -84,7 +86,7 @@ fun TimetableScreen(
             modifier = Modifier.padding(horizontal = spacing.md, vertical = spacing.sm),
         )
 
-        // Day tab selector
+        // Day tab selector — each button shares the full row width equally
         if (uiState.days.isNotEmpty()) {
             Row(
                 modifier = Modifier
@@ -100,6 +102,7 @@ fun TimetableScreen(
                     TextButton(
                         onClick = { viewModel.selectDay(index) },
                         modifier = Modifier
+                            .weight(1f)
                             .clip(RoundedCornerShape(spacing.cardCorner))
                             .background(if (selected) Crimson else NavyLight),
                     ) {
@@ -107,6 +110,8 @@ fun TimetableScreen(
                             text = dayName,
                             style = MaterialTheme.typography.labelLarge,
                             color = if (selected) White else WhiteAlpha60,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                         )
                     }
                 }
@@ -154,7 +159,7 @@ fun TimetableScreen(
             val dayStartDt = allBands.minOf { LocalDateTime.of(it.startDate, it.startTime) }
             val dayEndDt = allBands.maxOf { LocalDateTime.of(it.endDate, it.endTime) }
             val totalMinutes = Duration.between(dayStartDt, dayEndDt).toMinutes()
-            val totalTimelineHeight = (totalMinutes * MINUTE_HEIGHT_DP).dp
+            val totalTimelineHeight = (totalMinutes * minuteHeightDp).dp
 
             Row(
                 modifier = Modifier
@@ -167,6 +172,7 @@ fun TimetableScreen(
                     bands = uiState.stageABands,
                     dayStartDt = dayStartDt,
                     totalTimelineHeight = totalTimelineHeight,
+                    minuteHeightDp = minuteHeightDp,
                     favouriteIds = uiState.favouriteIds,
                     now = now,
                     onBandClick = onBandClick,
@@ -179,6 +185,7 @@ fun TimetableScreen(
                     bands = uiState.stageBBands,
                     dayStartDt = dayStartDt,
                     totalTimelineHeight = totalTimelineHeight,
+                    minuteHeightDp = minuteHeightDp,
                     favouriteIds = uiState.favouriteIds,
                     now = now,
                     onBandClick = onBandClick,
@@ -194,6 +201,7 @@ private fun ProportionalStageColumn(
     bands: List<Band>,
     dayStartDt: LocalDateTime,
     totalTimelineHeight: Dp,
+    minuteHeightDp: Float,
     favouriteIds: Set<Int>,
     now: LocalDateTime,
     onBandClick: (Int) -> Unit,
@@ -221,8 +229,8 @@ private fun ProportionalStageColumn(
             val durationMinutes = Duration.between(bandStartDt, bandEndDt).toMinutes()
                 .coerceAtLeast(1L)
 
-            val offsetDp = (offsetMinutes * MINUTE_HEIGHT_DP).dp
-            val heightDp = (durationMinutes * MINUTE_HEIGHT_DP).dp
+            val offsetDp = (offsetMinutes * minuteHeightDp).dp
+            val heightDp = (durationMinutes * minuteHeightDp).dp
 
             val isPlaying = !now.isBefore(bandStartDt) && now.isBefore(bandEndDt)
 

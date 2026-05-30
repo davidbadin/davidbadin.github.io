@@ -3,9 +3,10 @@ package sk.punkacidetom.pd2026
 import android.Manifest
 import android.os.Build
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.collectAsState
@@ -15,9 +16,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import sk.punkacidetom.pd2026.core.data.repository.BandRepositoryImpl
 import sk.punkacidetom.pd2026.core.data.repository.UserPreferencesRepository
+import sk.punkacidetom.pd2026.core.i18n.LocaleHelper
 import sk.punkacidetom.pd2026.core.ui.components.PD2026Scaffold
 import sk.punkacidetom.pd2026.core.ui.theme.PD2026Theme
 import sk.punkacidetom.pd2026.navigation.AppBottomBar
@@ -27,10 +30,11 @@ import sk.punkacidetom.pd2026.navigation.TimetableRoute
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     @Inject lateinit var bandRepository: BandRepositoryImpl
     @Inject lateinit var userPrefs: UserPreferencesRepository
+    @Inject lateinit var localeHelper: LocaleHelper
 
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -38,6 +42,15 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+
+        // 1. Seed language from device locale on first launch (no-op if already set)
+        // 2. Apply the persisted language so resources load in the correct locale
+        lifecycleScope.launch {
+            userPrefs.initLanguageIfAbsent(java.util.Locale.getDefault().language)
+            val lang = userPrefs.language.first()
+            localeHelper.applyLocale(lang)
+        }
 
         requestNotificationPermissionIfNeeded()
 

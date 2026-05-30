@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/Theme.PD2026"
-        android:usesCleartextTraffic="false">
+        android:usesCleartextTraffic="false"
+        android:localeConfig="@xml/locales_config">
 
         <activity
             android:name=".MainActivity"
