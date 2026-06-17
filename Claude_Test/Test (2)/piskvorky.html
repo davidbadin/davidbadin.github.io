@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Piškvorky</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: system-ui, sans-serif;
+    background: #1e1e2e;
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 40px 20px;
+  }
+  h1 { margin: 0 0 10px; }
+  #status { font-size: 1.3rem; margin: 16px 0; min-height: 1.5em; }
+  #board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 8px;
+  }
+  .cell {
+    background: #2d2d44;
+    border: none;
+    border-radius: 10px;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #e0e0e0;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .cell:hover:not(:disabled) { background: #3a3a5a; }
+  .cell.x { color: #f38ba8; }
+  .cell.o { color: #89b4fa; }
+  .cell.win { background: #a6e3a1; color: #1e1e2e; }
+  #reset {
+    margin-top: 24px;
+    padding: 10px 24px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    background: #89b4fa;
+    color: #1e1e2e;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  #reset:hover { background: #a6c8ff; }
+</style>
+</head>
+<body>
+  <h1>Piškvorky</h1>
+  <div id="status">Na ťahu: X</div>
+  <div id="board"></div>
+  <button id="reset">Nová hra</button>
+
+<script>
+  const board = document.getElementById('board');
+  const status = document.getElementById('status');
+  const resetBtn = document.getElementById('reset');
+  const wins = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+  let cells, current, over;
+
+  function init() {
+    board.innerHTML = '';
+    cells = Array(9).fill('');
+    current = 'X';
+    over = false;
+    status.textContent = 'Na ťahu: X';
+    for (let i = 0; i < 9; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'cell';
+      btn.dataset.i = i;
+      btn.addEventListener('click', play);
+      board.appendChild(btn);
+    }
+  }
+
+  function play(e) {
+    const i = +e.target.dataset.i;
+    if (over || cells[i]) return;
+    cells[i] = current;
+    e.target.textContent = current;
+    e.target.classList.add(current.toLowerCase());
+    e.target.disabled = true;
+
+    const line = winner();
+    if (line) {
+      over = true;
+      status.textContent = `Vyhráva ${current}!`;
+      line.forEach(j => board.children[j].classList.add('win'));
+      return;
+    }
+    if (cells.every(c => c)) {
+      over = true;
+      status.textContent = 'Remíza!';
+      return;
+    }
+    current = current === 'X' ? 'O' : 'X';
+    status.textContent = `Na ťahu: ${current}`;
+  }
+
+  function winner() {
+    return wins.find(([a,b,c]) =>
+      cells[a] && cells[a] === cells[b] && cells[a] === cells[c]);
+  }
+
+  resetBtn.addEventListener('click', init);
+  init();
+</script>
+</body>
+</html>
