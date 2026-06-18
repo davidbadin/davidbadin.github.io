@@ -41,8 +41,8 @@ fun AppBottomBar(navController: NavHostController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(spacing.bottomNavHeight)
             .navigationBarsPadding()
+            .height(spacing.bottomNavHeight)
             .background(NavyDark),
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
@@ -131,6 +131,7 @@ private fun BottomNavItem(
     val spacing = LocalAppSpacing.current
     Column(
         modifier = Modifier
+            .fillMaxHeight()
             .clickable(onClick = onClick)
             .padding(horizontal = spacing.sm, vertical = spacing.xs),
         horizontalAlignment = Alignment.CenterHorizontally,

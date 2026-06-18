@@ -221,16 +221,21 @@ private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxSize(),
             )
         } else {
+            // No band-specific image — show the festival logo centred on the Navy background
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Navy),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(
-                    text = band?.name?.take(1) ?: "",
-                    style = MaterialTheme.typography.displayLarge,
-                    color = Crimson,
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data("file:///android_asset/logo_pd.png")
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.fillMaxWidth(0.55f),
                 )
             }
         }
