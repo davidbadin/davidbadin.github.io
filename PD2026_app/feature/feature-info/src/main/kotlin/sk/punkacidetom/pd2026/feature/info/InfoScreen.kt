@@ -24,7 +24,7 @@ fun InfoScreen(
     modifier: Modifier = Modifier,
     viewModel: InfoViewModel = hiltViewModel(),
 ) {
-    val html by viewModel.htmlContent.collectAsState()
+    val content by viewModel.content.collectAsState()
     val context = LocalContext.current
 
     val webView = remember {
@@ -52,14 +52,14 @@ fun InfoScreen(
             .fillMaxSize()
             .background(Navy),
     ) {
-        html?.let { content ->
+        content?.let { info ->
             androidx.compose.ui.viewinterop.AndroidView(
                 factory = { webView },
                 modifier = Modifier.fillMaxSize(),
                 update = { wv ->
                     wv.loadDataWithBaseURL(
-                        "https://davidbadin.github.io/PD2026_app/",
-                        content,
+                        info.baseUrl,
+                        info.html,
                         "text/html",
                         "UTF-8",
                         null,
