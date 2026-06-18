@@ -60,11 +60,13 @@ dependencies {
     implementation(libs.androidx.browser)
     implementation(libs.coil.compose)
 
-    // Spotify Android App Remote SDK
-    // Download from https://github.com/spotify/android-sdk/releases and place at:
-    //   PD2026_app/libs/spotify-app-remote-release-0.8.0.aar
-    // The SDK is required for in-app playback; without it the module will not compile.
+    // Spotify Android App Remote SDK — compile-only in this library module.
+    // AGP does not allow local .aar as 'implementation' in a library (the classes cannot be
+    // re-packaged into the output AAR). Using compileOnly makes the SDK visible to the Kotlin
+    // compiler and KSP while keeping it out of the AAR. The app module provides the real
+    // (or CI-stub) AAR at link-time via its own 'implementation' declaration.
+    // Download the real SDK and place it at:  PD2026_app/libs/spotify-app-remote-release-0.8.0.aar
     val spotifyAar = rootProject.fileTree("libs") { include("spotify-app-remote-release-*.aar") }.firstOrNull()
         ?: file("${rootProject.projectDir}/libs/spotify-app-remote-release-0.8.0.aar")
-    implementation(files(spotifyAar))
+    compileOnly(files(spotifyAar))
 }
