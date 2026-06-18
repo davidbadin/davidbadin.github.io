@@ -2,6 +2,7 @@ package sk.punkacidetom.pd2026.feature.home
 
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -53,6 +56,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val isNewsletterAvailable by viewModel.isNewsletterAvailable.collectAsState()
     val spacing = LocalAppSpacing.current
     val context = LocalContext.current
 
@@ -66,13 +70,13 @@ fun HomeScreen(
     ) {
         Spacer(modifier = Modifier.height(spacing.lg))
 
-        // Festival title / logo
-        Text(
-            text = "PUNKÁČI DEŤOM\n2026",
-            style = MaterialTheme.typography.displayLarge,
-            color = Crimson,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth(),
+        // Festival logo
+        Image(
+            painter = painterResource(R.drawable.logo_pd),
+            contentDescription = "Punkáči deťom 2026",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = spacing.xl),
         )
 
         Spacer(modifier = Modifier.height(spacing.lg))
@@ -87,13 +91,15 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(spacing.lg))
 
         // Navigation buttons — single column, full width
-        val navButtons = listOf(
-            // Triple(stringResource(R.string.home_btn_news), "newspaper", onNavigateToNews),  // hidden until News is ready
-            Triple(stringResource(R.string.home_btn_timetable), "calendar", onNavigateToTimetable),
-            Triple(stringResource(R.string.home_btn_bands), "music", onNavigateToBands),
-            Triple(stringResource(R.string.home_btn_info), "circle-info", onNavigateToInfo),
-            Triple(stringResource(R.string.home_btn_tickets), "ticket", onNavigateToTickets),
-        )
+        val navButtons = buildList {
+            if (isNewsletterAvailable) {
+                add(Triple(stringResource(R.string.home_btn_newsletter), "newspaper", onNavigateToNews))
+            }
+            add(Triple(stringResource(R.string.home_btn_timetable), "calendar", onNavigateToTimetable))
+            add(Triple(stringResource(R.string.home_btn_bands), "music", onNavigateToBands))
+            add(Triple(stringResource(R.string.home_btn_info), "circle-info", onNavigateToInfo))
+            add(Triple(stringResource(R.string.home_btn_tickets), "ticket", onNavigateToTickets))
+        }
 
         navButtons.forEach { (label, icon, onClick) ->
             HomeNavButton(
@@ -212,10 +218,11 @@ private fun HomeNavButton(
     Button(
         onClick = onClick,
         modifier = modifier.height(spacing.homeButtonMinHeight),
-        colors = ButtonDefaults.buttonColors(containerColor = NavyLight),
+        shape = RectangleShape,
+        colors = ButtonDefaults.buttonColors(containerColor = White),
     ) {
         FaIcon(name = icon, size = spacing.iconMd, tint = Crimson, modifier = Modifier.padding(end = 6.dp))
-        Text(text = label, style = MaterialTheme.typography.labelLarge, color = White)
+        Text(text = label, style = MaterialTheme.typography.labelLarge, color = Navy)
     }
 }
 

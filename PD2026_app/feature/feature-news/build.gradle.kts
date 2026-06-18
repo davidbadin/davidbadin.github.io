@@ -24,6 +24,7 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":core:core-model"))
     implementation(project(":core:core-ui"))
+    implementation(project(":core:core-data"))
     implementation(libs.androidx.core.ktx)
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
@@ -34,5 +35,6 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.coil.compose)
 
 }

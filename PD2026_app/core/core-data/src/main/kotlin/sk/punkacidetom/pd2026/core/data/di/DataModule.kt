@@ -13,6 +13,8 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import sk.punkacidetom.pd2026.core.data.repository.BandRepository
 import sk.punkacidetom.pd2026.core.data.repository.BandRepositoryImpl
+import sk.punkacidetom.pd2026.core.data.repository.NewsletterRepository
+import sk.punkacidetom.pd2026.core.data.repository.NewsletterRepositoryImpl
 import sk.punkacidetom.pd2026.core.data.remote.CsvSheetFetcher
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -26,6 +28,10 @@ abstract class DataModule {
     @Binds
     @Singleton
     abstract fun bindBandRepository(impl: BandRepositoryImpl): BandRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindNewsletterRepository(impl: NewsletterRepositoryImpl): NewsletterRepository
 
     companion object {
 

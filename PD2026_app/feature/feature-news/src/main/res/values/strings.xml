@@ -3,4 +3,9 @@
     <string name="news_title">Novinky</string>
     <string name="news_offline">Správy nie sú dostupné offline.</string>
     <string name="news_open_facebook">Otvoriť na Facebooku</string>
+    <!-- Newsletter -->
+    <string name="newsletter_title">Šmajdoviny</string>
+    <string name="newsletter_volume">Šmajdoviny %s</string>
+    <string name="newsletter_not_yet">Zatiaľ nevyšlo</string>
+    <string name="newsletter_error">Šmajdoviny sa nepodarilo načítať.</string>
 </resources>

@@ -34,7 +34,7 @@
         }
 
         :root {
-            --bg:     #0B1338;   /* deep navy — background */
+            --bg:     #10133D;   /* deep navy — background */
             --accent: #AD1C24;   /* the only accent colour */
             --fg:     #FFFFFF;
             --muted:  rgba(255, 255, 255, 0.65);
@@ -62,36 +62,6 @@
             margin: 0 auto;
             padding: 28px 18px 64px;
         }
-
-        /* ============ FESTIVAL LOCKUP ============ */
-        .lockup {
-            display: flex;
-            justify-content: center;
-            align-items: baseline;
-            gap: 10px;
-            flex-wrap: wrap;
-            font-family: var(--f-big);
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-            line-height: 1;
-            font-size: clamp(2.2rem, 9vw, 3.6rem);
-        }
-        .lockup .heart {
-            color: var(--accent);
-            font-size: 0.85em;
-        }
-        .lockup .yr {
-            color: var(--accent);
-        }
-        .subline {
-            text-align: center;
-            font-family: var(--f-mid);
-            letter-spacing: 0.18em;
-            font-size: 1rem;
-            color: var(--muted);
-            margin: 6px 0 28px;
-        }
-        .subline .pipe { color: var(--accent); padding: 0 8px; }
 
         /* ============ PAGE TITLE ============ */
         h1 {
@@ -194,14 +164,10 @@
 <body>
     <main class="wrap">
 
-        <div class="lockup" aria-label="Punkáči deťom 15">
-            <span>Punkáči</span>
-            <span class="heart" aria-hidden="true">♥</span>
-            <span>Deťom</span>
-            <span class="yr">15</span>
-        </div>
-        <div class="subline">
-            27.8. – 29.8.2026 <span class="pipe">|</span> Camping Opatovce, Slovakia
+        <div style="text-align:center; margin-bottom:28px;">
+            <img src="pd_resources/logo_pd.png"
+                 alt="Punkáči deťom 2026"
+                 style="max-width:320px; width:80%; height:auto;">
         </div>
 
         <h1>INFO</h1>

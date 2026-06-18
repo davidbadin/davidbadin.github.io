@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -262,14 +263,21 @@ private fun SlotCard(
     val spacing = LocalAppSpacing.current
     val timeStr = "${band.startTime.hour}:${band.startTime.minute.toString().padStart(2, '0')}" +
         " – ${band.endTime.hour}:${band.endTime.minute.toString().padStart(2, '0')}"
-    val cornerShape = RoundedCornerShape(spacing.cardCorner)
+
+    // Playing: rounded corners + Crimson background (no change)
+    // Other:   sharp corners + white background
+    val containerShape = if (isPlaying) RoundedCornerShape(spacing.cardCorner) else RectangleShape
+    val containerColor = if (isPlaying) Crimson.copy(alpha = 0.85f) else White
+    val nameColor      = if (isPlaying) White else Navy
+    val timeColor      = if (isPlaying) White.copy(alpha = 0.85f) else Crimson
+    val genreColor     = if (isPlaying) White.copy(alpha = 0.7f) else Navy.copy(alpha = 0.65f)
 
     Column(
         modifier = modifier
-            .clip(cornerShape)
-            .background(if (isPlaying) Crimson.copy(alpha = 0.85f) else NavyLight)
+            .clip(containerShape)
+            .background(containerColor)
             .then(
-                if (isPlaying) Modifier.border(2.dp, Crimson, cornerShape)
+                if (isPlaying) Modifier.border(2.dp, Crimson, containerShape)
                 else Modifier
             )
             .clickable(onClick = onClick)
@@ -282,7 +290,7 @@ private fun SlotCard(
             Text(
                 text = band.name,
                 style = MaterialTheme.typography.titleSmall,
-                color = White,
+                color = nameColor,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f),
@@ -304,16 +312,12 @@ private fun SlotCard(
             }
         }
         Spacer(modifier = Modifier.height(2.dp))
-        Text(
-            text = timeStr,
-            style = MaterialTheme.typography.labelSmall,
-            color = if (isPlaying) White.copy(alpha = 0.85f) else Crimson,
-        )
+        Text(text = timeStr, style = MaterialTheme.typography.labelSmall, color = timeColor)
         if (band.genre.isNotBlank()) {
             Text(
                 text = band.genre,
                 style = MaterialTheme.typography.labelSmall,
-                color = if (isPlaying) White.copy(alpha = 0.7f) else WhiteAlpha60,
+                color = genreColor,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )

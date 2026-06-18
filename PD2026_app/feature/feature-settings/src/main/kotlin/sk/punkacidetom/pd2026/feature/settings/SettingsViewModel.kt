@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import sk.punkacidetom.pd2026.core.data.repository.BandRepositoryImpl
+import sk.punkacidetom.pd2026.core.data.repository.NewsletterRepository
 import sk.punkacidetom.pd2026.core.data.repository.UserPreferencesRepository
 import sk.punkacidetom.pd2026.core.i18n.LocaleHelper
 import javax.inject.Inject
@@ -28,6 +29,7 @@ data class SettingsUiState(
 class SettingsViewModel @Inject constructor(
     private val userPrefs: UserPreferencesRepository,
     private val bandRepository: BandRepositoryImpl,
+    private val newsletterRepository: NewsletterRepository,
     private val localeHelper: LocaleHelper,
 ) : ViewModel() {
 
@@ -67,8 +69,11 @@ class SettingsViewModel @Inject constructor(
     fun triggerDataUpdate() {
         viewModelScope.launch {
             _updateState.value = UpdateState.UPDATING
-            val result = bandRepository.forceRefresh()
-            _updateState.value = if (result.isSuccess) UpdateState.SUCCESS else UpdateState.ERROR
+            val bandResult = bandRepository.forceRefresh()
+            val newsletterResult = newsletterRepository.refreshManifest()
+            _updateState.value =
+                if (bandResult.isSuccess && newsletterResult.isSuccess) UpdateState.SUCCESS
+                else UpdateState.ERROR
         }
     }
 

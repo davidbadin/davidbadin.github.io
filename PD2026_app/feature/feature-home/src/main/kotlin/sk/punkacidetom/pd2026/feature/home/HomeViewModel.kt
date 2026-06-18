@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import sk.punkacidetom.pd2026.core.data.repository.BandRepository
+import sk.punkacidetom.pd2026.core.data.repository.NewsletterRepository
 import sk.punkacidetom.pd2026.core.data.repository.UserPreferencesRepository
 import sk.punkacidetom.pd2026.core.model.FestivalInfo
 import java.time.Duration
@@ -37,6 +38,7 @@ data class HomeUiState(
 class HomeViewModel @Inject constructor(
     private val bandRepository: BandRepository,
     private val userPrefs: UserPreferencesRepository,
+    private val newsletterRepository: NewsletterRepository,
     @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
@@ -50,6 +52,10 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    val isNewsletterAvailable: StateFlow<Boolean> =
+        newsletterRepository.observeAnyPublished()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
     val uiState: StateFlow<HomeUiState> = combine(
         bandRepository.observeFestivalInfo(),

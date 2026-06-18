@@ -3,7 +3,7 @@ package sk.punkacidetom.pd2026.core.ui.theme
 import androidx.compose.ui.graphics.Color
 
 // Primary palette — all tokens centralised here
-val Navy = Color(0xFF0B1338)       // background / large surfaces
+val Navy = Color(0xFF10133D)       // background / large surfaces
 val Crimson = Color(0xFFAD1C24)    // accent: buttons, active states, dividers, icons
 val White = Color(0xFFFFFFFF)      // on-navy text
 

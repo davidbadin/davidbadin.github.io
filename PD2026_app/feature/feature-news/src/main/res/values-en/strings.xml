@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="news_title">News</string>
+    <string name="news_offline">News not available offline.</string>
+    <string name="news_open_facebook">Open Facebook</string>
+    <!-- Newsletter -->
+    <string name="newsletter_title">Newsletter</string>
+    <string name="newsletter_volume">Newsletter %s</string>
+    <string name="newsletter_not_yet">Not published yet</string>
+    <string name="newsletter_error">Could not load newsletter.</string>
+</resources>

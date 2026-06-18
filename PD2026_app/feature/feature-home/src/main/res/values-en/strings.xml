@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="home_btn_news">News</string>
+    <string name="home_btn_newsletter">Newsletter</string>
     <string name="home_btn_bands">Bands</string>
     <string name="home_btn_timetable">Timetable</string>
     <string name="home_btn_info">Info</string>
