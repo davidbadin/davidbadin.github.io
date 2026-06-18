@@ -16,10 +16,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
+import sk.punkacidetom.pd2026.core.ui.theme.Crimson
 import sk.punkacidetom.pd2026.core.ui.theme.Navy
 import sk.punkacidetom.pd2026.core.ui.theme.White
 import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
@@ -57,14 +57,15 @@ fun NewsScreen(
             uiState.volumes.forEach { volume ->
                 Button(
                     onClick = { onOpenVolume(volume.id) },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RectangleShape,
-                    colors = ButtonDefaults.buttonColors(containerColor = White),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(spacing.homeButtonMinHeight),
+                    colors = ButtonDefaults.buttonColors(containerColor = Crimson),
                 ) {
                     Text(
                         text = stringResource(R.string.newsletter_volume, volume.id),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = Navy,
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = White,
                     )
                 }
             }

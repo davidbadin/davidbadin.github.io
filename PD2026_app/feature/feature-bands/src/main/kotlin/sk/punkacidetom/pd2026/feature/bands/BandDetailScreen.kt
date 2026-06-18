@@ -78,12 +78,14 @@ fun BandDetailScreen(
     ) {
         // Header image + back button
         item(key = "header") {
+            val hasPhoto = band != null && band.bandImagePngUrl.isNotBlank()
+            val headerHeight = if (hasPhoto) spacing.bandImageHeight else spacing.bandImageHeight * 0.45f
             Box {
                 BandHeaderImage(
                     band = band,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(spacing.bandImageHeight),
+                        .height(headerHeight),
                 )
                 IconButton(
                     onClick = onBack,
