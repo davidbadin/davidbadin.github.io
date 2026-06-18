@@ -16,10 +16,12 @@ dependencyResolutionManagement {
 
 rootProject.name = "PD2026"
 
-// Redirect build dirs outside OneDrive/Dropbox to avoid file-locking errors
-gradle.allprojects {
-    val relativePath = project.path.replace(":", java.io.File.separator).trimStart(java.io.File.separatorChar)
-    layout.buildDirectory.set(File("C:\\Users\\FS0605\\AndroidBuild\\PD2026\\${if (relativePath.isEmpty()) "root" else relativePath}\\build"))
+// Redirect build dirs outside OneDrive/Dropbox to avoid file-locking errors (Windows dev only)
+if (System.getProperty("os.name")?.lowercase()?.contains("windows") == true) {
+    gradle.allprojects {
+        val relativePath = project.path.replace(":", java.io.File.separator).trimStart(java.io.File.separatorChar)
+        layout.buildDirectory.set(File("C:\\Users\\FS0605\\AndroidBuild\\PD2026\\${if (relativePath.isEmpty()) "root" else relativePath}\\build"))
+    }
 }
 
 include(":app")
