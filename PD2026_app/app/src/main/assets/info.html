@@ -4,22 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Punkáči deťom 2026 — INFO</title>
+    <!-- Google Fonts — loaded from the network; provide the heavy display look
+         expected for the festival title. Anton is the closest freely available
+         substitute when the proprietary ThirdMan font file is not present. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Poppins&display=swap" rel="stylesheet">
     <style>
-        @font-face {
-            font-family: "BebasNeue";
-            src: url("fonts/bebas_neue_regular.ttf") format("truetype");
-            font-weight: normal; font-style: normal; font-display: swap;
-        }
-        @font-face {
-            font-family: "Poppins";
-            src: url("fonts/poppins_regular.ttf") format("truetype");
-            font-weight: 400; font-style: normal; font-display: swap;
-        }
         :root {
             --bg:     #10133D;
             --accent: #AD1C24;
             --fg:     #FFFFFF;
             --muted:  rgba(255,255,255,0.65);
+            --f-big:  "ThirdMan", "Anton", Impact, sans-serif;
             --f-mid:  "BebasNeue", "Bebas Neue", Impact, sans-serif;
             --f-body: "Poppins", system-ui, sans-serif;
         }
@@ -39,7 +36,7 @@
         }
         .logo { max-width: 280px; width: 70%; height: auto; margin-bottom: 8px; }
         h1 {
-            font-family: var(--f-mid);
+            font-family: var(--f-big);
             font-weight: normal;
             text-transform: uppercase;
             font-size: clamp(3rem, 14vw, 5rem);

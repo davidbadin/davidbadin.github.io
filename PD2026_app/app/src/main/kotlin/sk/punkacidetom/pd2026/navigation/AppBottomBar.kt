@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -131,6 +132,7 @@ private fun BottomNavItem(
     val spacing = LocalAppSpacing.current
     Column(
         modifier = Modifier
+            .fillMaxHeight()
             .clickable(onClick = onClick)
             .padding(horizontal = spacing.sm, vertical = spacing.xs),
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -5,11 +5,14 @@ import androidx.lifecycle.ViewModel
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import sk.punkacidetom.pd2026.feature.spotify.util.SpotifyLauncher
 import javax.inject.Inject
 
@@ -30,11 +33,23 @@ class SpotifyViewModel @Inject constructor(
      * connection fails (e.g. user is not logged in, SHA-1 mismatch, non-Premium account quirks).
      */
     fun connect(spotifyUri: String) {
+        // Always clean up any existing connection first
+        appRemote?.let { SpotifyAppRemote.disconnect(it) }
+        appRemote = null
+
         if (!SpotifyLauncher.isSpotifyInstalled(context)) {
             _uiState.value = SpotifyUiState.FallbackWebView
             return
         }
         _uiState.value = SpotifyUiState.Connecting
+
+        // Timeout — fall back to WebView if SDK doesn't respond within 10 s
+        viewModelScope.launch {
+            delay(10_000)
+            if (_uiState.value is SpotifyUiState.Connecting) {
+                _uiState.value = SpotifyUiState.FallbackWebView
+            }
+        }
 
         val params = ConnectionParams.Builder(BuildConfig.SPOTIFY_CLIENT_ID)
             .setRedirectUri(BuildConfig.SPOTIFY_REDIRECT_URI)
