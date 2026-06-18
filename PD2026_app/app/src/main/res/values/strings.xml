@@ -16,6 +16,11 @@
     <string name="home_countdown_minutes">minút</string>
     <string name="home_countdown_seconds">sekúnd</string>
     <string name="home_btn_news">Novinky</string>
+    <string name="home_btn_newsletter">Šmajdoviny</string>
+    <string name="newsletter_title">Šmajdoviny</string>
+    <string name="newsletter_volume">Šmajdoviny %s</string>
+    <string name="newsletter_not_yet">Zatiaľ nevyšlo</string>
+    <string name="newsletter_error">Šmajdoviny sa nepodarilo načítať.</string>
     <string name="home_btn_bands">Kapely</string>
     <string name="home_btn_timetable">Program</string>
     <string name="home_btn_info">Info</string>

@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable object BandsRoute
 @Serializable data class BandDetailRoute(val bandId: Int)
 @Serializable object NewsRoute
+@Serializable data class NewsletterVolumeRoute(val volumeId: String)
 @Serializable object InfoRoute
 @Serializable object TicketsRoute
 @Serializable object SettingsRoute

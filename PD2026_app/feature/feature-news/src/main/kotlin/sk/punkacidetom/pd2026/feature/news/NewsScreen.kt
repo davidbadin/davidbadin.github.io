@@ -1,66 +1,73 @@
 package sk.punkacidetom.pd2026.feature.news
 
-import android.annotation.SuppressLint
-import android.content.ActivityNotFoundException
-import android.content.Intent
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
+import sk.punkacidetom.pd2026.core.ui.theme.Navy
+import sk.punkacidetom.pd2026.core.ui.theme.White
+import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
 
-/** Mobile Facebook page — lighter and less aggressive about redirecting to the app. */
-private const val FACEBOOK_URL = "https://m.facebook.com/punkacidetom"
-
-/** Chrome mobile UA so Facebook does not block the WebView. */
-private const val CHROME_UA =
-    "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 " +
-    "(KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
-
-/**
- * Loads the festival Facebook page in an embedded WebView so the app header/footer
- * remain visible (unlike a Chrome Custom Tab which runs outside the scaffold).
- *
- * Spoofs the User-Agent so Facebook does not block the WebView, and intercepts
- * fb:// / intent:// deep-links to forward them to the Facebook app (or silently
- * ignore if not installed) instead of crashing the WebView.
- */
-@SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun NewsScreen(modifier: Modifier = Modifier) {
-    AndroidView(
-        modifier = modifier.fillMaxSize(),
-        factory = { ctx ->
-            WebView(ctx).apply {
-                settings.javaScriptEnabled = true
-                settings.domStorageEnabled = true
-                settings.useWideViewPort = true
-                settings.loadWithOverviewMode = true
-                settings.setSupportZoom(false)
-                settings.userAgentString = CHROME_UA
-                webViewClient = object : WebViewClient() {
-                    override fun shouldOverrideUrlLoading(
-                        view: WebView,
-                        request: WebResourceRequest,
-                    ): Boolean {
-                        val url = request.url
-                        return if (url.scheme == "fb" || url.scheme == "intent") {
-                            // Forward to Facebook app; silently ignore if not installed
-                            try {
-                                view.context.startActivity(
-                                    Intent(Intent.ACTION_VIEW, url)
-                                )
-                            } catch (_: ActivityNotFoundException) { }
-                            true   // consumed — do not load in WebView
-                        } else {
-                            false  // let WebView handle normal https:// URLs
-                        }
-                    }
+fun NewsScreen(
+    onOpenVolume: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: NewsViewModel = hiltViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val spacing = LocalAppSpacing.current
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Navy)
+            .padding(spacing.md),
+        verticalArrangement = Arrangement.spacedBy(spacing.sm),
+    ) {
+        Text(
+            text = stringResource(R.string.newsletter_title),
+            style = MaterialTheme.typography.displayMedium,
+            color = White,
+        )
+        Spacer(modifier = Modifier.height(spacing.sm))
+
+        if (uiState.volumes.isEmpty()) {
+            Text(
+                text = stringResource(R.string.newsletter_not_yet),
+                style = MaterialTheme.typography.bodyMedium,
+                color = WhiteAlpha60,
+            )
+        } else {
+            uiState.volumes.forEach { volume ->
+                Button(
+                    onClick = { onOpenVolume(volume.id) },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RectangleShape,
+                    colors = ButtonDefaults.buttonColors(containerColor = White),
+                ) {
+                    Text(
+                        text = stringResource(R.string.newsletter_volume, volume.id),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = Navy,
+                    )
                 }
-                loadUrl(FACEBOOK_URL)
             }
-        },
-    )
+        }
+    }
 }
