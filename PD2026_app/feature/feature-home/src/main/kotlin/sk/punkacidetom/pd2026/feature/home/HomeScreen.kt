@@ -148,14 +148,14 @@ private fun CountdownBlock(countdown: CountdownState, paddingMd: androidx.compos
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(NavyLight, shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
+            .background(Crimson, shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
             .padding(paddingMd),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = stringResource(R.string.home_countdown_until),
             style = MaterialTheme.typography.titleMedium,
-            color = WhiteAlpha60,
+            color = White,
             textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -177,12 +177,12 @@ private fun CountdownUnit(value: Long, label: String) {
         Text(
             text = value.toString().padStart(2, '0'),
             style = MaterialTheme.typography.displayMedium,
-            color = Crimson,
+            color = White,
         )
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall,
-            color = WhiteAlpha60,
+            color = White,
         )
     }
 }
