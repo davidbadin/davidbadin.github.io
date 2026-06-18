@@ -97,6 +97,10 @@ JAVA_STUBS = {
         public interface PlayerApi {
             CallResult<Void> play(String uri);
             Subscription<PlayerState> subscribeToPlayerState();
+            CallResult<Void> resume();
+            CallResult<Void> pause();
+            CallResult<Void> skipNext();
+            CallResult<Void> skipPrevious();
         }
     """,
     # android.content.Context is replaced with Object so javac needs no Android SDK
