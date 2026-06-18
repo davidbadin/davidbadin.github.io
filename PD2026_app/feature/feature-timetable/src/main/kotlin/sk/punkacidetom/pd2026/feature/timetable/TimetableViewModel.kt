@@ -75,4 +75,8 @@ class TimetableViewModel @Inject constructor(
     fun selectDay(index: Int) {
         _selectedDayIndex.value = index
     }
+
+    fun toggleFavourite(bandId: Int) {
+        viewModelScope.launch { userPrefs.toggleFavourite(bandId) }
+    }
 }

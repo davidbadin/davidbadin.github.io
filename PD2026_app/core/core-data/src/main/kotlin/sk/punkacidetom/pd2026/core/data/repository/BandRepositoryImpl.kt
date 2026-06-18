@@ -31,6 +31,7 @@ class BandRepositoryImpl @Inject constructor(
     private val fetcher: CsvSheetFetcher,
     private val cache: BandCache,
     private val dataStore: DataStore<Preferences>,
+    private val xlsxReader: XlsxAssetReader,
 ) : BandRepository {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -78,7 +79,22 @@ class BandRepositoryImpl @Inject constructor(
     }
 
     private suspend fun doFetch(): Result<Unit> = runCatching {
-        val csv = fetcher.fetchCsv()
+        val csv = try {
+            fetcher.fetchCsv()
+        } catch (e: Exception) {
+            // Network unavailable — fall back to bundled XLSX only if no data loaded yet
+            if (_bands.value.isEmpty()) {
+                val rows = xlsxReader.readRows()
+                if (rows != null) {
+                    val bands = BandMapper.mapRows(rows)
+                    if (bands.isNotEmpty()) {
+                        _bands.value = bands
+                        // Do NOT persist to cache or update timestamp — this is test-only data
+                    }
+                }
+            }
+            throw e   // re-throw so callers know the network fetch failed
+        }
         val rows = CsvParser.parse(csv)
         val bands = BandMapper.mapRows(rows)
         _bands.value = bands

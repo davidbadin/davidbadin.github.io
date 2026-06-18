@@ -41,8 +41,8 @@ fun AppBottomBar(navController: NavHostController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .navigationBarsPadding()
             .height(spacing.bottomNavHeight)
+            .navigationBarsPadding()
             .background(NavyDark),
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {

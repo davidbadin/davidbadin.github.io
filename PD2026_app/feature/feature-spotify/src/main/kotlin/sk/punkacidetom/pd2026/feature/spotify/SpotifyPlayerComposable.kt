@@ -1,7 +1,6 @@
 package sk.punkacidetom.pd2026.feature.spotify
 
 import android.annotation.SuppressLint
-import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.background
@@ -212,7 +211,6 @@ private fun SpotifySdkPlayerCard(
 @Composable
 private fun SpotifyWebViewCard(embedUrl: String) {
     val spacing = LocalAppSpacing.current
-    var webHeight by remember { mutableStateOf(80) }
     var webViewRef by remember { mutableStateOf<WebView?>(null) }
 
     DisposableEffect(embedUrl) {
@@ -230,7 +228,7 @@ private fun SpotifyWebViewCard(embedUrl: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(webHeight.dp.coerceAtLeast(80.dp))
+            .height(352.dp)                        // Spotify embed standard height
             .clip(RoundedCornerShape(spacing.cardCorner))
             .background(NavyLight),
     ) {
@@ -239,22 +237,7 @@ private fun SpotifyWebViewCard(embedUrl: String) {
                 WebView(ctx).apply {
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
-                    addJavascriptInterface(
-                        object {
-                            @JavascriptInterface
-                            fun reportHeight(h: Int) {
-                                webHeight = h.coerceAtLeast(80)
-                            }
-                        },
-                        "Android",
-                    )
-                    webViewClient = object : WebViewClient() {
-                        override fun onPageFinished(view: WebView, url: String) {
-                            view.evaluateJavascript(
-                                "(function() { Android.reportHeight(document.body.scrollHeight); })();",
-                            ) {}
-                        }
-                    }
+                    webViewClient = WebViewClient()  // handle redirects internally
                     loadUrl(embedUrl)
                 }.also { webViewRef = it }
             },

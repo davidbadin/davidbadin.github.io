@@ -236,22 +236,17 @@ private fun SocialButton(
     val spacing = LocalAppSpacing.current
     Button(
         onClick = onClick,
-        modifier = modifier.height(spacing.buttonMinHeight),
-        colors = ButtonDefaults.buttonColors(containerColor = NavyLight),
+        modifier = modifier.height(spacing.homeButtonMinHeight),
+        shape = RectangleShape,
+        colors = ButtonDefaults.buttonColors(containerColor = White),
     ) {
         FaIcon(
             name = icon,
             family = FaFamily.Brands,
             size = spacing.iconMd,
-            tint = Crimson,   // was White
+            tint = Crimson,
             modifier = Modifier.padding(end = 6.dp),
         )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelMedium,
-            color = White,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
+        Text(text = label, style = MaterialTheme.typography.labelLarge, color = Navy)
     }
 }

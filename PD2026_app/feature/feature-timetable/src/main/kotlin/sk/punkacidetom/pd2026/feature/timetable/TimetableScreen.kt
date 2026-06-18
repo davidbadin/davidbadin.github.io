@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,7 +42,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.delay
 import sk.punkacidetom.pd2026.core.model.Band
 import sk.punkacidetom.pd2026.core.model.Stages
-import sk.punkacidetom.pd2026.core.ui.icons.FaIcon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.Icon
 import sk.punkacidetom.pd2026.core.ui.theme.Crimson
 import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
 import sk.punkacidetom.pd2026.core.ui.theme.LocalFontScaleMultiplier
@@ -180,6 +184,7 @@ fun TimetableScreen(
                     favouriteIds = uiState.favouriteIds,
                     now = now,
                     onBandClick = onBandClick,
+                    onToggleFavourite = viewModel::toggleFavourite,
                     modifier = Modifier.weight(1f),
                 )
 
@@ -193,6 +198,7 @@ fun TimetableScreen(
                     favouriteIds = uiState.favouriteIds,
                     now = now,
                     onBandClick = onBandClick,
+                    onToggleFavourite = viewModel::toggleFavourite,
                     modifier = Modifier.weight(1f),
                 )
             }
@@ -209,6 +215,7 @@ private fun ProportionalStageColumn(
     favouriteIds: Set<Int>,
     now: LocalDateTime,
     onBandClick: (Int) -> Unit,
+    onToggleFavourite: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // Remove overlapping bands within this column (keep earlier ones, skip later ones)
@@ -243,6 +250,7 @@ private fun ProportionalStageColumn(
                 isFavourite = favouriteIds.contains(band.id),
                 isPlaying = isPlaying,
                 onClick = { onBandClick(band.id) },
+                onToggleFavourite = { onToggleFavourite(band.id) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .absoluteOffset(y = offsetDp)
@@ -258,6 +266,7 @@ private fun SlotCard(
     isFavourite: Boolean,
     isPlaying: Boolean,
     onClick: () -> Unit,
+    onToggleFavourite: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val spacing = LocalAppSpacing.current
@@ -302,14 +311,22 @@ private fun SlotCard(
                     color = White,
                     modifier = Modifier.padding(start = 4.dp),
                 )
-            } else if (isFavourite) {
-                FaIcon(
-                    name = "heart",
-                    size = spacing.iconSm,
-                    tint = Crimson,
-                    modifier = Modifier.padding(start = 4.dp),
-                )
             }
+            // Heart — always visible, tappable; click is separate from card navigation click
+            Icon(
+                imageVector = if (isFavourite) Icons.Filled.Favorite
+                              else Icons.Outlined.FavoriteBorder,
+                contentDescription = null,
+                tint = when {
+                    isFavourite -> Crimson
+                    isPlaying   -> White.copy(alpha = 0.75f)
+                    else        -> Navy.copy(alpha = 0.45f)
+                },
+                modifier = Modifier
+                    .padding(start = 4.dp)
+                    .size(spacing.iconSm)
+                    .clickable(onClick = onToggleFavourite),
+            )
         }
         Spacer(modifier = Modifier.height(2.dp))
         Text(text = timeStr, style = MaterialTheme.typography.labelSmall, color = timeColor)
