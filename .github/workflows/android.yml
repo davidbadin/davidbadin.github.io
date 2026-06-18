@@ -45,6 +45,13 @@ jobs:
         working-directory: PD2026_app
         run: cp app/google-services.json.placeholder app/google-services.json
 
+      # The real Spotify AAR is gitignored (download manually for local dev).
+      # On CI we generate a minimal compilation stub so the project compiles
+      # without the proprietary SDK binary.
+      - name: Create Spotify SDK compilation stub
+        working-directory: PD2026_app
+        run: python3 scripts/create-spotify-stub.py
+
       - name: Run unit tests
         working-directory: PD2026_app
         run: gradle test --no-daemon

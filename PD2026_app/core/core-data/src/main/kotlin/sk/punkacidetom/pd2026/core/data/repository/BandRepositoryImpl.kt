@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import sk.punkacidetom.pd2026.core.data.cache.BandCache
 import sk.punkacidetom.pd2026.core.data.mapper.BandMapper
+import sk.punkacidetom.pd2026.core.data.remote.CsvAssetReader
 import sk.punkacidetom.pd2026.core.data.remote.CsvParser
 import sk.punkacidetom.pd2026.core.data.remote.CsvSheetFetcher
 import sk.punkacidetom.pd2026.core.data.util.FestivalDayCalculator
@@ -31,7 +32,7 @@ class BandRepositoryImpl @Inject constructor(
     private val fetcher: CsvSheetFetcher,
     private val cache: BandCache,
     private val dataStore: DataStore<Preferences>,
-    private val xlsxReader: XlsxAssetReader,
+    private val csvReader: CsvAssetReader,
 ) : BandRepository {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -82,11 +83,11 @@ class BandRepositoryImpl @Inject constructor(
         val csv = try {
             fetcher.fetchCsv()
         } catch (e: Exception) {
-            // Network unavailable — fall back to bundled XLSX only if no data loaded yet
+            // Network unavailable — fall back to bundled CSV only if no data loaded yet
             if (_bands.value.isEmpty()) {
-                val rows = xlsxReader.readRows()
-                if (rows != null) {
-                    val bands = BandMapper.mapRows(rows)
+                val fallback = csvReader.readCsv()
+                if (fallback != null) {
+                    val bands = BandMapper.mapRows(CsvParser.parse(fallback))
                     if (bands.isNotEmpty()) {
                         _bands.value = bands
                         // Do NOT persist to cache or update timestamp — this is test-only data

@@ -1,0 +1,7 @@
+ID,START_DATE,START_TIME,END_DATE,END_TIME,BAND,DESCRIPTION,STAGE,SPOTIFY_URL,GENRE,SORTING_PRIORITY,DESCRIPTION_EN,IMAGE_NAME
+1,20.6.2026,14:00:00,20.6.2026,15:00:00,Test Band A,Slovenská punková kapela z Bratislavy.,A,,punk,1,Slovak punk band from Bratislava.,
+2,20.6.2026,15:30:00,20.6.2026,17:00:00,Test Band B,Rocková kapela s dlhou históriou.,B,,rock,2,Rock band with a long history.,
+3,20.6.2026,17:30:00,20.6.2026,19:00:00,Test Band C,Metalová banda z Košíc.,A,,metal,3,Metal band from Košice.,
+4,20.6.2026,19:30:00,20.6.2026,21:00:00,Test Band D,Indie kapela s alternatívnym zvukom.,B,,indie,4,Indie band with an alternative sound.,
+5,21.6.2026,14:00:00,21.6.2026,15:30:00,Test Band E,Hardcore punková kapela.,A,,hardcore punk,5,Hardcore punk band.,
+6,21.6.2026,16:00:00,21.6.2026,17:30:00,Test Band F,Reggae kapela zo Slovenska.,B,,reggae,6,Reggae band from Slovakia.,

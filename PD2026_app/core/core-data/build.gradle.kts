@@ -37,7 +37,6 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(libs.okhttp)
     implementation(libs.gson)
-    implementation("org.apache.poi:poi-ooxml:5.2.5")
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
