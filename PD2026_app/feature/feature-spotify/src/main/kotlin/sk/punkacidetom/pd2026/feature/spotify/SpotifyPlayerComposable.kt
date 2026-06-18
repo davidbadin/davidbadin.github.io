@@ -1,6 +1,11 @@
 package sk.punkacidetom.pd2026.feature.spotify
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.background
@@ -35,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.spotify.protocol.types.PlayerState
@@ -207,11 +213,49 @@ private fun SpotifySdkPlayerCard(
 // Fallback: WebView iframe embed
 // ---------------------------------------------------------------------------
 
+// Embed height shared between the HTML template and the Compose Box
+private const val SPOTIFY_EMBED_HEIGHT_DP = 152
+
+private fun spotifyEmbedHtml(embedUrl: String, heightDp: Int): String = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: transparent; overflow: hidden; }
+        iframe { display: block; width: 100%; height: ${heightDp}px; border: none; }
+      </style>
+    </head>
+    <body>
+      <iframe
+        src="$embedUrl"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy">
+      </iframe>
+    </body>
+    </html>
+""".trimIndent()
+
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 private fun SpotifyWebViewCard(embedUrl: String) {
+    val context = LocalContext.current
     val spacing = LocalAppSpacing.current
+
+    // onPageFinished fires for the local HTML shell immediately (no network needed),
+    // so we cannot use it to detect iframe load. Guard with a connectivity check instead:
+    // if there is no internet, return early and leave the block invisible.
+    val isOnline = remember(context) {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val caps = cm.getNetworkCapabilities(cm.activeNetwork) ?: return@remember false
+        caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+    if (!isOnline) return
+
     var webViewRef by remember { mutableStateOf<WebView?>(null) }
+    var isLoaded by remember { mutableStateOf(false) }
+    var hasError by remember { mutableStateOf(false) }
 
     DisposableEffect(embedUrl) {
         onDispose {
@@ -222,26 +266,67 @@ private fun SpotifyWebViewCard(embedUrl: String) {
                 wv.destroy()
                 webViewRef = null
             }
+            isLoaded = false
+            hasError = false
         }
     }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(352.dp)                        // Spotify embed standard height
-            .clip(RoundedCornerShape(spacing.cardCorner))
-            .background(NavyLight),
+            .then(
+                if (isLoaded) Modifier
+                    .height(SPOTIFY_EMBED_HEIGHT_DP.dp)
+                    .clip(RoundedCornerShape(spacing.cardCorner))
+                else Modifier.height(0.dp)
+            ),
     ) {
         AndroidView(
             factory = { ctx ->
                 WebView(ctx).apply {
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
-                    webViewClient = WebViewClient()  // handle redirects internally
-                    loadUrl(embedUrl)
+                    webViewClient = object : WebViewClient() {
+                        override fun onPageFinished(view: WebView, url: String) {
+                            if (!hasError && url != "about:blank") {
+                                isLoaded = true
+                            }
+                        }
+
+                        @Suppress("OVERRIDE_DEPRECATION")
+                        override fun onReceivedError(
+                            view: WebView,
+                            errorCode: Int,
+                            description: String?,
+                            failingUrl: String?,
+                        ) {
+                            hasError = true
+                            isLoaded = false
+                        }
+
+                        override fun onReceivedError(
+                            view: WebView,
+                            request: WebResourceRequest,
+                            error: WebResourceError,
+                        ) {
+                            if (request.isForMainFrame) {
+                                hasError = true
+                                isLoaded = false
+                            }
+                        }
+                    }
+                    loadDataWithBaseURL(
+                        "https://open.spotify.com/",
+                        spotifyEmbedHtml(embedUrl, SPOTIFY_EMBED_HEIGHT_DP),
+                        "text/html",
+                        "UTF-8",
+                        null,
+                    )
                 }.also { webViewRef = it }
             },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(SPOTIFY_EMBED_HEIGHT_DP.dp),
         )
     }
 }

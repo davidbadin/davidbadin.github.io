@@ -31,7 +31,17 @@ class NewsletterRepositoryImpl @Inject constructor(
 
     init {
         if (manifestFile.exists()) {
+            // Stale cached file from a previous network fetch — highest offline priority
             _volumes.value = parseManifest(manifestFile.readText())
+        } else {
+            // No cache yet (first launch or after clear) — fall back to bundled asset
+            try {
+                val assetJson = context.assets.open("newsletter_manifest.json")
+                    .bufferedReader().use { it.readText() }
+                _volumes.value = parseManifest(assetJson)
+            } catch (_: Exception) {
+                // Asset missing or unreadable — stay empty
+            }
         }
     }
 

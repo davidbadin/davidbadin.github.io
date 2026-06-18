@@ -33,6 +33,7 @@ class BandRepositoryImpl @Inject constructor(
     private val cache: BandCache,
     private val dataStore: DataStore<Preferences>,
     private val xlsxReader: XlsxAssetReader,
+    private val newsletterRepository: NewsletterRepository,
 ) : BandRepository {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -101,5 +102,8 @@ class BandRepositoryImpl @Inject constructor(
         _bands.value = bands
         cache.saveBands(bands)
         dataStore.edit { it[LAST_FETCH_KEY] = System.currentTimeMillis() }
+
+        // Network is confirmed reachable — refresh newsletter manifest concurrently
+        scope.launch { newsletterRepository.refreshManifest() }
     }
 }
