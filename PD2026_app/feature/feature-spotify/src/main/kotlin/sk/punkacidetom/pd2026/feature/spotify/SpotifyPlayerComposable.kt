@@ -1,9 +1,7 @@
 package sk.punkacidetom.pd2026.feature.spotify
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
+import android.webkit.JavascriptInterface
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -40,7 +38,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.spotify.protocol.types.PlayerState
@@ -216,6 +213,9 @@ private fun SpotifySdkPlayerCard(
 // Embed height shared between the HTML template and the Compose Box
 private const val SPOTIFY_EMBED_HEIGHT_DP = 152
 
+// The iframe's onload fires only when Spotify content renders successfully.
+// We call a JS bridge from that event so isLoaded is only set true when the
+// player is actually visible — not when the local HTML shell finishes loading.
 private fun spotifyEmbedHtml(embedUrl: String, heightDp: Int): String = """
     <!DOCTYPE html>
     <html>
@@ -231,31 +231,19 @@ private fun spotifyEmbedHtml(embedUrl: String, heightDp: Int): String = """
       <iframe
         src="$embedUrl"
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-        loading="lazy">
+        loading="lazy"
+        onload="Android.onIframeLoaded()">
       </iframe>
     </body>
     </html>
 """.trimIndent()
 
-@SuppressLint("SetJavaScriptEnabled")
+@SuppressLint("SetJavaScriptEnabled", "AddJavascriptInterface")
 @Composable
 private fun SpotifyWebViewCard(embedUrl: String) {
-    val context = LocalContext.current
     val spacing = LocalAppSpacing.current
-
-    // onPageFinished fires for the local HTML shell immediately (no network needed),
-    // so we cannot use it to detect iframe load. Guard with a connectivity check instead:
-    // if there is no internet, return early and leave the block invisible.
-    val isOnline = remember(context) {
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val caps = cm.getNetworkCapabilities(cm.activeNetwork) ?: return@remember false
-        caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    }
-    if (!isOnline) return
-
     var webViewRef by remember { mutableStateOf<WebView?>(null) }
     var isLoaded by remember { mutableStateOf(false) }
-    var hasError by remember { mutableStateOf(false) }
 
     DisposableEffect(embedUrl) {
         onDispose {
@@ -267,7 +255,6 @@ private fun SpotifyWebViewCard(embedUrl: String) {
                 webViewRef = null
             }
             isLoaded = false
-            hasError = false
         }
     }
 
@@ -286,35 +273,17 @@ private fun SpotifyWebViewCard(embedUrl: String) {
                 WebView(ctx).apply {
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
-                    webViewClient = object : WebViewClient() {
-                        override fun onPageFinished(view: WebView, url: String) {
-                            if (!hasError && url != "about:blank") {
-                                isLoaded = true
-                            }
-                        }
-
-                        @Suppress("OVERRIDE_DEPRECATION")
-                        override fun onReceivedError(
-                            view: WebView,
-                            errorCode: Int,
-                            description: String?,
-                            failingUrl: String?,
-                        ) {
-                            hasError = true
-                            isLoaded = false
-                        }
-
-                        override fun onReceivedError(
-                            view: WebView,
-                            request: WebResourceRequest,
-                            error: WebResourceError,
-                        ) {
-                            if (request.isForMainFrame) {
-                                hasError = true
-                                isLoaded = false
-                            }
-                        }
-                    }
+                    // Bridge called by iframe onload — only fires when Spotify content renders.
+                    // If the iframe never loads (offline, blocked by firewall, etc.) this is
+                    // never called, isLoaded stays false, and the box stays collapsed.
+                    addJavascriptInterface(
+                        object {
+                            @JavascriptInterface
+                            fun onIframeLoaded() { isLoaded = true }
+                        },
+                        "Android",
+                    )
+                    webViewClient = WebViewClient()
                     loadDataWithBaseURL(
                         "https://open.spotify.com/",
                         spotifyEmbedHtml(embedUrl, SPOTIFY_EMBED_HEIGHT_DP),
