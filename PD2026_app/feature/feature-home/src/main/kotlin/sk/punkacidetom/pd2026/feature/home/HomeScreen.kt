@@ -92,11 +92,11 @@ fun HomeScreen(
 
         // Navigation buttons — single column, full width
         val navButtons = buildList {
+            add(Triple(stringResource(R.string.home_btn_timetable), "calendar", onNavigateToTimetable))
+            add(Triple(stringResource(R.string.home_btn_bands), "music", onNavigateToBands))
             if (isNewsletterAvailable) {
                 add(Triple(stringResource(R.string.home_btn_newsletter), "newspaper", onNavigateToNews))
             }
-            add(Triple(stringResource(R.string.home_btn_timetable), "calendar", onNavigateToTimetable))
-            add(Triple(stringResource(R.string.home_btn_bands), "music", onNavigateToBands))
             add(Triple(stringResource(R.string.home_btn_info), "circle-info", onNavigateToInfo))
             add(Triple(stringResource(R.string.home_btn_tickets), "ticket", onNavigateToTickets))
         }
