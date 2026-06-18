@@ -34,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -261,6 +262,7 @@ private fun SpotifyWebViewCard(embedUrl: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .clipToBounds()   // prevent the WebView from overflowing the Box when height is 0
             .then(
                 if (isLoaded) Modifier
                     .height(SPOTIFY_EMBED_HEIGHT_DP.dp)
