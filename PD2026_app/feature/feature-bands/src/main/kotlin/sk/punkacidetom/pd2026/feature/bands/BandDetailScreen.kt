@@ -14,6 +14,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +38,9 @@ import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
 import sk.punkacidetom.pd2026.core.ui.theme.Navy
 import sk.punkacidetom.pd2026.core.ui.theme.White
 import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import sk.punkacidetom.pd2026.feature.spotify.SpotifyPlayerComposable
+import sk.punkacidetom.pd2026.feature.spotify.SpotifyViewModel
 import sk.punkacidetom.pd2026.feature.spotify.spotifyArtistEmbedUrl
 import sk.punkacidetom.pd2026.feature.spotify.util.SpotifyLauncher
 import java.time.format.TextStyle
@@ -48,11 +51,20 @@ fun BandDetailScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: BandDetailViewModel = hiltViewModel(),
+    spotifyViewModel: SpotifyViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val spotifyState by spotifyViewModel.uiState.collectAsStateWithLifecycle()
     val spacing = LocalAppSpacing.current
     val context = LocalContext.current
     val band = uiState.band
+
+    LaunchedEffect(band?.spotifyArtistId) {
+        val artistId = band?.spotifyArtistId
+        if (!artistId.isNullOrBlank()) {
+            spotifyViewModel.connect("spotify:artist:$artistId")
+        }
+    }
 
     LazyColumn(
         modifier = modifier
@@ -162,10 +174,12 @@ fun BandDetailScreen(
             item(key = "spotify") {
                 Spacer(modifier = Modifier.height(spacing.md))
                 SpotifyPlayerComposable(
+                    uiState = spotifyState,
                     embedUrl = spotifyArtistEmbedUrl(band.spotifyArtistId),
-                    openLabel = stringResource(R.string.band_detail_open_spotify),
                     onOpenClick = { SpotifyLauncher.openArtist(context, band.spotifyArtistId) },
-                    embedHeight = 152,
+                    onTogglePlayPause = spotifyViewModel::togglePlayPause,
+                    onSkipNext = spotifyViewModel::skipNext,
+                    onSkipPrevious = spotifyViewModel::skipPrevious,
                     modifier = Modifier.padding(horizontal = spacing.md),
                 )
             }

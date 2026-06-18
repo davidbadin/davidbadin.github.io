@@ -5,14 +5,22 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,97 +29,67 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.spotify.protocol.types.PlayerState
 import sk.punkacidetom.pd2026.core.ui.theme.Crimson
 import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
 import sk.punkacidetom.pd2026.core.ui.theme.NavyLight
 import sk.punkacidetom.pd2026.core.ui.theme.White
-import sk.punkacidetom.pd2026.feature.spotify.util.SpotifyLauncher
+import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
+
+// Spotify brand green — only used for the SDK status indicator
+private val SpotifyGreen = Color(0xFF1DB954)
 
 /**
- * Shared Spotify player composable.
+ * Spotify player composable that adapts to three states:
  *
- * Shows a Spotify iframe embed (WebView) and an "Open in Spotify" button.
- * When the Spotify app is installed, the button deep-links directly into it.
- * When not installed, Chrome Custom Tabs opens the web player.
+ * - [SpotifyUiState.Connecting]      — spinner while the SDK handshake is in progress
+ * - [SpotifyUiState.SdkConnected]    — native controls (track name, artist, play/pause, skip)
+ * - [SpotifyUiState.FallbackWebView] — Spotify iframe embed via WebView (Spotify not installed / SDK failed)
  *
- * The WebView height adapts dynamically to the embedded content height (min 80dp).
- * Playback is stopped and the WebView is destroyed when the composable leaves
- * the composition so music does not continue in the background.
+ * An "Open in Spotify" button is shown in every state.
  */
-@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun SpotifyPlayerComposable(
+    uiState: SpotifyUiState,
     embedUrl: String,
-    openLabel: String = stringResource(sk.punkacidetom.pd2026.feature.spotify.R.string.spotify_open_app),
     onOpenClick: () -> Unit,
+    onTogglePlayPause: () -> Unit,
+    onSkipNext: () -> Unit,
+    onSkipPrevious: () -> Unit,
     modifier: Modifier = Modifier,
-    embedHeight: Int = 152, // kept for API compatibility; actual height is measured dynamically
 ) {
     val spacing = LocalAppSpacing.current
-    var webHeight by remember { mutableStateOf(80) }
-    var webViewRef by remember { mutableStateOf<WebView?>(null) }
-
-    // Stop playback and release resources when the composable leaves composition
-    DisposableEffect(embedUrl) {
-        onDispose {
-            webViewRef?.let { wv ->
-                wv.onPause()
-                wv.pauseTimers()
-                wv.loadUrl("about:blank") // halts all media
-                wv.destroy()
-                webViewRef = null
-            }
-        }
-    }
 
     Column(modifier = modifier.fillMaxWidth()) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(webHeight.dp.coerceAtLeast(80.dp))
-                .clip(RoundedCornerShape(spacing.cardCorner))
-                .background(NavyLight),
-        ) {
-            AndroidView(
-                factory = { ctx ->
-                    WebView(ctx).apply {
-                        settings.javaScriptEnabled = true
-                        settings.domStorageEnabled = true
-                        addJavascriptInterface(
-                            object {
-                                @JavascriptInterface
-                                fun reportHeight(h: Int) {
-                                    webHeight = h.coerceAtLeast(80)
-                                }
-                            },
-                            "Android",
-                        )
-                        webViewClient = object : WebViewClient() {
-                            override fun onPageFinished(view: WebView, url: String) {
-                                view.evaluateJavascript(
-                                    "(function() { Android.reportHeight(document.body.scrollHeight); })();",
-                                ) {}
-                            }
-                        }
-                        loadUrl(embedUrl)
-                    }.also { webViewRef = it }
-                },
-                modifier = Modifier.fillMaxWidth(),
+        when (uiState) {
+            SpotifyUiState.Connecting -> SpotifyConnectingCard()
+            is SpotifyUiState.SdkConnected -> SpotifySdkPlayerCard(
+                playerState = uiState.playerState,
+                onTogglePlayPause = onTogglePlayPause,
+                onSkipNext = onSkipNext,
+                onSkipPrevious = onSkipPrevious,
             )
+            SpotifyUiState.FallbackWebView -> SpotifyWebViewCard(embedUrl = embedUrl)
         }
+
         Spacer(modifier = Modifier.height(spacing.sm))
+
         Button(
             onClick = onOpenClick,
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = Crimson),
         ) {
             Text(
-                text = openLabel,
+                text = stringResource(R.string.spotify_open_app),
                 style = MaterialTheme.typography.labelLarge,
                 color = White,
             )
@@ -119,7 +97,195 @@ fun SpotifyPlayerComposable(
     }
 }
 
-// Generates the Spotify embed URL from a playlist or artist ID
+// ---------------------------------------------------------------------------
+// SDK: native player controls
+// ---------------------------------------------------------------------------
+
+@Composable
+private fun SpotifySdkPlayerCard(
+    playerState: PlayerState,
+    onTogglePlayPause: () -> Unit,
+    onSkipNext: () -> Unit,
+    onSkipPrevious: () -> Unit,
+) {
+    val spacing = LocalAppSpacing.current
+    val track = playerState.track
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(spacing.cardCorner))
+            .background(NavyLight)
+            .padding(spacing.md),
+        verticalArrangement = Arrangement.spacedBy(spacing.sm),
+    ) {
+        // Connected status dot
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier
+                    .size(8.dp)
+                    .clip(CircleShape)
+                    .background(SpotifyGreen),
+            )
+            Text(
+                text = stringResource(R.string.spotify_sdk_connected),
+                style = MaterialTheme.typography.labelSmall,
+                color = SpotifyGreen,
+                modifier = Modifier.padding(start = 6.dp),
+            )
+        }
+
+        // Track / artist
+        if (track != null) {
+            Text(
+                text = track.name,
+                style = MaterialTheme.typography.titleMedium,
+                color = White,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                text = track.artist.name,
+                style = MaterialTheme.typography.bodyMedium,
+                color = WhiteAlpha60,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        } else {
+            Text(
+                text = stringResource(R.string.spotify_no_track),
+                style = MaterialTheme.typography.bodyMedium,
+                color = WhiteAlpha60,
+            )
+        }
+
+        // Playback controls
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            IconButton(onClick = onSkipPrevious) {
+                Icon(
+                    painter = painterResource(android.R.drawable.ic_media_previous),
+                    contentDescription = stringResource(R.string.spotify_skip_previous),
+                    tint = White,
+                    modifier = Modifier.size(28.dp),
+                )
+            }
+            IconButton(
+                onClick = onTogglePlayPause,
+                modifier = Modifier
+                    .size(52.dp)
+                    .clip(CircleShape)
+                    .background(Crimson),
+            ) {
+                Icon(
+                    painter = painterResource(
+                        if (playerState.isPaused) android.R.drawable.ic_media_play
+                        else android.R.drawable.ic_media_pause,
+                    ),
+                    contentDescription = stringResource(
+                        if (playerState.isPaused) R.string.spotify_play else R.string.spotify_pause,
+                    ),
+                    tint = White,
+                    modifier = Modifier.size(28.dp),
+                )
+            }
+            IconButton(onClick = onSkipNext) {
+                Icon(
+                    painter = painterResource(android.R.drawable.ic_media_next),
+                    contentDescription = stringResource(R.string.spotify_skip_next),
+                    tint = White,
+                    modifier = Modifier.size(28.dp),
+                )
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Fallback: WebView iframe embed
+// ---------------------------------------------------------------------------
+
+@SuppressLint("SetJavaScriptEnabled")
+@Composable
+private fun SpotifyWebViewCard(embedUrl: String) {
+    val spacing = LocalAppSpacing.current
+    var webHeight by remember { mutableStateOf(80) }
+    var webViewRef by remember { mutableStateOf<WebView?>(null) }
+
+    DisposableEffect(embedUrl) {
+        onDispose {
+            webViewRef?.let { wv ->
+                wv.onPause()
+                wv.pauseTimers()
+                wv.loadUrl("about:blank")
+                wv.destroy()
+                webViewRef = null
+            }
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(webHeight.dp.coerceAtLeast(80.dp))
+            .clip(RoundedCornerShape(spacing.cardCorner))
+            .background(NavyLight),
+    ) {
+        AndroidView(
+            factory = { ctx ->
+                WebView(ctx).apply {
+                    settings.javaScriptEnabled = true
+                    settings.domStorageEnabled = true
+                    addJavascriptInterface(
+                        object {
+                            @JavascriptInterface
+                            fun reportHeight(h: Int) {
+                                webHeight = h.coerceAtLeast(80)
+                            }
+                        },
+                        "Android",
+                    )
+                    webViewClient = object : WebViewClient() {
+                        override fun onPageFinished(view: WebView, url: String) {
+                            view.evaluateJavascript(
+                                "(function() { Android.reportHeight(document.body.scrollHeight); })();",
+                            ) {}
+                        }
+                    }
+                    loadUrl(embedUrl)
+                }.also { webViewRef = it }
+            },
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Connecting: spinner placeholder
+// ---------------------------------------------------------------------------
+
+@Composable
+private fun SpotifyConnectingCard() {
+    val spacing = LocalAppSpacing.current
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(120.dp)
+            .clip(RoundedCornerShape(spacing.cardCorner))
+            .background(NavyLight),
+        contentAlignment = Alignment.Center,
+    ) {
+        CircularProgressIndicator(color = SpotifyGreen)
+    }
+}
+
+// ---------------------------------------------------------------------------
+// URL helpers
+// ---------------------------------------------------------------------------
+
 fun spotifyPlaylistEmbedUrl(playlistId: String) =
     "https://open.spotify.com/embed/playlist/$playlistId?utm_source=generator&theme=0"
 

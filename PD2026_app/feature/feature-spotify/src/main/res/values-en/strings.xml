@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="spotify_title">Spotify</string>
+    <string name="spotify_playlist_label">Festival playlist</string>
+    <string name="spotify_open_app">Open in Spotify</string>
+    <string name="spotify_install_prompt">Install Spotify to enable playback</string>
+    <!-- SDK player -->
+    <string name="spotify_sdk_connected">Connected via Spotify</string>
+    <string name="spotify_no_track">No track playing</string>
+    <string name="spotify_play">Play</string>
+    <string name="spotify_pause">Pause</string>
+    <string name="spotify_skip_previous">Previous track</string>
+    <string name="spotify_skip_next">Next track</string>
+</resources>

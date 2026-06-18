@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -7,10 +9,25 @@ plugins {
     alias(libs.plugins.hilt)
 }
 
+val localProps = Properties().also { props ->
+    val f = rootProject.file("local.properties")
+    if (f.exists()) f.inputStream().use { props.load(it) }
+}
+
 android {
     namespace = "sk.punkacidetom.pd2026.feature.spotify"
     compileSdk = 35
-    defaultConfig { minSdk = 24 }
+    defaultConfig {
+        minSdk = 24
+        buildConfigField(
+            "String", "SPOTIFY_CLIENT_ID",
+            "\"${localProps.getProperty("SPOTIFY_CLIENT_ID", "<PLACEHOLDER_SPOTIFY_CLIENT_ID>")}\"",
+        )
+        buildConfigField(
+            "String", "SPOTIFY_REDIRECT_URI",
+            "\"${localProps.getProperty("SPOTIFY_REDIRECT_URI", "pd2026://callback")}\"",
+        )
+    }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
@@ -41,13 +58,13 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.androidx.browser)
+    implementation(libs.coil.compose)
 
     // Spotify Android App Remote SDK
     // Download from https://github.com/spotify/android-sdk/releases and place at:
     //   PD2026_app/libs/spotify-app-remote-release-0.8.0.aar
-    // Without the AAR the module still compiles — Spotify features fall back to Chrome Custom Tabs.
-    val spotifyAar = file("${rootProject.projectDir}/libs/spotify-app-remote-release-0.8.0.aar")
-    if (spotifyAar.exists()) {
-        implementation(files(spotifyAar))
-    }
+    // The SDK is required for in-app playback; without it the module will not compile.
+    val spotifyAar = rootProject.fileTree("libs") { include("spotify-app-remote-release-*.aar") }.firstOrNull()
+        ?: file("${rootProject.projectDir}/libs/spotify-app-remote-release-0.8.0.aar")
+    implementation(files(spotifyAar))
 }

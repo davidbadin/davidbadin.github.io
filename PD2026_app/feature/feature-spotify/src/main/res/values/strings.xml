@@ -4,4 +4,11 @@
     <string name="spotify_playlist_label">Festivalový playlist</string>
     <string name="spotify_open_app">Otvoriť v Spotify</string>
     <string name="spotify_install_prompt">Nainštalujte Spotify pre prehrávanie</string>
+    <!-- SDK player -->
+    <string name="spotify_sdk_connected">Pripojené cez Spotify</string>
+    <string name="spotify_no_track">Žiadna skladba</string>
+    <string name="spotify_play">Prehrať</string>
+    <string name="spotify_pause">Pozastaviť</string>
+    <string name="spotify_skip_previous">Predošlá skladba</string>
+    <string name="spotify_skip_next">Ďalšia skladba</string>
 </resources>
