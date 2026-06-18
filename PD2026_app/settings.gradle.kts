@@ -16,6 +16,12 @@ dependencyResolutionManagement {
 
 rootProject.name = "PD2026"
 
+// Redirect build dirs outside OneDrive/Dropbox to avoid file-locking errors
+gradle.allprojects {
+    val relativePath = project.path.replace(":", java.io.File.separator).trimStart(java.io.File.separatorChar)
+    layout.buildDirectory.set(File("C:\\Users\\FS0605\\AndroidBuild\\PD2026\\${if (relativePath.isEmpty()) "root" else relativePath}\\build"))
+}
+
 include(":app")
 include(":core:core-model")
 include(":core:core-ui")
