@@ -1,6 +1,9 @@
 package sk.punkacidetom.pd2026.feature.spotify
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -37,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.spotify.protocol.types.PlayerState
@@ -236,7 +240,19 @@ private fun spotifyEmbedHtml(embedUrl: String, heightDp: Int): String = """
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 private fun SpotifyWebViewCard(embedUrl: String) {
+    val context = LocalContext.current
     val spacing = LocalAppSpacing.current
+
+    // onPageFinished fires for the local HTML shell immediately (no network needed),
+    // so we cannot use it to detect iframe load. Guard with a connectivity check instead:
+    // if there is no internet, return early and leave the block invisible.
+    val isOnline = remember(context) {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val caps = cm.getNetworkCapabilities(cm.activeNetwork) ?: return@remember false
+        caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+    if (!isOnline) return
+
     var webViewRef by remember { mutableStateOf<WebView?>(null) }
     var isLoaded by remember { mutableStateOf(false) }
     var hasError by remember { mutableStateOf(false) }
