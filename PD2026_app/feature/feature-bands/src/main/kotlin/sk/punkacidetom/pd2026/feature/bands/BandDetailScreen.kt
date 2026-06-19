@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -296,26 +296,25 @@ private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
         // ── Photo branch ──────────────────────────────────────────────────────
         // BoxWithConstraints lets us read the actual pixel width so every
         // measurement is derived from the loaded image's intrinsic dimensions.
-        BoxWithConstraints(modifier = modifier) {
-            val containerWidthPx = constraints.maxWidth.toFloat()
+        // fillMaxWidth() is always appended so constraints.maxWidth is the screen width
+        // even when the caller only passes Modifier.fillMaxWidth() without height.
+        BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
+            val containerWidthPx = constraints.maxWidth.toFloat()   // pixels, not dp
 
-            // Rendered image height after scaling to fill the full width (aspect-ratio-correct)
+            // Rendered image height after scaling to fill width (aspect-ratio-correct)
             val renderedHeightPx = containerWidthPx *
                 imgIntrinsicHeight.toFloat() / imgIntrinsicWidth.toFloat()
 
-            // Crop amounts in px
-            val cropTopPx    = renderedHeightPx * CR_TOP       // 32% hidden at top
-            val cropBottomPx = renderedHeightPx * CR_BOTTOM    // 6%  hidden at bottom
-
-            // Visible container height = 62% of the rendered image height
-            val containerHeightPx = renderedHeightPx - cropTopPx - cropBottomPx
-            val containerHeightDp    = with(density) { containerHeightPx.toDp() }
-            val renderedImageHeightDp = with(density) { renderedHeightPx.toDp() }
-            val cropTopDp             = with(density) { cropTopPx.toDp() }
+            // Visible container height = 62% of H(i)
+            val containerHeightPx = renderedHeightPx * (1f - CR_TOP - CR_BOTTOM)
+            val containerHeightDp = with(density) { containerHeightPx.toDp() }
 
             // Fade heights (percentage of H(i), not H(c))
             val fadeTopHeightDp = with(density) { (renderedHeightPx * FADE_TOP).toDp() }
             val fadeBotHeightDp = with(density) { (renderedHeightPx * FADE_BOT).toDp() }
+
+            // cropTopPx is re-derived inside drawWithContent from size.width to avoid
+            // any density-conversion rounding mismatch between layout and draw phases.
 
             Box(
                 modifier = Modifier
@@ -324,6 +323,10 @@ private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
                     .clipToBounds(),   // clips image content that overflows top and bottom
             ) {
                 // ── Band photo ───────────────────────────────────────────────
+                // The composable height is H(c). ContentScale.FillWidth draws the
+                // image at full H(i) height with Alignment.TopCenter (image top at y=0).
+                // canvas.translate(0, -cropTopPxLocal) shifts the canvas origin UP so
+                // the composable's clip region [0..H(c)] maps to image rows [32%..94%].
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(imageUrl)
@@ -337,12 +340,21 @@ private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
                         .crossfade(true)
                         .build(),
                     contentDescription = band?.name,
-                    contentScale = ContentScale.FillWidth,   // fill width, keep aspect ratio
+                    contentScale = ContentScale.FillWidth,
                     alignment = Alignment.TopCenter,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(renderedImageHeightDp)       // full rendered height
-                        .offset(y = -cropTopDp),             // shift up — hides top 32%
+                        .height(containerHeightDp)           // composable height = H(c), NOT H(i)
+                        .drawWithContent {
+                            // Re-derive cropTopPx from draw-scope width (pixels, no rounding)
+                            val hiLocal = size.width *
+                                imgIntrinsicHeight.toFloat() / imgIntrinsicWidth.toFloat()
+                            val cropTopPxLocal = hiLocal * CR_TOP
+                            drawContext.canvas.save()
+                            drawContext.canvas.translate(0f, -cropTopPxLocal)
+                            drawContent()                    // draws image at H(i), shifted up
+                            drawContext.canvas.restore()
+                        },
                 )
 
                 // ── Top fade: Navy → Transparent ─────────────────────────────
