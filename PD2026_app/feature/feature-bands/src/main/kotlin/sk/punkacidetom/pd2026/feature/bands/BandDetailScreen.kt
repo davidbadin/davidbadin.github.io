@@ -280,7 +280,7 @@ private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
                     .drawWithContent {
                         // Crop the bottom 5%: save canvas state, apply a clip rect
                         // that excludes the bottom 5%, draw, then restore.
-                        val count = drawContext.canvas.save()
+                        drawContext.canvas.save()
                         drawContext.canvas.clipRect(
                             left = 0f,
                             top = 0f,
@@ -288,7 +288,7 @@ private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
                             bottom = size.height * 0.95f,
                         )
                         drawContent()
-                        drawContext.canvas.restoreToCount(count)
+                        drawContext.canvas.restore()
                     },
             )
 
