@@ -1,6 +1,7 @@
 package sk.punkacidetom.pd2026.feature.bands
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,11 +29,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import sk.punkacidetom.pd2026.core.model.Band
@@ -43,13 +44,37 @@ import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
 import sk.punkacidetom.pd2026.core.ui.theme.Navy
 import sk.punkacidetom.pd2026.core.ui.theme.White
 import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import sk.punkacidetom.pd2026.feature.spotify.SpotifyPlayerComposable
 import sk.punkacidetom.pd2026.feature.spotify.SpotifyViewModel
 import sk.punkacidetom.pd2026.feature.spotify.spotifyArtistEmbedUrl
 import sk.punkacidetom.pd2026.feature.spotify.util.SpotifyLauncher
 import java.time.format.TextStyle
 import java.util.Locale
+
+// ---------------------------------------------------------------------------
+// Image source fallback chain:
+//   NetworkPng → NetworkJpg → AssetPng → AssetJpg → None (show logo)
+// ---------------------------------------------------------------------------
+
+private enum class ImageSource { NetworkPng, NetworkJpg, AssetPng, AssetJpg, None }
+
+private fun Band.imageUri(source: ImageSource): String = when (source) {
+    ImageSource.NetworkPng -> bandImagePngUrl
+    ImageSource.NetworkJpg -> bandImageJpgUrl
+    ImageSource.AssetPng   -> "file:///android_asset/bands/$imageName.png"
+    ImageSource.AssetJpg   -> "file:///android_asset/bands/$imageName.jpg"
+    ImageSource.None       -> ""
+}
+
+private fun ImageSource.next(): ImageSource = when (this) {
+    ImageSource.NetworkPng -> ImageSource.NetworkJpg
+    ImageSource.NetworkJpg -> ImageSource.AssetPng
+    ImageSource.AssetPng   -> ImageSource.AssetJpg
+    ImageSource.AssetJpg   -> ImageSource.None
+    ImageSource.None       -> ImageSource.None
+}
+
+// ---------------------------------------------------------------------------
 
 @Composable
 fun BandDetailScreen(
@@ -63,6 +88,10 @@ fun BandDetailScreen(
     val spacing = LocalAppSpacing.current
     val context = LocalContext.current
     val band = uiState.band
+
+    // True when the band record has a photo (imageName non-blank).
+    // Used to switch layout: image present → hide text name/genre, show compact favourite row.
+    val hasPhoto = band != null && band.imageName.isNotBlank()
 
     LaunchedEffect(band?.spotifyArtistId) {
         val artistId = band?.spotifyArtistId
@@ -78,7 +107,6 @@ fun BandDetailScreen(
     ) {
         // Header image + back button
         item(key = "header") {
-            val hasPhoto = band != null && band.bandImagePngUrl.isNotBlank()
             val headerHeight = if (hasPhoto) spacing.bandImageHeight else spacing.bandImageHeight * 0.45f
             Box {
                 BandHeaderImage(
@@ -111,32 +139,53 @@ fun BandDetailScreen(
 
         // Name + favourite toggle
         item(key = "name") {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = spacing.sm, start = spacing.md, end = spacing.md),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = band.name,
-                    style = MaterialTheme.typography.displaySmall,
-                    color = White,
-                    modifier = Modifier.weight(1f),
-                )
-                IconButton(onClick = { viewModel.toggleFavourite() }) {
-                    Icon(
-                        imageVector = if (uiState.isFavourite) Icons.Filled.Favorite
-                                      else Icons.Outlined.FavoriteBorder,
-                        contentDescription = null,
-                        tint = if (uiState.isFavourite) Crimson else WhiteAlpha60,
-                        modifier = Modifier.size(spacing.iconLg),
+            if (hasPhoto) {
+                // Image already contains the band name — only show the favourite toggle
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = spacing.xs, end = spacing.xs),
+                    horizontalArrangement = Arrangement.End,
+                ) {
+                    IconButton(onClick = { viewModel.toggleFavourite() }) {
+                        Icon(
+                            imageVector = if (uiState.isFavourite) Icons.Filled.Favorite
+                                          else Icons.Outlined.FavoriteBorder,
+                            contentDescription = null,
+                            tint = if (uiState.isFavourite) Crimson else WhiteAlpha60,
+                            modifier = Modifier.size(spacing.iconLg),
+                        )
+                    }
+                }
+            } else {
+                // No image — show name text + favourite toggle side-by-side
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = spacing.sm, start = spacing.md, end = spacing.md),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = band.name,
+                        style = MaterialTheme.typography.displaySmall,
+                        color = White,
+                        modifier = Modifier.weight(1f),
                     )
+                    IconButton(onClick = { viewModel.toggleFavourite() }) {
+                        Icon(
+                            imageVector = if (uiState.isFavourite) Icons.Filled.Favorite
+                                          else Icons.Outlined.FavoriteBorder,
+                            contentDescription = null,
+                            tint = if (uiState.isFavourite) Crimson else WhiteAlpha60,
+                            modifier = Modifier.size(spacing.iconLg),
+                        )
+                    }
                 }
             }
         }
 
-        // Genre
-        if (band.genre.isNotBlank()) {
+        // Genre — hidden when an image is present (name is visible in the photo)
+        if (band.genre.isNotBlank() && !hasPhoto) {
             item(key = "genre") {
                 Text(
                     text = band.genre,
@@ -203,24 +252,42 @@ fun BandDetailScreen(
 @Composable
 private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
     val spacing = LocalAppSpacing.current
-    var usePng by remember(band?.imageName) { mutableStateOf(true) }
-    val imageUrl = when {
-        band == null || band.bandImagePngUrl.isBlank() -> ""
-        usePng -> band.bandImagePngUrl
-        else -> band.bandImageJpgUrl
+
+    // Walk the fallback chain on each Coil onError callback
+    var source by remember(band?.imageName) {
+        mutableStateOf(
+            if (band != null && band.imageName.isNotBlank()) ImageSource.NetworkPng
+            else ImageSource.None
+        )
     }
+    val imageUrl = if (band != null && source != ImageSource.None) band.imageUri(source) else ""
 
     Box(modifier = modifier) {
         if (imageUrl.isNotBlank()) {
+            // Photo found — crop from top so faces/subjects near the bottom stay visible
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(imageUrl)
-                    .listener(onError = { _, _ -> if (usePng) usePng = false })
+                    .listener(onError = { _, _ -> source = source.next() })
                     .crossfade(true)
                     .build(),
                 contentDescription = band?.name,
                 contentScale = ContentScale.Crop,
+                alignment = Alignment.BottomCenter,   // crop excess from the top
                 modifier = Modifier.fillMaxSize(),
+            )
+
+            // Top gradient: Navy → Transparent (blends into the page background)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(spacing.bandImageHeight * 0.35f)
+                    .align(Alignment.TopCenter)
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(Navy, Color.Transparent),
+                        )
+                    ),
             )
         } else {
             // No band-specific image — show the festival logo centred on the Navy background
@@ -242,15 +309,15 @@ private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
             }
         }
 
-        // Gradient overlay fading into Navy at the bottom
+        // Bottom gradient: Transparent → Navy (always shown)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(spacing.bandImageHeight * 0.5f)
+                .height(spacing.bandImageHeight * 0.25f)
                 .align(Alignment.BottomCenter)
                 .background(
                     Brush.verticalGradient(
-                        colors = listOf(androidx.compose.ui.graphics.Color.Transparent, Navy),
+                        colors = listOf(Color.Transparent, Navy),
                     )
                 ),
         )
