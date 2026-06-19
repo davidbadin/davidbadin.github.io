@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -274,7 +275,14 @@ private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
                 contentDescription = band?.name,
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.BottomCenter,   // crop excess from the top
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .drawWithContent {
+                        // Also crop the bottom 5% of the rendered image
+                        clipRect(bottom = size.height * 0.95f) {
+                            drawContent()
+                        }
+                    },
             )
 
             // Top gradient: Navy → Transparent (blends into the page background)
