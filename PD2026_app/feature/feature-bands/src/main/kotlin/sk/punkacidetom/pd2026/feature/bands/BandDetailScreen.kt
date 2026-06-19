@@ -3,12 +3,14 @@ package sk.punkacidetom.pd2026.feature.bands
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,16 +25,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
@@ -76,6 +80,16 @@ private fun ImageSource.next(): ImageSource = when (this) {
 }
 
 // ---------------------------------------------------------------------------
+// Crop / fade constants (fraction of the image's rendered pixel height H(i))
+// ---------------------------------------------------------------------------
+
+private const val CR_TOP    = 0.32f   // 32% of H(i) hidden at top
+private const val CR_BOTTOM = 0.06f   // 6%  of H(i) hidden at bottom
+private const val FADE_TOP  = 0.15f   // 15% of H(i) — top fade height
+private const val FADE_BOT  = 0.10f   // 10% of H(i) — bottom fade height
+// Visible slice = (1 - CR_TOP - CR_BOTTOM) = 0.62 × H(i)
+
+// ---------------------------------------------------------------------------
 
 @Composable
 fun BandDetailScreen(
@@ -108,13 +122,13 @@ fun BandDetailScreen(
     ) {
         // Header image + back button
         item(key = "header") {
-            val headerHeight = if (hasPhoto) spacing.bandImageHeight else spacing.bandImageHeight * 0.45f
             Box {
                 BandHeaderImage(
                     band = band,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(headerHeight),
+                    // Photo branch: height is self-determined from intrinsic image dimensions.
+                    // No-photo branch: fixed height to leave room for the festival logo.
+                    modifier = if (hasPhoto) Modifier.fillMaxWidth()
+                               else Modifier.fillMaxWidth().height(spacing.bandImageHeight * 0.45f),
                 )
                 IconButton(
                     onClick = onBack,
@@ -250,11 +264,19 @@ fun BandDetailScreen(
     }
 }
 
+// ---------------------------------------------------------------------------
+// BandHeaderImage
+//
+// Photo branch  — all sizes derived from the image's actual intrinsic dimensions
+//                 so the visible slice is always the same relative 62% regardless
+//                 of screen density or aspect ratio.
+// No-photo branch — festival logo centred on Navy; unchanged from original design.
+// ---------------------------------------------------------------------------
+
 @Composable
 private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
-    val spacing = LocalAppSpacing.current
 
-    // Walk the fallback chain on each Coil onError callback
+    // Fallback-chain state — declared at top level so remember is never conditional
     var source by remember(band?.imageName) {
         mutableStateOf(
             if (band != null && band.imageName.isNotBlank()) ImageSource.NetworkPng
@@ -263,78 +285,108 @@ private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
     }
     val imageUrl = if (band != null && source != ImageSource.None) band.imageUri(source) else ""
 
-    Box(modifier = modifier) {
-        if (imageUrl.isNotBlank()) {
-            // Photo found — crop from top so faces/subjects near the bottom stay visible
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(imageUrl)
-                    .listener(onError = { _, _ -> source = source.next() })
-                    .crossfade(true)
-                    .build(),
-                contentDescription = band?.name,
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.BottomCenter,   // crop excess from the top
-                modifier = Modifier
-                    .fillMaxSize()
-                    .drawWithContent {
-                        // Crop the bottom 5%: save canvas state, apply a clip rect
-                        // that excludes the bottom 5%, draw, then restore.
-                        drawContext.canvas.save()
-                        drawContext.canvas.clipRect(
-                            left = 0f,
-                            top = 0f,
-                            right = size.width,
-                            bottom = size.height * 0.95f,
-                        )
-                        drawContent()
-                        drawContext.canvas.restore()
-                    },
-            )
+    // Intrinsic-dimension state — also at top level (Compose rule: no conditional remember).
+    // Default 1080×1080 gives a stable layout before the image loads.
+    var imgIntrinsicWidth  by remember(band?.imageName) { mutableIntStateOf(1080) }
+    var imgIntrinsicHeight by remember(band?.imageName) { mutableIntStateOf(1080) }
 
-            // Top gradient: Navy → Transparent (blends into the page background)
+    val density = LocalDensity.current
+
+    if (imageUrl.isNotBlank()) {
+        // ── Photo branch ──────────────────────────────────────────────────────
+        // BoxWithConstraints lets us read the actual pixel width so every
+        // measurement is derived from the loaded image's intrinsic dimensions.
+        BoxWithConstraints(modifier = modifier) {
+            val containerWidthPx = constraints.maxWidth.toFloat()
+
+            // Rendered image height after scaling to fill the full width (aspect-ratio-correct)
+            val renderedHeightPx = containerWidthPx *
+                imgIntrinsicHeight.toFloat() / imgIntrinsicWidth.toFloat()
+
+            // Crop amounts in px
+            val cropTopPx    = renderedHeightPx * CR_TOP       // 32% hidden at top
+            val cropBottomPx = renderedHeightPx * CR_BOTTOM    // 6%  hidden at bottom
+
+            // Visible container height = 62% of the rendered image height
+            val containerHeightPx = renderedHeightPx - cropTopPx - cropBottomPx
+            val containerHeightDp    = with(density) { containerHeightPx.toDp() }
+            val renderedImageHeightDp = with(density) { renderedHeightPx.toDp() }
+            val cropTopDp             = with(density) { cropTopPx.toDp() }
+
+            // Fade heights (percentage of H(i), not H(c))
+            val fadeTopHeightDp = with(density) { (renderedHeightPx * FADE_TOP).toDp() }
+            val fadeBotHeightDp = with(density) { (renderedHeightPx * FADE_BOT).toDp() }
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(spacing.bandImageHeight * 0.35f)
-                    .align(Alignment.TopCenter)
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(Navy, Color.Transparent),
-                        )
-                    ),
-            )
-        } else {
-            // No band-specific image — show the festival logo centred on the Navy background
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Navy),
-                contentAlignment = Alignment.Center,
+                    .height(containerHeightDp)
+                    .clipToBounds(),   // clips image content that overflows top and bottom
             ) {
+                // ── Band photo ───────────────────────────────────────────────
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data("file:///android_asset/logo_pd.png")
+                        .data(imageUrl)
+                        .listener(
+                            onError = { _, _ -> source = source.next() },
+                            onSuccess = { _, result ->
+                                imgIntrinsicWidth  = result.drawable.intrinsicWidth.coerceAtLeast(1)
+                                imgIntrinsicHeight = result.drawable.intrinsicHeight.coerceAtLeast(1)
+                            },
+                        )
                         .crossfade(true)
                         .build(),
-                    contentDescription = null,
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.fillMaxWidth(0.55f),
+                    contentDescription = band?.name,
+                    contentScale = ContentScale.FillWidth,   // fill width, keep aspect ratio
+                    alignment = Alignment.TopCenter,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(renderedImageHeightDp)       // full rendered height
+                        .offset(y = -cropTopDp),             // shift up — hides top 32%
+                )
+
+                // ── Top fade: Navy → Transparent ─────────────────────────────
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(fadeTopHeightDp)
+                        .align(Alignment.TopCenter)
+                        .background(
+                            Brush.verticalGradient(
+                                colors = listOf(Navy, Color.Transparent),
+                            )
+                        ),
+                )
+
+                // ── Bottom fade: Transparent → Navy ──────────────────────────
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(fadeBotHeightDp)
+                        .align(Alignment.BottomCenter)
+                        .background(
+                            Brush.verticalGradient(
+                                colors = listOf(Color.Transparent, Navy),
+                            )
+                        ),
                 )
             }
         }
-
-        // Bottom gradient: Transparent → Navy (always shown)
+    } else {
+        // ── No-photo fallback — festival logo centred on Navy (unchanged) ─────
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(spacing.bandImageHeight * 0.25f)
-                .align(Alignment.BottomCenter)
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, Navy),
-                    )
-                ),
-        )
+            modifier = modifier.background(Navy),
+            contentAlignment = Alignment.Center,
+        ) {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data("file:///android_asset/logo_pd.png")
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.fillMaxWidth(0.55f),
+            )
+        }
     }
 }
