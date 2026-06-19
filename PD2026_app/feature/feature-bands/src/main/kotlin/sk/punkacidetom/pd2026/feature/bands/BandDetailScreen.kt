@@ -31,8 +31,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.unit.Constraints
+import kotlin.math.roundToInt
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -301,32 +303,35 @@ private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
         BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
             val containerWidthPx = constraints.maxWidth.toFloat()   // pixels, not dp
 
-            // Rendered image height after scaling to fill width (aspect-ratio-correct)
+            // H(i): rendered image height after scaling to fill width (aspect-ratio-correct)
             val renderedHeightPx = containerWidthPx *
                 imgIntrinsicHeight.toFloat() / imgIntrinsicWidth.toFloat()
 
-            // Visible container height = 62% of H(i)
-            val containerHeightPx = renderedHeightPx * (1f - CR_TOP - CR_BOTTOM)
-            val containerHeightDp = with(density) { containerHeightPx.toDp() }
+            // H(c): visible container height = 62% of H(i)
+            val containerHeightPx  = renderedHeightPx * (1f - CR_TOP - CR_BOTTOM)
+            val containerHeightDp  = with(density) { containerHeightPx.toDp() }
 
-            // Fade heights (percentage of H(i), not H(c))
+            // Fade heights (% of H(i), not H(c))
             val fadeTopHeightDp = with(density) { (renderedHeightPx * FADE_TOP).toDp() }
             val fadeBotHeightDp = with(density) { (renderedHeightPx * FADE_BOT).toDp() }
 
-            // cropTopPx is re-derived inside drawWithContent from size.width to avoid
-            // any density-conversion rounding mismatch between layout and draw phases.
-
+            // ── Layer 1: outer Box — visible window = H(c) ───────────────────
+            // clipToBounds clips any child drawing that falls outside 0..H(c).
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(containerHeightDp)
-                    .clipToBounds(),   // clips image content that overflows top and bottom
+                    .clipToBounds(),
             ) {
                 // ── Band photo ───────────────────────────────────────────────
-                // The composable height is H(c). ContentScale.FillWidth draws the
-                // image at full H(i) height with Alignment.TopCenter (image top at y=0).
-                // canvas.translate(0, -cropTopPxLocal) shifts the canvas origin UP so
-                // the composable's clip region [0..H(c)] maps to image rows [32%..94%].
+                // Custom layout modifier: measures AsyncImage with unconstrained
+                // height so Coil/ContentScale.FillWidth returns the true H(i).
+                // Reports H(c) to the parent Box, and places the image at
+                // y = -cropTop so that image rows [32%..94%] are visible through
+                // the outer Box's clipToBounds.
+                // This works at layout time (before compositing) — unlike canvas
+                // translate or Modifier.offset on a height-constrained composable,
+                // which both operate on an already-clipped layer.
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(imageUrl)
@@ -341,19 +346,27 @@ private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
                         .build(),
                     contentDescription = band?.name,
                     contentScale = ContentScale.FillWidth,
-                    alignment = Alignment.TopCenter,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(containerHeightDp)           // composable height = H(c), NOT H(i)
-                        .drawWithContent {
-                            // Re-derive cropTopPx from draw-scope width (pixels, no rounding)
-                            val hiLocal = size.width *
-                                imgIntrinsicHeight.toFloat() / imgIntrinsicWidth.toFloat()
-                            val cropTopPxLocal = hiLocal * CR_TOP
-                            drawContext.canvas.save()
-                            drawContext.canvas.translate(0f, -cropTopPxLocal)
-                            drawContent()                    // draws image at H(i), shifted up
-                            drawContext.canvas.restore()
+                        .layout { measurable, constraints ->
+                            // Measure with unconstrained height — Coil + FillWidth
+                            // will return the image's natural rendered height H(i).
+                            val placeable = measurable.measure(
+                                constraints.copy(
+                                    minHeight = 0,
+                                    maxHeight = Constraints.Infinity,
+                                )
+                            )
+                            // H(i): actual rendered height; fall back to square
+                            // (width == H(i)) if the image hasn't loaded yet.
+                            val hi      = if (placeable.height > 0) placeable.height
+                                          else constraints.maxWidth
+                            val cropTop = (hi * CR_TOP).roundToInt()
+                            val hc      = hi - cropTop - (hi * CR_BOTTOM).roundToInt()
+                            // Report H(c) to parent; place image shifted up by cropTop.
+                            layout(placeable.width, hc.coerceAtLeast(1)) {
+                                placeable.placeRelative(0, -cropTop)
+                            }
                         },
                 )
 

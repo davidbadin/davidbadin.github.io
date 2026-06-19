@@ -156,6 +156,19 @@ fun SettingsScreen(
                 color = WhiteAlpha60,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
             )
+
+            val context = LocalContext.current
+            val versionName = remember {
+                context.packageManager
+                    .getPackageInfo(context.packageName, 0)
+                    .versionName ?: ""
+            }
+            Text(
+                text = "version $versionName",
+                style = MaterialTheme.typography.labelSmall,
+                color = WhiteAlpha60,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+            )
         }
     }
 }
