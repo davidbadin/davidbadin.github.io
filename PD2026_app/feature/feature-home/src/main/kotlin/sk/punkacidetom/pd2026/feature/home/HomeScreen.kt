@@ -25,7 +25,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -218,7 +217,6 @@ private fun HomeNavButton(
     Button(
         onClick = onClick,
         modifier = modifier.height(spacing.homeButtonMinHeight),
-        shape = RectangleShape,
         colors = ButtonDefaults.buttonColors(containerColor = White),
     ) {
         FaIcon(name = icon, size = spacing.iconMd, tint = Crimson, modifier = Modifier.padding(end = 6.dp))
@@ -237,7 +235,6 @@ private fun SocialButton(
     Button(
         onClick = onClick,
         modifier = modifier.height(spacing.homeButtonMinHeight),
-        shape = RectangleShape,
         colors = ButtonDefaults.buttonColors(containerColor = White),
     ) {
         FaIcon(
