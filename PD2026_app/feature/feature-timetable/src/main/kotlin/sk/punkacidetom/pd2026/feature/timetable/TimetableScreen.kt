@@ -319,13 +319,13 @@ private fun SlotCard(
             }
             // Heart — always visible, tappable; click is separate from card navigation click
             Icon(
-                imageVector = if (isPlaying && isFavourite) Icons.Filled.Favorite
+                imageVector = if (isFavourite) Icons.Filled.Favorite
                               else Icons.Outlined.FavoriteBorder,
                 contentDescription = null,
                 tint = when {
-                    isPlaying && isFavourite  -> White                      // filled white on red
-                    isPlaying && !isFavourite -> White.copy(alpha = 0.35f)  // gray silhouette on red
-                    else                      -> Navy.copy(alpha = 0.45f)   // gray outline on white/pink
+                    isFavourite             -> White                     // filled white heart — on pink or red bg
+                    isPlaying               -> White.copy(alpha = 0.35f) // gray silhouette on red bg
+                    else                    -> Navy.copy(alpha = 0.45f)  // gray outline on white bg
                 },
                 modifier = Modifier
                     .padding(start = 4.dp)
