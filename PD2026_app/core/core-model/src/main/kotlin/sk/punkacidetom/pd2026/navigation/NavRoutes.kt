@@ -12,3 +12,4 @@ import kotlinx.serialization.Serializable
 @Serializable object TicketsRoute
 @Serializable object SettingsRoute
 @Serializable object SpotifyRoute
+@Serializable object NfctronRoute

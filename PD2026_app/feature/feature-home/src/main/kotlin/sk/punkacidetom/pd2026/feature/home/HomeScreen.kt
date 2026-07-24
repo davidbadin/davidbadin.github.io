@@ -50,7 +50,9 @@ fun HomeScreen(
     onNavigateToBands: () -> Unit,
     onNavigateToTimetable: () -> Unit,
     onNavigateToInfo: () -> Unit,
+    onNavigateToNfctron: () -> Unit,
     onNavigateToTickets: () -> Unit,
+    onNavigateToSpotify: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -96,8 +98,9 @@ fun HomeScreen(
             if (isNewsletterAvailable) {
                 add(Triple(stringResource(R.string.home_btn_newsletter), "newspaper", onNavigateToNews))
             }
-            add(Triple(stringResource(R.string.home_btn_info), "circle-info", onNavigateToInfo))
-            add(Triple(stringResource(R.string.home_btn_tickets), "ticket", onNavigateToTickets))
+            add(Triple(stringResource(R.string.home_btn_info),     "circle-info", onNavigateToInfo))
+            add(Triple(stringResource(R.string.home_btn_nfctron),  "rss",         onNavigateToNfctron))
+            add(Triple(stringResource(R.string.home_btn_tickets),  "ticket",      onNavigateToTickets))
         }
 
         navButtons.forEach { (label, icon, onClick) ->
@@ -136,6 +139,13 @@ fun HomeScreen(
             onClick = {
                 CustomTabsIntent.Builder().build().launchUrl(context, Uri.parse(URL_INSTAGRAM))
             },
+        )
+        Spacer(modifier = Modifier.height(spacing.sm))
+        SocialButton(
+            label = stringResource(R.string.home_social_spotify),
+            icon = "spotify",
+            modifier = Modifier.fillMaxWidth(),
+            onClick = onNavigateToSpotify,
         )
 
         Spacer(modifier = Modifier.height(spacing.xl))

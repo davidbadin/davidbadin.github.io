@@ -117,6 +117,7 @@ dependencies {
     implementation(project(":feature:feature-tickets"))
     implementation(project(":feature:feature-settings"))
     implementation(project(":feature:feature-spotify"))
+    implementation(project(":feature:feature-nfctron"))
 
     // AndroidX
     implementation(libs.androidx.core.ktx)

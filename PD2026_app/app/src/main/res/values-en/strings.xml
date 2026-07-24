@@ -7,6 +7,7 @@
     <string name="nav_home">Home</string>
     <string name="nav_timetable">Schedule</string>
     <string name="nav_spotify">Spotify</string>
+    <string name="nav_nfctron">NFCtron</string>
     <string name="nav_settings">Settings</string>
 
     <!-- Home screen -->

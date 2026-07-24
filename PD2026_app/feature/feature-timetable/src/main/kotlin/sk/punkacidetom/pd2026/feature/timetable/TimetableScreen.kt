@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -276,7 +277,11 @@ private fun SlotCard(
     // Playing: rounded corners + Crimson background (no change)
     // Other:   sharp corners + white background
     val containerShape = if (isPlaying) RoundedCornerShape(spacing.cardCorner) else RectangleShape
-    val containerColor = if (isPlaying) Crimson.copy(alpha = 0.85f) else White
+    val containerColor = when {
+        isPlaying   -> Crimson.copy(alpha = 0.85f)
+        isFavourite -> Color(0xFFFFAFB0)
+        else        -> White
+    }
     val nameColor      = if (isPlaying) White else Navy
     val timeColor      = if (isPlaying) White.copy(alpha = 0.85f) else Crimson
     val genreColor     = if (isPlaying) White.copy(alpha = 0.7f) else Navy.copy(alpha = 0.65f)
@@ -314,13 +319,13 @@ private fun SlotCard(
             }
             // Heart — always visible, tappable; click is separate from card navigation click
             Icon(
-                imageVector = if (isFavourite) Icons.Filled.Favorite
+                imageVector = if (isPlaying && isFavourite) Icons.Filled.Favorite
                               else Icons.Outlined.FavoriteBorder,
                 contentDescription = null,
                 tint = when {
-                    isFavourite -> Crimson
-                    isPlaying   -> White.copy(alpha = 0.75f)
-                    else        -> Navy.copy(alpha = 0.45f)
+                    isPlaying && isFavourite  -> White                      // filled white on red
+                    isPlaying && !isFavourite -> White.copy(alpha = 0.35f)  // gray silhouette on red
+                    else                      -> Navy.copy(alpha = 0.45f)   // gray outline on white/pink
                 },
                 modifier = Modifier
                     .padding(start = 4.dp)
@@ -329,7 +334,7 @@ private fun SlotCard(
             )
         }
         Spacer(modifier = Modifier.height(2.dp))
-        Text(text = timeStr, style = MaterialTheme.typography.labelSmall, color = timeColor)
+        Text(text = timeStr, style = MaterialTheme.typography.labelSmall, color = timeColor, fontWeight = FontWeight.Bold)
         if (band.genre.isNotBlank()) {
             Text(
                 text = band.genre,
