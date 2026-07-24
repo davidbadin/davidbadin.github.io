@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Punkáči deťom 2026 — NFCtron</title>
+    <!-- All resources are loaded from the local asset bundle so this page
+         works in fully offline / first-launch mode.
+         Base URL when served from the app is file:///android_asset/       -->
+    <style>
+        @font-face {
+            font-family: "BebasNeue";
+            src: url("fonts/bebas_neue_regular.ttf") format("truetype");
+            font-weight: normal; font-style: normal; font-display: block;
+        }
+        @font-face {
+            font-family: "Poppins";
+            src: url("fonts/poppins_regular.ttf") format("truetype");
+            font-weight: 400; font-style: normal; font-display: block;
+        }
+        :root {
+            --bg:     #10133D;
+            --accent: #AD1C24;
+            --fg:     #FFFFFF;
+            --muted:  rgba(255,255,255,0.65);
+            --f-big:  "BebasNeue", Impact, sans-serif;
+            --f-body: "Poppins", system-ui, sans-serif;
+        }
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0; padding: 0;
+            background: var(--bg);
+            color: var(--fg);
+            font-family: var(--f-body);
+            line-height: 1.55;
+        }
+        .wrap {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 28px 18px 64px;
+            text-align: center;
+        }
+        .logo { max-width: 280px; width: 70%; height: auto; margin-bottom: 8px; }
+        h1 {
+            font-family: var(--f-big);
+            font-weight: normal;
+            text-transform: uppercase;
+            font-size: clamp(3rem, 14vw, 5rem);
+            color: var(--fg);
+            letter-spacing: 0.06em;
+            margin: 8px 0 4px;
+            line-height: 1;
+        }
+        .rule {
+            height: 4px; background: var(--accent);
+            width: 80px; margin: 0 auto 32px;
+        }
+        p { font-size: 1rem; color: var(--muted); margin: 8px 0 14px; }
+        em { color: var(--fg); font-style: normal; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <img class="logo"
+             src="logo_pd.png"
+             alt="Punkáči deťom 2026">
+        <h1>NFCtron</h1>
+        <div class="rule"></div>
+        <p>Informácie pripravujeme.</p>
+        <p><em>We are working on this section.</em></p>
+    </div>
+</body>
+</html>
