@@ -1,6 +1,9 @@
 package sk.punkacidetom.pd2026.feature.settings
 
 import android.app.Activity
+import android.content.Intent
+import android.os.Build
+import android.provider.Settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,19 +43,20 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val updateState by viewModel.updateState.collectAsState()
-    val spacing = LocalAppSpacing.current
+    val uiState      by viewModel.uiState.collectAsState()
+    val updateState  by viewModel.updateState.collectAsState()
+    val spacing      = LocalAppSpacing.current
+    val context      = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
     // Recreate the Activity after a locale switch so the new language takes effect immediately
-    val activity = LocalContext.current as? Activity
+    val activity = context as? Activity
     LaunchedEffect(Unit) {
         viewModel.recreateActivity.collect { activity?.recreate() }
     }
 
     val updateSuccessMsg = stringResource(R.string.settings_update_success)
-    val updateErrorMsg = stringResource(R.string.settings_update_error)
+    val updateErrorMsg   = stringResource(R.string.settings_update_error)
 
     LaunchedEffect(updateState) {
         when (updateState) {
@@ -128,6 +132,58 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(spacing.lg))
 
+            // Band-start notifications toggle
+            SectionLabel(stringResource(R.string.settings_notifications))
+            Spacer(modifier = Modifier.height(spacing.sm))
+            Row {
+                ToggleButton(
+                    label = stringResource(R.string.settings_notifications_off),
+                    selected = !uiState.isNotificationsEnabled,
+                    modifier = Modifier.weight(1f),
+                ) { viewModel.setNotificationsEnabled(false) }
+                ToggleButton(
+                    label = stringResource(R.string.settings_notifications_on),
+                    selected = uiState.isNotificationsEnabled,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = spacing.sm),
+                ) { viewModel.setNotificationsEnabled(true) }
+            }
+
+            // Exact-alarm permission warning (Android 12+, shown only when relevant)
+            if (uiState.isNotificationsEnabled && uiState.isExactAlarmPermissionMissing) {
+                Spacer(modifier = Modifier.height(spacing.sm))
+                Text(
+                    text = stringResource(R.string.settings_exact_alarm_warning),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = WhiteAlpha60,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Spacer(modifier = Modifier.height(spacing.sm))
+                Button(
+                    onClick = {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            context.startActivity(
+                                Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                            )
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(spacing.buttonMinHeight),
+                    colors = ButtonDefaults.buttonColors(containerColor = NavyLight),
+                ) {
+                    Text(
+                        text = stringResource(R.string.settings_exact_alarm_grant),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = White,
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(spacing.lg))
+
             // Update data
             Button(
                 onClick = { viewModel.triggerDataUpdate() },
@@ -157,7 +213,6 @@ fun SettingsScreen(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
             )
 
-            val context = LocalContext.current
             val versionName = remember {
                 context.packageManager
                     .getPackageInfo(context.packageName, 0)
@@ -195,7 +250,7 @@ private fun ToggleButton(
         modifier = modifier.height(spacing.buttonMinHeight),
         colors = ButtonDefaults.buttonColors(
             containerColor = if (selected) Crimson else NavyLight,
-            contentColor = if (selected) White else WhiteAlpha60,
+            contentColor   = if (selected) White   else WhiteAlpha60,
         ),
     ) {
         Text(text = label, style = MaterialTheme.typography.labelLarge)

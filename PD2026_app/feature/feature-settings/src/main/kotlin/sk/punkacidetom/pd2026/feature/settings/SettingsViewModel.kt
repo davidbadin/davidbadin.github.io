@@ -9,12 +9,14 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import sk.punkacidetom.pd2026.core.data.repository.BandRepositoryImpl
 import sk.punkacidetom.pd2026.core.data.repository.NewsletterRepository
 import sk.punkacidetom.pd2026.core.data.repository.UserPreferencesRepository
 import sk.punkacidetom.pd2026.core.i18n.LocaleHelper
+import sk.punkacidetom.pd2026.core.model.BandNotificationScheduler
 import javax.inject.Inject
 
 enum class UpdateState { IDLE, UPDATING, SUCCESS, ERROR }
@@ -22,6 +24,8 @@ enum class UpdateState { IDLE, UPDATING, SUCCESS, ERROR }
 data class SettingsUiState(
     val language: String = "sk",
     val isFontLarge: Boolean = false,
+    val isNotificationsEnabled: Boolean = true,
+    val isExactAlarmPermissionMissing: Boolean = false,
     val updateState: UpdateState = UpdateState.IDLE,
 )
 
@@ -31,13 +35,21 @@ class SettingsViewModel @Inject constructor(
     private val bandRepository: BandRepositoryImpl,
     private val newsletterRepository: NewsletterRepository,
     private val localeHelper: LocaleHelper,
+    private val bandNotificationScheduler: BandNotificationScheduler,
 ) : ViewModel() {
 
     val uiState: StateFlow<SettingsUiState> = combine(
         userPrefs.language,
         userPrefs.isFontLarge,
-    ) { lang, fontLarge ->
-        SettingsUiState(language = lang, isFontLarge = fontLarge)
+        userPrefs.notificationsEnabled,
+        userPrefs.exactAlarmPermissionMissing,
+    ) { lang, fontLarge, notifEnabled, exactAlarmMissing ->
+        SettingsUiState(
+            language = lang,
+            isFontLarge = fontLarge,
+            isNotificationsEnabled = notifEnabled,
+            isExactAlarmPermissionMissing = exactAlarmMissing,
+        )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SettingsUiState())
 
     private val _updateState = MutableStateFlow(UpdateState.IDLE)
@@ -57,6 +69,10 @@ class SettingsViewModel @Inject constructor(
             userPrefs.setLanguage(lang)
             localeHelper.applyLocale(lang)
             _recreateActivity.tryEmit(Unit)
+            // Reschedule all alarms so new language is baked into the pending intents
+            if (userPrefs.notificationsEnabled.first()) {
+                bandNotificationScheduler.rescheduleAll()
+            }
         }
     }
 
@@ -66,10 +82,26 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun setNotificationsEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            userPrefs.setNotificationsEnabled(enabled)
+            if (enabled) {
+                val favouriteIds = userPrefs.favouriteIds.first()
+                val allBands     = bandRepository.observeBands().first()
+                favouriteIds.forEach { id ->
+                    val band = allBands.find { it.id == id } ?: return@forEach
+                    bandNotificationScheduler.scheduleNotification(band)
+                }
+            } else {
+                bandNotificationScheduler.cancelAllNotifications()
+            }
+        }
+    }
+
     fun triggerDataUpdate() {
         viewModelScope.launch {
             _updateState.value = UpdateState.UPDATING
-            val bandResult = bandRepository.forceRefresh()
+            val bandResult       = bandRepository.forceRefresh()
             val newsletterResult = newsletterRepository.refreshManifest()
             _updateState.value =
                 if (bandResult.isSuccess && newsletterResult.isSuccess) UpdateState.SUCCESS

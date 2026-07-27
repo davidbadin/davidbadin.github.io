@@ -14,6 +14,7 @@ android {
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -24,6 +25,12 @@ android {
 }
 
 dependencies {
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    // Internal modules
+    implementation(project(":core:core-model"))  // Band, BandNotificationScheduler, Stages
+    implementation(project(":core:core-data"))   // BandRepository, UserPreferencesRepository
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)

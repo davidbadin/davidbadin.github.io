@@ -8,11 +8,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import sk.punkacidetom.pd2026.core.data.repository.BandRepository
 import sk.punkacidetom.pd2026.core.data.repository.UserPreferencesRepository
 import sk.punkacidetom.pd2026.core.model.Band
+import sk.punkacidetom.pd2026.core.model.BandNotificationScheduler
 import sk.punkacidetom.pd2026.navigation.BandDetailRoute
 import javax.inject.Inject
 
@@ -27,6 +29,7 @@ class BandDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val bandRepository: BandRepository,
     private val userPrefs: UserPreferencesRepository,
+    private val bandNotificationScheduler: BandNotificationScheduler,
 ) : ViewModel() {
 
     private val bandId: Int = savedStateHandle.toRoute<BandDetailRoute>().bandId
@@ -44,6 +47,17 @@ class BandDetailViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), BandDetailUiState())
 
     fun toggleFavourite() {
-        viewModelScope.launch { userPrefs.toggleFavourite(bandId) }
+        viewModelScope.launch {
+            val wasFavourite = uiState.value.isFavourite
+            val band = uiState.value.band ?: return@launch
+            userPrefs.toggleFavourite(bandId)
+            if (userPrefs.notificationsEnabled.first()) {
+                if (wasFavourite) {
+                    bandNotificationScheduler.cancelNotification(bandId)
+                } else {
+                    bandNotificationScheduler.scheduleNotification(band)
+                }
+            }
+        }
     }
 }

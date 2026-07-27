@@ -8,12 +8,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import sk.punkacidetom.pd2026.core.data.repository.BandRepository
 import sk.punkacidetom.pd2026.core.data.repository.UserPreferencesRepository
 import sk.punkacidetom.pd2026.core.model.Band
+import sk.punkacidetom.pd2026.core.model.BandNotificationScheduler
 import sk.punkacidetom.pd2026.core.model.FestivalDay
 import sk.punkacidetom.pd2026.core.model.FestivalInfo
 import java.time.LocalDateTime
@@ -31,6 +33,7 @@ data class TimetableUiState(
 class TimetableViewModel @Inject constructor(
     private val bandRepository: BandRepository,
     private val userPrefs: UserPreferencesRepository,
+    private val bandNotificationScheduler: BandNotificationScheduler,
 ) : ViewModel() {
 
     private val _selectedDayIndex = MutableStateFlow(0)
@@ -77,6 +80,18 @@ class TimetableViewModel @Inject constructor(
     }
 
     fun toggleFavourite(bandId: Int) {
-        viewModelScope.launch { userPrefs.toggleFavourite(bandId) }
+        viewModelScope.launch {
+            val wasFavourite = uiState.value.favouriteIds.contains(bandId)
+            userPrefs.toggleFavourite(bandId)
+            if (userPrefs.notificationsEnabled.first()) {
+                if (wasFavourite) {
+                    bandNotificationScheduler.cancelNotification(bandId)
+                } else {
+                    val band = bandRepository.observeBands().first().find { it.id == bandId }
+                        ?: return@launch
+                    bandNotificationScheduler.scheduleNotification(band)
+                }
+            }
+        }
     }
 }

@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import sk.punkacidetom.pd2026.core.data.repository.BandRepositoryImpl
 import sk.punkacidetom.pd2026.core.data.repository.UserPreferencesRepository
 import sk.punkacidetom.pd2026.core.i18n.LocaleHelper
+import sk.punkacidetom.pd2026.core.notifications.NotificationChannelInitializer
 import sk.punkacidetom.pd2026.core.ui.components.PD2026Scaffold
 import sk.punkacidetom.pd2026.core.ui.theme.PD2026Theme
 import sk.punkacidetom.pd2026.navigation.AppBottomBar
@@ -52,6 +53,7 @@ class MainActivity : AppCompatActivity() {
             localeHelper.applyLocale(lang)
         }
 
+        NotificationChannelInitializer.createChannels(this)
         requestNotificationPermissionIfNeeded()
 
         setContent {
