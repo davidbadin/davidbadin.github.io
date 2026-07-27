@@ -20,6 +20,7 @@ import sk.punkacidetom.pd2026.core.data.remote.CsvSheetFetcher
 import sk.punkacidetom.pd2026.core.data.remote.XlsxAssetReader
 import sk.punkacidetom.pd2026.core.data.util.FestivalDayCalculator
 import sk.punkacidetom.pd2026.core.model.Band
+import dagger.Lazy
 import sk.punkacidetom.pd2026.core.model.BandNotificationScheduler
 import sk.punkacidetom.pd2026.core.model.FestivalInfo
 import javax.inject.Inject
@@ -35,7 +36,7 @@ class BandRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     private val xlsxReader: XlsxAssetReader,
     private val newsletterRepository: NewsletterRepository,
-    private val bandNotificationScheduler: BandNotificationScheduler,
+    private val bandNotificationScheduler: Lazy<BandNotificationScheduler>,
 ) : BandRepository {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -109,6 +110,6 @@ class BandRepositoryImpl @Inject constructor(
         scope.launch { newsletterRepository.refreshManifest() }
 
         // Sync scheduled band alarms: cancel removed bands, reschedule changed start times
-        scope.launch { bandNotificationScheduler.syncWithUpdatedBands(bands) }
+        scope.launch { bandNotificationScheduler.get().syncWithUpdatedBands(bands) }
     }
 }
