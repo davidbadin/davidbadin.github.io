@@ -24,12 +24,12 @@ val keystoreProps = Properties().also { props ->
 
 android {
     namespace = "sk.punkacidetom.pd2026"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "sk.punkacidetom.pd2026"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 7
         versionName = "1.0.7"
 

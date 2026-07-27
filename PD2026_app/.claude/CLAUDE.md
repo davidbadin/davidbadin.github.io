@@ -246,7 +246,7 @@ Gradle build dirs are redirected to `C:\Users\FS0605\AndroidBuild\PD2026\` to av
 | `versionCode` | 4 |
 | `versionName` | 1.0.0 |
 | `minSdk` | 24 |
-| `targetSdk` / `compileSdk` | 35 |
+| `targetSdk` / `compileSdk` | 36 |
 | Last merged PR | #54 — offline info HTML fix |
 | Active branch | `master` |
 
