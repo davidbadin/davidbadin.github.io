@@ -10,16 +10,18 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,13 +51,6 @@ class MainActivity : AppCompatActivity() {
     /** Tracks exact-alarm permission state across resume cycles (in-memory only). */
     private var hadExactAlarmPermission = false
 
-    /**
-     * Dialog state owned at Activity level so [onResume] can trigger it without
-     * a LaunchedEffect inside setContent — avoids the dialog being swallowed by
-     * the initial navigation transition during festival mode.
-     */
-    private val showExactAlarmDialog = mutableStateOf(false)
-
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { /* granted or denied — app works either way */ }
@@ -76,6 +71,8 @@ class MainActivity : AppCompatActivity() {
         requestNotificationPermissionIfNeeded()
 
         setContent {
+            val viewModel: MainActivityViewModel = hiltViewModel()
+
             val isFontLarge by userPrefs.isFontLarge.collectAsState(initial = false)
             val fontScale = if (isFontLarge) 1.60f else 1.12f
 
@@ -87,53 +84,43 @@ class MainActivity : AppCompatActivity() {
                 sk.punkacidetom.pd2026.core.model.FestivalInfo.Phase.DURING
             ) TimetableRoute else HomeRoute
 
-            // Read Activity-level state (set from onResume, not from a LaunchedEffect)
-            val showAlarmDialog by showExactAlarmDialog
+            val showDialog by viewModel.showExactAlarmDialog.collectAsState()
 
             PD2026Theme(fontScaleMultiplier = fontScale) {
-                if (showAlarmDialog) {
-                    AlertDialog(
-                        onDismissRequest = { showExactAlarmDialog.value = false },
-                        title   = { Text(stringResource(R.string.perm_alarm_dialog_title)) },
-                        text    = { Text(stringResource(R.string.perm_alarm_dialog_body)) },
-                        confirmButton = {
-                            TextButton(onClick = {
-                                showExactAlarmDialog.value = false
+                Box(modifier = Modifier.fillMaxSize()) {
+                    val navController = rememberNavController()
+                    PD2026Scaffold(
+                        bands = bands,
+                        bottomBar = { AppBottomBar(navController) },
+                        onNowPlayingBandClick = { bandId ->
+                            navController.navigate(
+                                sk.punkacidetom.pd2026.navigation.BandDetailRoute(bandId)
+                            )
+                        },
+                    ) { innerPadding ->
+                        AppNavHost(
+                            navController = navController,
+                            startDestination = startDestination,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(innerPadding),
+                        )
+                    }
+
+                    if (showDialog) {
+                        ExactAlarmRationaleDialog(
+                            onConfirm = {
+                                viewModel.onExactAlarmDialogConfirmed()
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                                     startActivity(
                                         Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
                                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
                                     )
                                 }
-                            }) {
-                                Text(stringResource(R.string.perm_alarm_dialog_confirm))
-                            }
-                        },
-                        dismissButton = {
-                            TextButton(onClick = { showExactAlarmDialog.value = false }) {
-                                Text(stringResource(R.string.perm_alarm_dialog_dismiss))
-                            }
-                        },
-                    )
-                }
-
-                val navController = rememberNavController()
-                PD2026Scaffold(
-                    bands = bands,
-                    bottomBar = { AppBottomBar(navController) },
-                    onNowPlayingBandClick = { bandId ->
-                        navController.navigate(
-                            sk.punkacidetom.pd2026.navigation.BandDetailRoute(bandId)
+                            },
+                            onDismiss = { viewModel.onExactAlarmDialogDismissed() },
                         )
-                    },
-                ) { innerPadding ->
-                    AppNavHost(
-                        navController = navController,
-                        startDestination = startDestination,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding),
-                    )
+                    }
                 }
             }
         }
@@ -148,16 +135,6 @@ class MainActivity : AppCompatActivity() {
 
         val hasPermissionNow = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
             getSystemService(AlarmManager::class.java).canScheduleExactAlarms() else true
-
-        // Show one-time rationale dialog if exact-alarm permission is missing and not yet shown
-        if (!hasPermissionNow) {
-            lifecycleScope.launch {
-                if (!userPrefs.exactAlarmDialogShown.first()) {
-                    userPrefs.setExactAlarmDialogShown()
-                    showExactAlarmDialog.value = true
-                }
-            }
-        }
 
         // Reschedule all favourite-band alarms when exact-alarm permission is just granted
         if (!hadExactAlarmPermission && hasPermissionNow) {
@@ -175,4 +152,26 @@ class MainActivity : AppCompatActivity() {
             notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
+}
+
+@Composable
+private fun ExactAlarmRationaleDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title   = { Text(stringResource(R.string.perm_alarm_dialog_title)) },
+        text    = { Text(stringResource(R.string.perm_alarm_dialog_body)) },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(stringResource(R.string.perm_alarm_dialog_confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.perm_alarm_dialog_dismiss))
+            }
+        },
+    )
 }
