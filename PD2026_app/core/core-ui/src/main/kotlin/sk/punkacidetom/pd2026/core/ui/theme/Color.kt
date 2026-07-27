@@ -15,3 +15,4 @@ val CrimsonLight = Color(0xFFD42830)
 val WhiteAlpha60 = Color(0x99FFFFFF)
 val WhiteAlpha30 = Color(0x4DFFFFFF)
 val OnCrimson = Color(0xFFFFFFFF)
+val NotificationGreen = Color(0xFF2E7D32) // confirm action in exact-alarm rationale dialog

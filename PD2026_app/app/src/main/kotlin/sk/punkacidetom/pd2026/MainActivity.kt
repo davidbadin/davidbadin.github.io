@@ -14,13 +14,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import sk.punkacidetom.pd2026.core.ui.theme.Crimson
+import sk.punkacidetom.pd2026.core.ui.theme.NavyLight
+import sk.punkacidetom.pd2026.core.ui.theme.NotificationGreen
+import sk.punkacidetom.pd2026.core.ui.theme.White
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
@@ -161,15 +166,28 @@ private fun ExactAlarmRationaleDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title   = { Text(stringResource(R.string.perm_alarm_dialog_title)) },
-        text    = { Text(stringResource(R.string.perm_alarm_dialog_body)) },
+        containerColor = NavyLight,
+        title   = { Text(stringResource(R.string.perm_alarm_dialog_title), color = White) },
+        text    = { Text(stringResource(R.string.perm_alarm_dialog_body),  color = White) },
         confirmButton = {
-            TextButton(onClick = onConfirm) {
+            Button(
+                onClick = onConfirm,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = NotificationGreen,
+                    contentColor   = White,
+                ),
+            ) {
                 Text(stringResource(R.string.perm_alarm_dialog_confirm))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Crimson,
+                    contentColor   = White,
+                ),
+            ) {
                 Text(stringResource(R.string.perm_alarm_dialog_dismiss))
             }
         },
