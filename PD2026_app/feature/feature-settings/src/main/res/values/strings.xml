@@ -7,9 +7,7 @@
     <string name="settings_font_size">Veľkosť písma</string>
     <string name="settings_font_normal">Normálna</string>
     <string name="settings_font_large">Veľká</string>
-    <string name="settings_notifications">Notifikácie kapiel</string>
-    <string name="settings_notifications_on">Zapnuté</string>
-    <string name="settings_notifications_off">Vypnuté</string>
+    <string name="settings_notifications">Notifikácie obľúbených kapiel</string>
     <string name="settings_exact_alarm_warning">Pre presné notifikácie je potrebné povolenie pre plánované alarmy.</string>
     <string name="settings_exact_alarm_grant">Udeliť povolenie</string>
     <string name="settings_update_data">Aktualizovať dáta</string>

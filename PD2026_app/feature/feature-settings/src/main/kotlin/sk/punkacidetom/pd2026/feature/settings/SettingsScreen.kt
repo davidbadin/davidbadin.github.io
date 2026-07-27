@@ -19,6 +19,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -133,21 +135,26 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(spacing.lg))
 
             // Band-start notifications toggle
-            SectionLabel(stringResource(R.string.settings_notifications))
-            Spacer(modifier = Modifier.height(spacing.sm))
-            Row {
-                ToggleButton(
-                    label = stringResource(R.string.settings_notifications_off),
-                    selected = !uiState.isNotificationsEnabled,
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResource(R.string.settings_notifications),
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = White,
                     modifier = Modifier.weight(1f),
-                ) { viewModel.setNotificationsEnabled(false) }
-                ToggleButton(
-                    label = stringResource(R.string.settings_notifications_on),
-                    selected = uiState.isNotificationsEnabled,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = spacing.sm),
-                ) { viewModel.setNotificationsEnabled(true) }
+                )
+                Switch(
+                    checked = uiState.isNotificationsEnabled,
+                    onCheckedChange = { viewModel.setNotificationsEnabled(it) },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor   = White,
+                        checkedTrackColor   = Crimson,
+                        uncheckedThumbColor = WhiteAlpha60,
+                        uncheckedTrackColor = NavyLight,
+                    ),
+                )
             }
 
             // Exact-alarm permission warning (Android 12+, shown only when relevant)

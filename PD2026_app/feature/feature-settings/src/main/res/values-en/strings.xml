@@ -7,9 +7,7 @@
     <string name="settings_font_size">Font size</string>
     <string name="settings_font_normal">Normal</string>
     <string name="settings_font_large">Large</string>
-    <string name="settings_notifications">Band notifications</string>
-    <string name="settings_notifications_on">On</string>
-    <string name="settings_notifications_off">Off</string>
+    <string name="settings_notifications">Favorite bands notifications</string>
     <string name="settings_exact_alarm_warning">Exact alarm permission is required for precise notifications.</string>
     <string name="settings_exact_alarm_grant">Grant permission</string>
     <string name="settings_update_data">Update data</string>

@@ -80,6 +80,12 @@
     <string name="spotify_open_app">Otvoriť v Spotify</string>
     <string name="spotify_install_prompt">Nainštalujte Spotify pre prehrávanie</string>
 
+    <!-- Exact alarm permission one-time dialog -->
+    <string name="perm_alarm_dialog_title">Nezmeškaj svoju kapelu!</string>
+    <string name="perm_alarm_dialog_body">Upozorníme ťa pred tým, ako tvoje kapely vybehnú na pódium — najprv však musíš povoliť oprávnenie v nastaveniach telefónu.</string>
+    <string name="perm_alarm_dialog_confirm">Jasné, ideme na to!</string>
+    <string name="perm_alarm_dialog_dismiss">Teraz nie</string>
+
     <!-- Shared / generic -->
     <string name="loading">Načítava sa…</string>
     <string name="error_generic">Niečo sa pokazilo.</string>

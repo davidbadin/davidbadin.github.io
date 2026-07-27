@@ -18,7 +18,8 @@ private val FAVOURITE_IDS_KEY         = stringSetPreferencesKey("favourite_ids")
 private val NOTIFICATIONS_ENABLED_KEY = booleanPreferencesKey("notifications_enabled")
 private val EXACT_ALARM_MISSING_KEY   = booleanPreferencesKey("exact_alarm_permission_missing")
 // Encodes Map<Int, Long> as Set<"bandId:epochMs"> — DataStore has no native map type
-private val SCHEDULED_NOTIFICATIONS_KEY = stringSetPreferencesKey("scheduled_band_notifications")
+private val SCHEDULED_NOTIFICATIONS_KEY  = stringSetPreferencesKey("scheduled_band_notifications")
+private val EXACT_ALARM_DIALOG_SHOWN_KEY = booleanPreferencesKey("exact_alarm_dialog_shown")
 
 @Singleton
 class UserPreferencesRepository @Inject constructor(
@@ -34,6 +35,10 @@ class UserPreferencesRepository @Inject constructor(
     }
     val exactAlarmPermissionMissing: Flow<Boolean> = dataStore.data.map {
         it[EXACT_ALARM_MISSING_KEY] ?: false
+    }
+    /** `true` once the one-time exact-alarm rationale dialog has been shown. Never reset. */
+    val exactAlarmDialogShown: Flow<Boolean> = dataStore.data.map {
+        it[EXACT_ALARM_DIALOG_SHOWN_KEY] ?: false
     }
 
     /**
@@ -88,6 +93,11 @@ class UserPreferencesRepository @Inject constructor(
 
     suspend fun setExactAlarmPermissionMissing(missing: Boolean) {
         dataStore.edit { it[EXACT_ALARM_MISSING_KEY] = missing }
+    }
+
+    /** Marks the one-time exact-alarm rationale dialog as shown. Idempotent. */
+    suspend fun setExactAlarmDialogShown() {
+        dataStore.edit { it[EXACT_ALARM_DIALOG_SHOWN_KEY] = true }
     }
 
     // -------------------------------------------------------------------------
