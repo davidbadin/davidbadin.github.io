@@ -1,13 +1,18 @@
 package sk.punkacidetom.pd2026.feature.settings
 
+import android.app.AlarmManager
+import android.content.Context
+import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
@@ -31,12 +36,30 @@ data class SettingsUiState(
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val userPrefs: UserPreferencesRepository,
     private val bandRepository: BandRepositoryImpl,
     private val newsletterRepository: NewsletterRepository,
     private val localeHelper: LocaleHelper,
     private val bandNotificationScheduler: BandNotificationScheduler,
 ) : ViewModel() {
+
+    // -------------------------------------------------------------------------
+    // Exact-alarm permission — refreshed on every ON_RESUME so the button
+    // disappears immediately after the user grants the permission and returns.
+    // -------------------------------------------------------------------------
+
+    private fun checkExactAlarmPermission(): Boolean =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            context.getSystemService(AlarmManager::class.java).canScheduleExactAlarms()
+        else true // permission concept does not exist below API 31
+
+    private val _canScheduleExactAlarms = MutableStateFlow(checkExactAlarmPermission())
+    val canScheduleExactAlarms: StateFlow<Boolean> = _canScheduleExactAlarms.asStateFlow()
+
+    fun refreshExactAlarmPermission() {
+        _canScheduleExactAlarms.value = checkExactAlarmPermission()
+    }
 
     val uiState: StateFlow<SettingsUiState> = combine(
         userPrefs.language,

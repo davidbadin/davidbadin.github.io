@@ -27,6 +27,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -45,11 +47,18 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
-    val uiState      by viewModel.uiState.collectAsState()
-    val updateState  by viewModel.updateState.collectAsState()
-    val spacing      = LocalAppSpacing.current
-    val context      = LocalContext.current
-    val snackbarHostState = remember { SnackbarHostState() }
+    val uiState                by viewModel.uiState.collectAsState()
+    val updateState            by viewModel.updateState.collectAsState()
+    val canScheduleExactAlarms by viewModel.canScheduleExactAlarms.collectAsState()
+    val spacing                = LocalAppSpacing.current
+    val context                = LocalContext.current
+    val snackbarHostState      = remember { SnackbarHostState() }
+
+    // Recheck the permission every time this screen is resumed so the button
+    // disappears automatically after the user grants it and navigates back.
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        viewModel.refreshExactAlarmPermission()
+    }
 
     // Recreate the Activity after a locale switch so the new language takes effect immediately
     val activity = context as? Activity
@@ -190,6 +199,31 @@ fun SettingsScreen(
             }
 
             Spacer(modifier = Modifier.height(spacing.lg))
+
+            // Android permissions button — shown only when exact-alarm permission is not granted (API 31+)
+            if (!canScheduleExactAlarms) {
+                Button(
+                    onClick = {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            context.startActivity(
+                                Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                            )
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(spacing.buttonMinHeight),
+                    colors = ButtonDefaults.buttonColors(containerColor = Crimson),
+                ) {
+                    Text(
+                        text = stringResource(R.string.settings_android_permissions),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = White,
+                    )
+                }
+                Spacer(modifier = Modifier.height(spacing.lg))
+            }
 
             // Update data
             Button(
