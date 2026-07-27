@@ -10,7 +10,6 @@
     <string name="settings_notifications">Notifikácie obľúbených kapiel</string>
     <string name="settings_exact_alarm_warning">Pre presné notifikácie je potrebné povolenie pre plánované alarmy.</string>
     <string name="settings_exact_alarm_grant">Udeliť povolenie</string>
-    <string name="settings_android_permissions">Android oprávnenia</string>
     <string name="settings_update_data">Aktualizovať dáta</string>
     <string name="settings_updating">Aktualizujem…</string>
     <string name="settings_update_success">Dáta boli aktualizované.</string>
