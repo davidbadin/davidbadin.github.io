@@ -15,12 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.lifecycleScope
@@ -51,6 +48,13 @@ class MainActivity : AppCompatActivity() {
 
     /** Tracks exact-alarm permission state across resume cycles (in-memory only). */
     private var hadExactAlarmPermission = false
+
+    /**
+     * Dialog state owned at Activity level so [onResume] can trigger it without
+     * a LaunchedEffect inside setContent — avoids the dialog being swallowed by
+     * the initial navigation transition during festival mode.
+     */
+    private val showExactAlarmDialog = mutableStateOf(false)
 
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -83,29 +87,18 @@ class MainActivity : AppCompatActivity() {
                 sk.punkacidetom.pd2026.core.model.FestivalInfo.Phase.DURING
             ) TimetableRoute else HomeRoute
 
-            // One-time exact-alarm permission rationale dialog
-            var showExactAlarmDialog by remember { mutableStateOf(false) }
-            LaunchedEffect(Unit) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    val alarmManager = getSystemService(AlarmManager::class.java)
-                    if (!alarmManager.canScheduleExactAlarms() &&
-                        !userPrefs.exactAlarmDialogShown.first()
-                    ) {
-                        userPrefs.setExactAlarmDialogShown()
-                        showExactAlarmDialog = true
-                    }
-                }
-            }
+            // Read Activity-level state (set from onResume, not from a LaunchedEffect)
+            val showAlarmDialog by showExactAlarmDialog
 
             PD2026Theme(fontScaleMultiplier = fontScale) {
-                if (showExactAlarmDialog) {
+                if (showAlarmDialog) {
                     AlertDialog(
-                        onDismissRequest = { showExactAlarmDialog = false },
+                        onDismissRequest = { showExactAlarmDialog.value = false },
                         title   = { Text(stringResource(R.string.perm_alarm_dialog_title)) },
                         text    = { Text(stringResource(R.string.perm_alarm_dialog_body)) },
                         confirmButton = {
                             TextButton(onClick = {
-                                showExactAlarmDialog = false
+                                showExactAlarmDialog.value = false
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                                     startActivity(
                                         Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
@@ -117,7 +110,7 @@ class MainActivity : AppCompatActivity() {
                             }
                         },
                         dismissButton = {
-                            TextButton(onClick = { showExactAlarmDialog = false }) {
+                            TextButton(onClick = { showExactAlarmDialog.value = false }) {
                                 Text(stringResource(R.string.perm_alarm_dialog_dismiss))
                             }
                         },
@@ -152,19 +145,29 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             bandRepository.refreshIfStale()
         }
-        // Reschedule all favourite-band alarms when exact-alarm permission is just granted
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val alarmManager = getSystemService(AlarmManager::class.java)
-            val hasPermissionNow = alarmManager.canScheduleExactAlarms()
-            if (!hadExactAlarmPermission && hasPermissionNow) {
-                lifecycleScope.launch {
-                    if (userPrefs.notificationsEnabled.first()) {
-                        bandNotificationScheduler.rescheduleAll()
-                    }
+
+        val hasPermissionNow = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            getSystemService(AlarmManager::class.java).canScheduleExactAlarms() else true
+
+        // Show one-time rationale dialog if exact-alarm permission is missing and not yet shown
+        if (!hasPermissionNow) {
+            lifecycleScope.launch {
+                if (!userPrefs.exactAlarmDialogShown.first()) {
+                    userPrefs.setExactAlarmDialogShown()
+                    showExactAlarmDialog.value = true
                 }
             }
-            hadExactAlarmPermission = hasPermissionNow
         }
+
+        // Reschedule all favourite-band alarms when exact-alarm permission is just granted
+        if (!hadExactAlarmPermission && hasPermissionNow) {
+            lifecycleScope.launch {
+                if (userPrefs.notificationsEnabled.first()) {
+                    bandNotificationScheduler.rescheduleAll()
+                }
+            }
+        }
+        hadExactAlarmPermission = hasPermissionNow
     }
 
     private fun requestNotificationPermissionIfNeeded() {
