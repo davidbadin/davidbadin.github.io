@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
 import sk.punkacidetom.pd2026.core.data.repository.BandRepository
 import sk.punkacidetom.pd2026.core.data.repository.UserPreferencesRepository
 import sk.punkacidetom.pd2026.core.model.Band
@@ -116,7 +117,11 @@ class BandNotificationSchedulerImpl @Inject constructor(
     override suspend fun rescheduleAll() {
         val scheduled = userPrefs.getScheduledNotifications()
         if (scheduled.isEmpty()) return
-        val allBands = bandRepository.observeBands().first()
+        // Wait for the first non-empty emission — the very first emission after
+        // reboot can be empty while DataStore is still loading the band cache.
+        val allBands = withTimeoutOrNull(30_000) {
+            bandRepository.observeBands().first { it.isNotEmpty() }
+        } ?: return
         scheduled.keys.forEach { bandId ->
             val band = allBands.find { it.id == bandId } ?: return@forEach
             scheduleNotification(band)
