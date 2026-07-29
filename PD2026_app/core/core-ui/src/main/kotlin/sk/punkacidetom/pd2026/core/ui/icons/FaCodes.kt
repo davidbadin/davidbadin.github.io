@@ -41,6 +41,7 @@ val FaRegularCodes: Map<String, Int> = mapOf(
     "link" to 0xF0C1,
     "list" to 0xF03A,
     "circle" to 0xF111,      // ✓ present
+    "rss" to 0xF192,         // → circle-dot (0xF09E/wifi/tower-broadcast all missing; closest available concentric-circle glyph)
 )
 
 // Font Awesome 7 Free — Brands weight codepoints

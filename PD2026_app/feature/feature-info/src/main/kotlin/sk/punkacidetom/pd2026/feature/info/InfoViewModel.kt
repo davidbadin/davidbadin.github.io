@@ -15,7 +15,7 @@ import okhttp3.Request
 import java.io.File
 import javax.inject.Inject
 
-private const val INFO_URL = "https://davidbadin.github.io/PD2026_app/info.html"
+private const val INFO_URL = "https://davidbadin.github.io/PD2026_app/pd_resources/info.html"
 private const val CACHE_FILE = "info_cache.html"
 private const val ASSET_FILE = "info.html"
 
@@ -29,7 +29,7 @@ private const val ASSET_BASE_URL = "file:///android_asset/"
  * Base URL used when serving content fetched from the network / cache.
  * Relative paths in the server-supplied HTML resolve against GitHub Pages.
  */
-private const val REMOTE_BASE_URL = "https://davidbadin.github.io/PD2026_app/"
+private const val REMOTE_BASE_URL = "https://davidbadin.github.io/PD2026_app/pd_resources/"
 
 data class InfoContent(
     val html: String,

@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -276,7 +277,11 @@ private fun SlotCard(
     // Playing: rounded corners + Crimson background (no change)
     // Other:   sharp corners + white background
     val containerShape = if (isPlaying) RoundedCornerShape(spacing.cardCorner) else RectangleShape
-    val containerColor = if (isPlaying) Crimson.copy(alpha = 0.85f) else White
+    val containerColor = when {
+        isPlaying   -> Crimson.copy(alpha = 0.85f)
+        isFavourite -> Color(0xFFFFAFB0)
+        else        -> White
+    }
     val nameColor      = if (isPlaying) White else Navy
     val timeColor      = if (isPlaying) White.copy(alpha = 0.85f) else Crimson
     val genreColor     = if (isPlaying) White.copy(alpha = 0.7f) else Navy.copy(alpha = 0.65f)
@@ -318,9 +323,9 @@ private fun SlotCard(
                               else Icons.Outlined.FavoriteBorder,
                 contentDescription = null,
                 tint = when {
-                    isFavourite -> Crimson
-                    isPlaying   -> White.copy(alpha = 0.75f)
-                    else        -> Navy.copy(alpha = 0.45f)
+                    isFavourite             -> White                     // filled white heart — on pink or red bg
+                    isPlaying               -> White.copy(alpha = 0.35f) // gray silhouette on red bg
+                    else                    -> Navy.copy(alpha = 0.45f)  // gray outline on white bg
                 },
                 modifier = Modifier
                     .padding(start = 4.dp)
@@ -329,7 +334,7 @@ private fun SlotCard(
             )
         }
         Spacer(modifier = Modifier.height(2.dp))
-        Text(text = timeStr, style = MaterialTheme.typography.labelSmall, color = timeColor)
+        Text(text = timeStr, style = MaterialTheme.typography.labelSmall, color = timeColor, fontWeight = FontWeight.Bold)
         if (band.genre.isNotBlank()) {
             Text(
                 text = band.genre,

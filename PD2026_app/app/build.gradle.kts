@@ -24,14 +24,14 @@ val keystoreProps = Properties().also { props ->
 
 android {
     namespace = "sk.punkacidetom.pd2026"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "sk.punkacidetom.pd2026"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 7
-        versionName = "1.0.7"
+        targetSdk = 36
+        versionCode = 9
+        versionName = "1.0.9"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -117,6 +117,7 @@ dependencies {
     implementation(project(":feature:feature-tickets"))
     implementation(project(":feature:feature-settings"))
     implementation(project(":feature:feature-spotify"))
+    implementation(project(":feature:feature-nfctron"))
 
     // AndroidX
     implementation(libs.androidx.core.ktx)

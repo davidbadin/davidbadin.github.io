@@ -5,6 +5,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- POST_NOTIFICATIONS: requested at runtime on API 33+ (see MainActivity) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- SCHEDULE_EXACT_ALARM: required for precise band-start reminders (API 31+) -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <!-- RECEIVE_BOOT_COMPLETED: reschedule alarms after device reboot -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".PD2026App"
@@ -16,6 +20,20 @@
         android:theme="@style/Theme.PD2026"
         android:usesCleartextTraffic="false"
         android:localeConfig="@xml/locales_config">
+
+        <!-- BandAlarmReceiver: fires 5 min before a favourite band starts -->
+        <receiver
+            android:name="sk.punkacidetom.pd2026.core.notifications.BandAlarmReceiver"
+            android:exported="false" />
+
+        <!-- BootReceiver: reschedules all alarms after device reboot -->
+        <receiver
+            android:name="sk.punkacidetom.pd2026.core.notifications.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".MainActivity"

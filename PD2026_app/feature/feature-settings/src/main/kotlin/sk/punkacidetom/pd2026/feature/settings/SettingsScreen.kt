@@ -1,6 +1,9 @@
 package sk.punkacidetom.pd2026.feature.settings
 
 import android.app.Activity
+import android.content.Intent
+import android.os.Build
+import android.provider.Settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,12 +19,16 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -40,19 +47,27 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val updateState by viewModel.updateState.collectAsState()
-    val spacing = LocalAppSpacing.current
-    val snackbarHostState = remember { SnackbarHostState() }
+    val uiState                by viewModel.uiState.collectAsState()
+    val updateState            by viewModel.updateState.collectAsState()
+    val canScheduleExactAlarms by viewModel.canScheduleExactAlarms.collectAsState()
+    val spacing                = LocalAppSpacing.current
+    val context                = LocalContext.current
+    val snackbarHostState      = remember { SnackbarHostState() }
+
+    // Recheck the permission every time this screen is resumed so the button
+    // disappears automatically after the user grants it and navigates back.
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        viewModel.refreshExactAlarmPermission()
+    }
 
     // Recreate the Activity after a locale switch so the new language takes effect immediately
-    val activity = LocalContext.current as? Activity
+    val activity = context as? Activity
     LaunchedEffect(Unit) {
         viewModel.recreateActivity.collect { activity?.recreate() }
     }
 
     val updateSuccessMsg = stringResource(R.string.settings_update_success)
-    val updateErrorMsg = stringResource(R.string.settings_update_error)
+    val updateErrorMsg   = stringResource(R.string.settings_update_error)
 
     LaunchedEffect(updateState) {
         when (updateState) {
@@ -128,6 +143,88 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(spacing.lg))
 
+            // Band-start notifications toggle
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResource(R.string.settings_notifications),
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = White,
+                    modifier = Modifier.weight(1f),
+                )
+                Switch(
+                    checked = uiState.isNotificationsEnabled,
+                    onCheckedChange = { viewModel.setNotificationsEnabled(it) },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor   = White,
+                        checkedTrackColor   = Crimson,
+                        uncheckedThumbColor = WhiteAlpha60,
+                        uncheckedTrackColor = NavyLight,
+                    ),
+                )
+            }
+
+            // Exact-alarm permission warning (Android 12+, shown only when relevant)
+            if (uiState.isNotificationsEnabled && uiState.isExactAlarmPermissionMissing) {
+                Spacer(modifier = Modifier.height(spacing.sm))
+                Text(
+                    text = stringResource(R.string.settings_exact_alarm_warning),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = WhiteAlpha60,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Spacer(modifier = Modifier.height(spacing.sm))
+                Button(
+                    onClick = {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            context.startActivity(
+                                Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                            )
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(spacing.buttonMinHeight),
+                    colors = ButtonDefaults.buttonColors(containerColor = NavyLight),
+                ) {
+                    Text(
+                        text = stringResource(R.string.settings_exact_alarm_grant),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = White,
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(spacing.lg))
+
+            // Android permissions button — shown only when exact-alarm permission is not granted (API 31+)
+            if (!canScheduleExactAlarms) {
+                Button(
+                    onClick = {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            context.startActivity(
+                                Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                            )
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(spacing.buttonMinHeight),
+                    colors = ButtonDefaults.buttonColors(containerColor = Crimson),
+                ) {
+                    Text(
+                        text = stringResource(R.string.settings_android_permissions),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = White,
+                    )
+                }
+                Spacer(modifier = Modifier.height(spacing.lg))
+            }
+
             // Update data
             Button(
                 onClick = { viewModel.triggerDataUpdate() },
@@ -157,7 +254,6 @@ fun SettingsScreen(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
             )
 
-            val context = LocalContext.current
             val versionName = remember {
                 context.packageManager
                     .getPackageInfo(context.packageName, 0)
@@ -195,7 +291,7 @@ private fun ToggleButton(
         modifier = modifier.height(spacing.buttonMinHeight),
         colors = ButtonDefaults.buttonColors(
             containerColor = if (selected) Crimson else NavyLight,
-            contentColor = if (selected) White else WhiteAlpha60,
+            contentColor   = if (selected) White   else WhiteAlpha60,
         ),
     ) {
         Text(text = label, style = MaterialTheme.typography.labelLarge)

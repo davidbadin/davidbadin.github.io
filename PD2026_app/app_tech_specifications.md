@@ -304,9 +304,9 @@ state with a button that deep-links to the Facebook app /
 
 ### 5.6 INFO
 
-`WebView` that loads `https://davidbadin.github.io/PD2026_app/info.html`.
+`WebView` that loads `https://davidbadin.github.io/PD2026_app/pd_resources/info.html`.
 Create a copy of this file to the relevant folder of the app project.
-`https://davidbadin.github.io/PD2026_app/info.html` will be removed later.
+`https://davidbadin.github.io/PD2026_app/pd_resources/info.html` will be removed later.
 Use **stale-while-revalidate** caching: keep the last fetched HTML in
 local cache, show it immediately, then refresh in the background. Allow
 external links to open in an in-app browser tab (Chrome Custom Tabs).

@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import sk.punkacidetom.pd2026.R
-import sk.punkacidetom.pd2026.core.ui.icons.FaFamily
 import sk.punkacidetom.pd2026.core.ui.icons.FaIcon
 import sk.punkacidetom.pd2026.core.ui.theme.Crimson
 import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
@@ -84,18 +83,17 @@ fun AppBottomBar(navController: NavHostController) {
             },
         )
         BottomNavItem(
-            label = stringResource(R.string.nav_spotify),
+            label = stringResource(R.string.nav_nfctron),
             icon = { isSelected ->
                 FaIcon(
-                    name = "spotify",
-                    family = FaFamily.Brands,
+                    name = "rss",
                     size = spacing.iconLg,
                     tint = if (isSelected) Crimson else WhiteAlpha60,
                 )
             },
-            isSelected = currentRoute?.contains("SpotifyRoute") == true,
+            isSelected = currentRoute?.contains("NfctronRoute") == true,
             onClick = {
-                navController.navigate(SpotifyRoute) {
+                navController.navigate(NfctronRoute) {
                     popUpTo(0) { inclusive = true }
                     launchSingleTop = true
                 }

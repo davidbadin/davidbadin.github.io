@@ -47,10 +47,11 @@ PD2026_app/
     ├── feature-info/           # Info page (HTML, offline-first — see below)
     ├── feature-tickets/        # Tickets WebView
     ├── feature-settings/       # Language toggle, notification prefs
+    ├── feature-nfctron/        # NFCtron page (HTML, offline-first — same pattern as feature-info)
     └── feature-spotify/        # Spotify App Remote integration + embedded player
 ```
 
-Navigation routes live in `app/src/main/kotlin/…/navigation/`. Bottom nav tabs: Home, Timetable, Spotify, Settings. Info and other screens are reachable from within tabs.
+Navigation routes live in `app/src/main/kotlin/…/navigation/`. Bottom nav tabs: Home, Timetable, NFCtron, Settings. Info and other screens are reachable from within tabs.
 
 ---
 
@@ -145,12 +146,12 @@ The Info tab displays an HTML page using a `WebView` with stale-while-revalidate
 ### Content priority
 1. `context.filesDir/info_cache.html` (previously fetched network version) → shown first if exists
 2. `app/src/main/assets/info.html` (bundled fallback) → used on first launch when offline
-3. Background fetch of `https://davidbadin.github.io/PD2026_app/info.html` → updates cache
+3. Background fetch of `https://davidbadin.github.io/PD2026_app/pd_resources/info.html` → updates cache
 
 ### Base URL split (critical)
 `InfoViewModel` returns `InfoContent(html: String, baseUrl: String)`:
 - **Asset HTML** → `baseUrl = "file:///android_asset/"` — relative paths resolve locally
-- **Cached/network HTML** → `baseUrl = "https://davidbadin.github.io/PD2026_app/"` — relative paths resolve to GitHub Pages
+- **Cached/network HTML** → `baseUrl = "https://davidbadin.github.io/PD2026_app/pd_resources/"` — relative paths resolve to GitHub Pages
 
 `InfoScreen` calls `wv.loadDataWithBaseURL(info.baseUrl, info.html, …)`.
 
@@ -161,6 +162,21 @@ Do NOT hard-code the HTTPS base URL for all cases — asset HTML resources (logo
 - Logo: `<img src="logo_pd.png">` — resolves to `file:///android_asset/logo_pd.png`
 - Fonts via `@font-face { src: url("fonts/bebas_neue_regular.ttf") }` — resolves locally
 - No `<link rel="stylesheet" href="https://fonts.googleapis.com/…">` — requires internet
+
+---
+
+## NFCtron Screen — Offline-First HTML
+
+Same architecture as Info Screen. Uses `feature-nfctron` module.
+
+### Content priority
+1. `context.filesDir/nfctron_cache.html` → shown first if exists
+2. `app/src/main/assets/nfctron.html` (bundled fallback)
+3. Background fetch of `https://davidbadin.github.io/PD2026_app/pd_resources/nfctron.html` → updates cache
+
+### Base URL split (same rule as Info)
+- **Asset HTML** → `baseUrl = "file:///android_asset/"`
+- **Cached/network HTML** → `baseUrl = "https://davidbadin.github.io/PD2026_app/pd_resources/"`
 
 ---
 
@@ -208,22 +224,29 @@ Gradle build dirs are redirected to `C:\Users\FS0605\AndroidBuild\PD2026\` to av
 
 ## Git Workflow
 
-- Branch naming: `fix/batch-XX`, `fix/<short-description>`, `feature/<name>`
-- One PR per logical batch of fixes
+### ⚠️ Branch Management Rules — Strictly Follow
+
+1. **Never merge branches automatically.** Only merge when David explicitly says to merge.
+2. **Never commit directly to `master`.** If `master` is the active branch, create a new branch first before making any changes.
+3. **Branch naming for fixes files:** When processing a `fixes_XX.md` file, create a branch named `fix/` + filename without extension (e.g., processing `fixes_12.md` → create branch `fix/fixes_12`).
+4. **Branch naming for everything else:** If a new branch is needed and David hasn't specified a name, **ask David first** and suggest a name. Never silently invent a branch name.
+5. **No automatic branch cleanup:** Never delete or rename branches without explicit instruction from David.
+
+### Other Git Rules
 - Always check `git status` before committing — never stage `local.properties`, `google-services.json`, or any `.jks`/`.aar`
-- Merge strategy: standard merge commit via `gh pr merge <number> --merge`
-- After merging a PR, create a new branch from `master` for the next batch — don't keep committing onto a merged branch
+- Merge strategy when instructed by David: `gh pr merge <number> --merge`
+- One PR per logical batch of fixes
 
 ---
 
-## Current State (as of 2026-06-18)
+## Current State (as of 2026-07-24)
 
 | Item | Value |
 |---|---|
 | `versionCode` | 4 |
 | `versionName` | 1.0.0 |
 | `minSdk` | 24 |
-| `targetSdk` / `compileSdk` | 35 |
+| `targetSdk` / `compileSdk` | 36 |
 | Last merged PR | #54 — offline info HTML fix |
 | Active branch | `master` |
 
@@ -233,3 +256,5 @@ Gradle build dirs are redirected to `C:\Users\FS0605\AndroidBuild\PD2026\` to av
 - Bottom nav modifier order: `navigationBarsPadding()` before `height()`
 - Info screen base URL is dynamic per content source (not hard-coded)
 - Band image fallback is `logo_pd.png`, not an initial letter
+- Bottom nav: Spotify tab replaced by NFCtron tab (fixes_12)
+- info.html online URL moved to `pd_resources/` subfolder (fixes_12)

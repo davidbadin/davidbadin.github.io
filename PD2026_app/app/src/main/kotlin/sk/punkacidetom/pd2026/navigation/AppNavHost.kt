@@ -10,6 +10,7 @@ import sk.punkacidetom.pd2026.feature.info.navigation.infoNavGraph
 import sk.punkacidetom.pd2026.feature.news.navigation.newsNavGraph
 import sk.punkacidetom.pd2026.feature.settings.navigation.settingsNavGraph
 import sk.punkacidetom.pd2026.feature.spotify.navigation.spotifyNavGraph
+import sk.punkacidetom.pd2026.feature.nfctron.navigation.nfctronNavGraph
 import sk.punkacidetom.pd2026.feature.tickets.navigation.ticketsNavGraph
 import sk.punkacidetom.pd2026.feature.timetable.navigation.timetableNavGraph
 
@@ -34,5 +35,6 @@ fun AppNavHost(
         ticketsNavGraph(navController)
         settingsNavGraph(navController)
         spotifyNavGraph(navController)
+        nfctronNavGraph(navController)
     }
 }

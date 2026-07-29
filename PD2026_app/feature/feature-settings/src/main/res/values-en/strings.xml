@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Settings</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_sk">Slovak</string>
+    <string name="settings_language_en">English</string>
+    <string name="settings_font_size">Font size</string>
+    <string name="settings_font_normal">Normal</string>
+    <string name="settings_font_large">Large</string>
+    <string name="settings_notifications">Favorite bands notifications</string>
+    <string name="settings_exact_alarm_warning">Exact alarm permission is required for precise notifications.</string>
+    <string name="settings_exact_alarm_grant">Grant permission</string>
+    <string name="settings_android_permissions">Android permissions</string>
+    <string name="settings_update_data">Update data</string>
+    <string name="settings_updating">Updating…</string>
+    <string name="settings_update_success">Data updated.</string>
+    <string name="settings_update_error">Update failed. Try again later.</string>
+    <string name="settings_credit">Created by David Badin</string>
+</resources>
