@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
@@ -26,15 +28,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import sk.punkacidetom.pd2026.core.ui.components.FestivalScreenHeader
 import sk.punkacidetom.pd2026.core.ui.theme.Crimson
 import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
 import sk.punkacidetom.pd2026.core.ui.theme.Navy
@@ -52,15 +58,15 @@ fun SettingsScreen(
     val canScheduleExactAlarms by viewModel.canScheduleExactAlarms.collectAsState()
     val spacing                = LocalAppSpacing.current
     val context                = LocalContext.current
+    val density                = LocalDensity.current
     val snackbarHostState      = remember { SnackbarHostState() }
 
-    // Recheck the permission every time this screen is resumed so the button
-    // disappears automatically after the user grants it and navigates back.
+    // Recheck the permission every time this screen is resumed
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         viewModel.refreshExactAlarmPermission()
     }
 
-    // Recreate the Activity after a locale switch so the new language takes effect immediately
+    // Recreate the Activity after a locale switch
     val activity = context as? Activity
     LaunchedEffect(Unit) {
         viewModel.recreateActivity.collect { activity?.recreate() }
@@ -83,188 +89,206 @@ fun SettingsScreen(
         }
     }
 
-    androidx.compose.material3.Scaffold(
+    var contentStartPx by remember { mutableIntStateOf(0) }
+    val contentStartDp = with(density) { contentStartPx.toDp() }
+
+    Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = Navy,
     ) { innerPadding ->
-        Column(
+        Box(
             modifier = modifier
                 .fillMaxSize()
                 .background(Navy)
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .padding(spacing.md),
+                .padding(innerPadding),
         ) {
-            Text(
-                text = stringResource(R.string.settings_title),
-                style = MaterialTheme.typography.displayMedium,
-                color = White,
+            // Layer 1: static pinned header
+            FestivalScreenHeader(
+                title = stringResource(R.string.settings_title),
+                onContentStartY = { contentStartPx = it },
             )
-            Spacer(modifier = Modifier.height(spacing.lg))
 
-            // Language
-            SectionLabel(stringResource(R.string.settings_language))
-            Spacer(modifier = Modifier.height(spacing.sm))
-            Row {
-                ToggleButton(
-                    label = stringResource(R.string.settings_language_sk),
-                    selected = uiState.language == "sk",
-                    modifier = Modifier.weight(1f),
-                ) { viewModel.setLanguage("sk") }
-                Spacer(modifier = Modifier.height(0.dp).also { /* horizontal gap */ })
-                ToggleButton(
-                    label = stringResource(R.string.settings_language_en),
-                    selected = uiState.language == "en",
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = spacing.sm),
-                ) { viewModel.setLanguage("en") }
-            }
-
-            Spacer(modifier = Modifier.height(spacing.lg))
-
-            // Font size
-            SectionLabel(stringResource(R.string.settings_font_size))
-            Spacer(modifier = Modifier.height(spacing.sm))
-            Row {
-                ToggleButton(
-                    label = stringResource(R.string.settings_font_normal),
-                    selected = !uiState.isFontLarge,
-                    modifier = Modifier.weight(1f),
-                ) { viewModel.setFontLarge(false) }
-                ToggleButton(
-                    label = stringResource(R.string.settings_font_large),
-                    selected = uiState.isFontLarge,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = spacing.sm),
-                ) { viewModel.setFontLarge(true) }
-            }
-
-            Spacer(modifier = Modifier.height(spacing.lg))
-
-            // Band-start notifications toggle
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = stringResource(R.string.settings_notifications),
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = White,
-                    modifier = Modifier.weight(1f),
-                )
-                Switch(
-                    checked = uiState.isNotificationsEnabled,
-                    onCheckedChange = { viewModel.setNotificationsEnabled(it) },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor   = White,
-                        checkedTrackColor   = Crimson,
-                        uncheckedThumbColor = WhiteAlpha60,
-                        uncheckedTrackColor = NavyLight,
-                    ),
-                )
-            }
-
-            // Exact-alarm permission warning (Android 12+, shown only when relevant)
-            if (uiState.isNotificationsEnabled && uiState.isExactAlarmPermissionMissing) {
-                Spacer(modifier = Modifier.height(spacing.sm))
-                Text(
-                    text = stringResource(R.string.settings_exact_alarm_warning),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = WhiteAlpha60,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Spacer(modifier = Modifier.height(spacing.sm))
-                Button(
-                    onClick = {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                            context.startActivity(
-                                Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-                            )
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(spacing.buttonMinHeight),
-                    colors = ButtonDefaults.buttonColors(containerColor = NavyLight),
-                ) {
-                    Text(
-                        text = stringResource(R.string.settings_exact_alarm_grant),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = White,
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(spacing.lg))
-
-            // Android permissions button — shown only when exact-alarm permission is not granted (API 31+)
-            if (!canScheduleExactAlarms) {
-                Button(
-                    onClick = {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                            context.startActivity(
-                                Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-                            )
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(spacing.buttonMinHeight),
-                    colors = ButtonDefaults.buttonColors(containerColor = Crimson),
-                ) {
-                    Text(
-                        text = stringResource(R.string.settings_android_permissions),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = White,
-                    )
-                }
-                Spacer(modifier = Modifier.height(spacing.lg))
-            }
-
-            // Update data
-            Button(
-                onClick = { viewModel.triggerDataUpdate() },
-                enabled = updateState != UpdateState.UPDATING,
+            // Layer 2: scrollable settings content
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(spacing.buttonMinHeight),
-                colors = ButtonDefaults.buttonColors(containerColor = Crimson),
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
             ) {
-                Text(
-                    text = if (updateState == UpdateState.UPDATING)
-                        stringResource(R.string.settings_updating)
-                    else
-                        stringResource(R.string.settings_update_data),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = White,
-                )
+                // Transparent spacer — header visible behind it
+                Spacer(modifier = Modifier.height(contentStartDp))
+
+                // Navy-backed settings content
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Navy)
+                        .padding(spacing.md),
+                ) {
+                    // Language
+                    SectionLabel(stringResource(R.string.settings_language))
+                    Spacer(modifier = Modifier.height(spacing.sm))
+                    Row {
+                        ToggleButton(
+                            label = stringResource(R.string.settings_language_sk),
+                            selected = uiState.language == "sk",
+                            modifier = Modifier.weight(1f),
+                        ) { viewModel.setLanguage("sk") }
+                        Spacer(modifier = Modifier.height(0.dp))
+                        ToggleButton(
+                            label = stringResource(R.string.settings_language_en),
+                            selected = uiState.language == "en",
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(start = spacing.sm),
+                        ) { viewModel.setLanguage("en") }
+                    }
+
+                    Spacer(modifier = Modifier.height(spacing.lg))
+
+                    // Font size
+                    SectionLabel(stringResource(R.string.settings_font_size))
+                    Spacer(modifier = Modifier.height(spacing.sm))
+                    Row {
+                        ToggleButton(
+                            label = stringResource(R.string.settings_font_normal),
+                            selected = !uiState.isFontLarge,
+                            modifier = Modifier.weight(1f),
+                        ) { viewModel.setFontLarge(false) }
+                        ToggleButton(
+                            label = stringResource(R.string.settings_font_large),
+                            selected = uiState.isFontLarge,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(start = spacing.sm),
+                        ) { viewModel.setFontLarge(true) }
+                    }
+
+                    Spacer(modifier = Modifier.height(spacing.lg))
+
+                    // Band-start notifications toggle
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = stringResource(R.string.settings_notifications),
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = White,
+                            modifier = Modifier.weight(1f),
+                        )
+                        Switch(
+                            checked = uiState.isNotificationsEnabled,
+                            onCheckedChange = { viewModel.setNotificationsEnabled(it) },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor   = White,
+                                checkedTrackColor   = Crimson,
+                                uncheckedThumbColor = WhiteAlpha60,
+                                uncheckedTrackColor = NavyLight,
+                            ),
+                        )
+                    }
+
+                    // Exact-alarm permission warning (Android 12+, shown only when relevant)
+                    if (uiState.isNotificationsEnabled && uiState.isExactAlarmPermissionMissing) {
+                        Spacer(modifier = Modifier.height(spacing.sm))
+                        Text(
+                            text = stringResource(R.string.settings_exact_alarm_warning),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = WhiteAlpha60,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                        Spacer(modifier = Modifier.height(spacing.sm))
+                        Button(
+                            onClick = {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                    context.startActivity(
+                                        Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                                    )
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(spacing.buttonMinHeight),
+                            colors = ButtonDefaults.buttonColors(containerColor = NavyLight),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.settings_exact_alarm_grant),
+                                style = MaterialTheme.typography.labelLarge,
+                                color = White,
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(spacing.lg))
+
+                    // Android permissions button — shown only when exact-alarm permission not granted
+                    if (!canScheduleExactAlarms) {
+                        Button(
+                            onClick = {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                    context.startActivity(
+                                        Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                                    )
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(spacing.buttonMinHeight),
+                            colors = ButtonDefaults.buttonColors(containerColor = Crimson),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.settings_android_permissions),
+                                style = MaterialTheme.typography.labelLarge,
+                                color = White,
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(spacing.lg))
+                    }
+
+                    // Update data
+                    Button(
+                        onClick = { viewModel.triggerDataUpdate() },
+                        enabled = updateState != UpdateState.UPDATING,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(spacing.buttonMinHeight),
+                        colors = ButtonDefaults.buttonColors(containerColor = Crimson),
+                    ) {
+                        Text(
+                            text = if (updateState == UpdateState.UPDATING)
+                                stringResource(R.string.settings_updating)
+                            else
+                                stringResource(R.string.settings_update_data),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = White,
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.height(spacing.xl))
+
+                    Text(
+                        text = stringResource(R.string.settings_credit),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = WhiteAlpha60,
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                    )
+
+                    val versionName = remember {
+                        context.packageManager
+                            .getPackageInfo(context.packageName, 0)
+                            .versionName ?: ""
+                    }
+                    Text(
+                        text = "version $versionName",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = WhiteAlpha60,
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                    )
+                }
             }
-
-            Spacer(modifier = Modifier.weight(1f))
-            Spacer(modifier = Modifier.height(spacing.xl))
-
-            Text(
-                text = stringResource(R.string.settings_credit),
-                style = MaterialTheme.typography.bodySmall,
-                color = WhiteAlpha60,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-            )
-
-            val versionName = remember {
-                context.packageManager
-                    .getPackageInfo(context.packageName, 0)
-                    .versionName ?: ""
-            }
-            Text(
-                text = "version $versionName",
-                style = MaterialTheme.typography.labelSmall,
-                color = WhiteAlpha60,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-            )
         }
     }
 }

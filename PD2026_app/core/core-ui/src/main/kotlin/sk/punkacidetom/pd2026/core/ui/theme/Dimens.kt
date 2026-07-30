@@ -46,3 +46,6 @@ fun AppSpacing.scale(factor: Float) = AppSpacing(
 )
 
 val LocalFontScaleMultiplier = compositionLocalOf { 1.0f }
+
+/** Width fraction for major nav/action buttons — 75% of screen width, centred. */
+const val NAV_BUTTON_WIDTH_FRACTION = 0.75f

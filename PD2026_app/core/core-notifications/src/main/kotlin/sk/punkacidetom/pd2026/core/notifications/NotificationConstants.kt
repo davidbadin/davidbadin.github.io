@@ -1,7 +1,7 @@
 package sk.punkacidetom.pd2026.core.notifications
 
 object NotificationConstants {
-    const val BAND_REMINDER_MINUTES_BEFORE = 5
+    const val BAND_REMINDER_MINUTES_BEFORE = 10
     const val BAND_REMINDER_CHANNEL_ID     = "band_reminders"
     const val BAND_REMINDER_CHANNEL_NAME   = "Band reminders"
 

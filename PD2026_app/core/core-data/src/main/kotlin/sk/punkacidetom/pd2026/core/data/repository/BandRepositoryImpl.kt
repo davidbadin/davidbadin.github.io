@@ -59,10 +59,12 @@ class BandRepositoryImpl @Inject constructor(
         _bands.map { FestivalDayCalculator.compute(it) }
 
     override fun observeSortedBands(): Flow<List<Band>> = _bands.map { bands ->
-        bands.sortedWith(
-            compareBy<Band> { it.sortingPriority ?: Int.MAX_VALUE }
-                .thenBy { it.name }
-        )
+        bands
+            .filter { it.sortingPriority != null }
+            .sortedWith(
+                compareBy<Band> { it.sortingPriority ?: Int.MAX_VALUE }
+                    .thenBy { it.name }
+            )
     }
 
     override suspend fun forceRefresh(): Result<Unit> = doFetch()
