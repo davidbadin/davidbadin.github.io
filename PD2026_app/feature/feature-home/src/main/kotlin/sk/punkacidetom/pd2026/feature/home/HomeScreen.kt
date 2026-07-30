@@ -151,7 +151,7 @@ fun HomeScreen(
                 SocialLink(
                     label      = stringResource(R.string.home_social_website),
                     icon       = "globe",
-                    iconFamily = FaFamily.Solid,
+                    iconFamily = FaFamily.Regular,
                     onClick    = {
                         CustomTabsIntent.Builder().build()
                             .launchUrl(context, Uri.parse(URL_WEBSITE))
@@ -319,7 +319,7 @@ private fun ThankyouContent(
 private fun HomeNavButton(
     label: String,
     icon: String,
-    iconFamily: FaFamily = FaFamily.Solid,
+    iconFamily: FaFamily = FaFamily.Regular,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
