@@ -65,7 +65,7 @@ fun FestivalScreenHeader(
         AsyncImage(
             model = "file:///android_asset/header_short.png",
             contentDescription = null,
-            contentScale = ContentScale.FitWidth,
+            contentScale = ContentScale.FillWidth,
             modifier = Modifier
                 .fillMaxWidth()
                 .onSizeChanged { bgHeightPx = it.height },
@@ -76,7 +76,7 @@ fun FestivalScreenHeader(
             AsyncImage(
                 model = "file:///android_asset/logo_pd_short.png",
                 contentDescription = "Punkáči deťom 2026",
-                contentScale = ContentScale.FitWidth,
+                contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .fillMaxWidth(SHORT_HEADER_LOGO_WIDTH_FRACTION)
                     .align(Alignment.TopCenter)

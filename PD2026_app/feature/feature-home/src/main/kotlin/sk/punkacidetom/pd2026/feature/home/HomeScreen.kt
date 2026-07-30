@@ -187,7 +187,7 @@ private fun HomeHeader(
         AsyncImage(
             model = "file:///android_asset/header_main.png",
             contentDescription = null,
-            contentScale = ContentScale.FitWidth,
+            contentScale = ContentScale.FillWidth,
             modifier = Modifier
                 .fillMaxWidth()
                 .onSizeChanged { bgHeightPx = it.height },
@@ -199,7 +199,7 @@ private fun HomeHeader(
             AsyncImage(
                 model = "file:///android_asset/logo_pd_main.png",
                 contentDescription = "Punkáči deťom 2026",
-                contentScale = ContentScale.FitWidth,
+                contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .fillMaxWidth(HOME_HEADER_LOGO_WIDTH_FRACTION)
                     .align(Alignment.TopCenter)
@@ -250,7 +250,7 @@ private fun PhaseBlock(
         AsyncImage(
             model = "file:///android_asset/stripe.png",
             contentDescription = null,
-            contentScale = ContentScale.FitWidth,
+            contentScale = ContentScale.FillWidth,
             modifier = Modifier.fillMaxWidth(),
         )
         when (phase) {

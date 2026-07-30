@@ -150,14 +150,14 @@ fun TimetableScreen(
                 AsyncImage(
                     model = "file:///android_asset/stage_A.png",
                     contentDescription = "Stage A",
-                    contentScale = ContentScale.FitWidth,
+                    contentScale = ContentScale.FillWidth,
                     modifier = Modifier.weight(1f),
                 )
                 Spacer(modifier = Modifier.width(spacing.sm))
                 AsyncImage(
                     model = "file:///android_asset/stage_B.png",
                     contentDescription = "Stage B",
-                    contentScale = ContentScale.FitWidth,
+                    contentScale = ContentScale.FillWidth,
                     modifier = Modifier.weight(1f),
                 )
             }
