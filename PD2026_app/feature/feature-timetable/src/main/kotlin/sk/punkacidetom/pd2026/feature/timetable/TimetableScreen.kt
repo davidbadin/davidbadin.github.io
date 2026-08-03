@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -72,7 +73,7 @@ import java.util.Locale
 private const val GLOW_HEIGHT_MINUTES             = 15
 private const val GLOW_START_ALPHA                = 0.5f
 private const val INACTIVE_DAY_BUTTON_ALPHA       = 0.5f
-private const val SCHEDULE_DAYBUTTON_TOP_PADDING_DP      = 32
+private const val SCHEDULE_DAYBUTTON_TOP_PADDING_DP      = 16
 private const val SCHEDULE_STAGE_LABEL_TOP_PADDING_DP    = 4
 private const val SCHEDULE_STAGE_LABEL_BOTTOM_PADDING_DP = 4
 private const val SWIPE_DAY_THRESHOLD_DP          = 50
@@ -112,81 +113,8 @@ fun TimetableScreen(
 
     Box(modifier = modifier.fillMaxSize().background(Navy)) {
 
-        // Layer 1: static header column (FestivalScreenHeader + day tabs + stage images)
-        // zIndex(1f) ensures this is drawn on top of the scrollable band blocks in Layer 2
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .zIndex(1f)
-                .onSizeChanged { staticHeaderHeightPx = it.height },
-        ) {
-            FestivalScreenHeader(title = stringResource(R.string.timetable_title))
-
-            // Day tab selector
-            if (uiState.days.isNotEmpty()) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            top   = SCHEDULE_DAYBUTTON_TOP_PADDING_DP.dp,
-                            start = spacing.md,
-                            end   = spacing.md,
-                        ),
-                    horizontalArrangement = Arrangement.spacedBy(spacing.sm),
-                ) {
-                    uiState.days.forEachIndexed { index, day ->
-                        val dayName = day.date.dayOfWeek
-                            .getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
-                            .replaceFirstChar { it.uppercase() }
-                        val selected = index == uiState.selectedDayIndex
-                        TextButton(
-                            onClick = { viewModel.selectDay(index) },
-                            modifier = Modifier
-                                .weight(1f)
-                                .clip(RoundedCornerShape(spacing.cardCorner))
-                                .background(if (selected) Crimson else NavyLight)
-                                .alpha(if (selected) 1f else INACTIVE_DAY_BUTTON_ALPHA),
-                        ) {
-                            Text(
-                                text = dayName,
-                                style = MaterialTheme.typography.labelLarge,
-                                color = if (selected) White else WhiteAlpha60,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        }
-                    }
-                }
-            }
-
-            // Stage header images
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        top    = SCHEDULE_STAGE_LABEL_TOP_PADDING_DP.dp,
-                        bottom = SCHEDULE_STAGE_LABEL_BOTTOM_PADDING_DP.dp,
-                        start  = spacing.md,
-                        end    = spacing.md,
-                    ),
-            ) {
-                AsyncImage(
-                    model = "file:///android_asset/stage_A.png",
-                    contentDescription = "Stage A",
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.weight(1f),
-                )
-                Spacer(modifier = Modifier.width(spacing.sm))
-                AsyncImage(
-                    model = "file:///android_asset/stage_B.png",
-                    contentDescription = "Stage B",
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.weight(1f),
-                )
-            }
-        }
-
-        // Layer 2: scrollable timetable — swipe gesture lives here so day buttons in Layer 1 are unaffected
+        // Layer 1: scrollable timetable — declared first so it renders at the bottom
+        // Swipe gesture lives here so day buttons in the static header are unaffected
         val allBands = uiState.stageABands + uiState.stageBBands
         Column(
             modifier = Modifier
@@ -202,8 +130,9 @@ fun TimetableScreen(
                             swipeAccumulator = 0f
                         },
                         onDragCancel = { swipeAccumulator = 0f },
-                        onHorizontalDrag = { change, dragAmount ->
-                            change.consume()
+                        onHorizontalDrag = { _, dragAmount ->
+                            // change.consume() intentionally omitted — consuming events here
+                            // prevents TextButton click handlers in the static header from firing
                             swipeAccumulator += dragAmount
                         },
                     )
@@ -254,6 +183,90 @@ fun TimetableScreen(
                         modifier = Modifier.weight(1f),
                     )
                 }
+            }
+        }
+
+        // Layer 2: Navy overlay — hides band blocks that have scrolled up into the header area
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(staticHeaderHeightDp)
+                .background(Navy),
+        )
+
+        // Layer 3: static header column (FestivalScreenHeader + day tabs + stage images)
+        // zIndex(1f) ensures this is drawn on top of the Navy overlay and scrollable band blocks
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .zIndex(1f)
+                .onSizeChanged { staticHeaderHeightPx = it.height },
+        ) {
+            FestivalScreenHeader(title = stringResource(R.string.timetable_title))
+
+            // Day tab selector
+            if (uiState.days.isNotEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            top   = SCHEDULE_DAYBUTTON_TOP_PADDING_DP.dp,
+                            start = spacing.md,
+                            end   = spacing.md,
+                        ),
+                    horizontalArrangement = Arrangement.spacedBy(spacing.sm),
+                ) {
+                    uiState.days.forEachIndexed { index, day ->
+                        key(index) {
+                            val dayName = day.date.dayOfWeek
+                                .getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
+                                .replaceFirstChar { it.uppercase() }
+                            val selected = index == uiState.selectedDayIndex
+                            TextButton(
+                                onClick = { viewModel.selectDay(index) },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(spacing.cardCorner))
+                                    .background(if (selected) Crimson else NavyLight)
+                                    .alpha(if (selected) 1f else INACTIVE_DAY_BUTTON_ALPHA),
+                            ) {
+                                Text(
+                                    text = dayName,
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = if (selected) White else WhiteAlpha60,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Stage header images
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top    = SCHEDULE_STAGE_LABEL_TOP_PADDING_DP.dp,
+                        bottom = SCHEDULE_STAGE_LABEL_BOTTOM_PADDING_DP.dp,
+                        start  = spacing.md,
+                        end    = spacing.md,
+                    ),
+            ) {
+                AsyncImage(
+                    model = "file:///android_asset/stage_A.png",
+                    contentDescription = "Stage A",
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier.weight(1f),
+                )
+                Spacer(modifier = Modifier.width(spacing.sm))
+                AsyncImage(
+                    model = "file:///android_asset/stage_B.png",
+                    contentDescription = "Stage B",
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier.weight(1f),
+                )
             }
         }
     }

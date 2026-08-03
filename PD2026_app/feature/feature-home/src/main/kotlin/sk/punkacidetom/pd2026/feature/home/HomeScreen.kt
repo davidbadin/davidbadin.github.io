@@ -27,6 +27,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -93,15 +94,22 @@ fun HomeScreen(
             .fillMaxSize()
             .background(Navy),
     ) {
-        // Layer 1: background image — outside the scroll column; moves at 0.5× speed
-        AsyncImage(
-            model = "file:///android_asset/header_main.png",
-            contentDescription = null,
-            contentScale = ContentScale.FillWidth,
+        // Layer 1: background image — clipped below status bar so it can't render behind it
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .graphicsLayer { translationY = -scrollState.value * PARALLAX_SCROLL_FRACTION },
-        )
+                .statusBarsPadding()
+                .clipToBounds(),
+        ) {
+            AsyncImage(
+                model = "file:///android_asset/header_main.png",
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .graphicsLayer { translationY = -scrollState.value * PARALLAX_SCROLL_FRACTION },
+            )
+        }
 
         // Layer 2: all content — scrolls at 1×; statusBarsPadding keeps logo below status bar
         Column(

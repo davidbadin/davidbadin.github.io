@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -20,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -31,6 +33,7 @@ import sk.punkacidetom.pd2026.core.ui.theme.NAV_BUTTON_WIDTH_FRACTION
 import sk.punkacidetom.pd2026.core.ui.theme.Navy
 import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_TOP_PADDING_DP
 import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_WIDTH_FRACTION
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_TITLE_BOTTOM_PADDING_DP
 import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_TITLE_TOP_PADDING_DP
 import sk.punkacidetom.pd2026.core.ui.theme.White
 
@@ -53,18 +56,22 @@ fun TicketsScreen(modifier: Modifier = Modifier) {
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // Header area: background image + logo + title in one Box
-            Box(modifier = Modifier.fillMaxWidth()) {
-
-                // Background image — layer 1, scrolls at 1×; extends behind status bar
+            // Header area: Box sized by logo/title Column; background clipped to that height
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .clipToBounds(),
+            ) {
+                // Background image — fills Box (sized by content Column below); clipped at bottom
                 AsyncImage(
                     model = "file:///android_asset/header_main.png",
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.matchParentSize(),
                 )
 
-                // Logo + title — layer 2, pushed below status bar
+                // Logo + title — sizes the Box; pushed below status bar
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -87,6 +94,7 @@ fun TicketsScreen(modifier: Modifier = Modifier) {
                             .fillMaxWidth()
                             .padding(horizontal = spacing.md),
                     )
+                    Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_BOTTOM_PADDING_DP.dp))
                 }
             }
 

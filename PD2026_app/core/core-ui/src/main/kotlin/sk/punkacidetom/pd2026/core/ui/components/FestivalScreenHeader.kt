@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,13 +42,14 @@ fun FestivalScreenHeader(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            // Background image — full width, natural height; extends behind status bar
+        Box(modifier = Modifier.fillMaxWidth().wrapContentHeight().clipToBounds()) {
+            // Background image — fills Box size (Box is sized by the content Column below);
+            // image is clipped to that height, showing the top portion of the asset.
             AsyncImage(
                 model = "file:///android_asset/header_short.png",
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.matchParentSize(),
             )
 
             // Logo and title overlaid on background image; pushed below status bar
