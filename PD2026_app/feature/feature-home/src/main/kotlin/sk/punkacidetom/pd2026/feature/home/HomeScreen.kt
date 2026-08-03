@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -102,10 +103,11 @@ fun HomeScreen(
                 .graphicsLayer { translationY = -scrollState.value * PARALLAX_SCROLL_FRACTION },
         )
 
-        // Layer 2: all content — scrolls at 1×
+        // Layer 2: all content — scrolls at 1×; statusBarsPadding keeps logo below status bar
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .statusBarsPadding()
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

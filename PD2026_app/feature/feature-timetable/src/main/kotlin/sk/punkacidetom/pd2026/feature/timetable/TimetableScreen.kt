@@ -31,7 +31,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.zIndex
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
@@ -98,22 +98,9 @@ fun TimetableScreen(
         }
     }
 
-    // Hoisted scroll state for per-day save/restore
+    // Hoisted scroll state — retains pixel offset naturally when day content changes;
+    // new day starts at the same position as the departing day (desired behaviour).
     val scrollState = rememberScrollState()
-    val savedScrollOffsets = remember { mutableStateMapOf<Int, Int>() }
-    var isRestoringScroll by remember { mutableStateOf(false) }
-
-    LaunchedEffect(uiState.selectedDayIndex) {
-        isRestoringScroll = true
-        scrollState.scrollTo(savedScrollOffsets[uiState.selectedDayIndex] ?: 0)
-        isRestoringScroll = false
-    }
-
-    LaunchedEffect(scrollState.value) {
-        if (!isRestoringScroll) {
-            savedScrollOffsets[uiState.selectedDayIndex] = scrollState.value
-        }
-    }
 
     // Swipe to change day
     val swipeThresholdPx = with(density) { SWIPE_DAY_THRESHOLD_DP.dp.toPx() }
@@ -123,32 +110,14 @@ fun TimetableScreen(
     var staticHeaderHeightPx by remember { mutableIntStateOf(0) }
     val staticHeaderHeightDp = with(density) { staticHeaderHeightPx.toDp() }
 
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Navy)
-            .pointerInput(Unit) {
-                detectHorizontalDragGestures(
-                    onDragEnd = {
-                        when {
-                            swipeAccumulator < -swipeThresholdPx -> viewModel.selectNextDay()
-                            swipeAccumulator >  swipeThresholdPx -> viewModel.selectPreviousDay()
-                        }
-                        swipeAccumulator = 0f
-                    },
-                    onDragCancel = { swipeAccumulator = 0f },
-                    onHorizontalDrag = { change, dragAmount ->
-                        change.consume()
-                        swipeAccumulator += dragAmount
-                    },
-                )
-            },
-    ) {
+    Box(modifier = modifier.fillMaxSize().background(Navy)) {
 
         // Layer 1: static header column (FestivalScreenHeader + day tabs + stage images)
+        // zIndex(1f) ensures this is drawn on top of the scrollable band blocks in Layer 2
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .zIndex(1f)
                 .onSizeChanged { staticHeaderHeightPx = it.height },
         ) {
             FestivalScreenHeader(title = stringResource(R.string.timetable_title))
@@ -217,12 +186,28 @@ fun TimetableScreen(
             }
         }
 
-        // Layer 2: scrollable timetable
+        // Layer 2: scrollable timetable — swipe gesture lives here so day buttons in Layer 1 are unaffected
         val allBands = uiState.stageABands + uiState.stageBBands
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(scrollState),
+                .verticalScroll(scrollState)
+                .pointerInput(Unit) {
+                    detectHorizontalDragGestures(
+                        onDragEnd = {
+                            when {
+                                swipeAccumulator < -swipeThresholdPx -> viewModel.selectNextDay()
+                                swipeAccumulator >  swipeThresholdPx -> viewModel.selectPreviousDay()
+                            }
+                            swipeAccumulator = 0f
+                        },
+                        onDragCancel = { swipeAccumulator = 0f },
+                        onHorizontalDrag = { change, dragAmount ->
+                            change.consume()
+                            swipeAccumulator += dragAmount
+                        },
+                    )
+                },
         ) {
             Spacer(modifier = Modifier.height(staticHeaderHeightDp))
 

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -19,7 +20,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -29,7 +29,6 @@ import sk.punkacidetom.pd2026.core.ui.theme.Crimson
 import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
 import sk.punkacidetom.pd2026.core.ui.theme.NAV_BUTTON_WIDTH_FRACTION
 import sk.punkacidetom.pd2026.core.ui.theme.Navy
-import sk.punkacidetom.pd2026.core.ui.theme.PARALLAX_SCROLL_FRACTION
 import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_TOP_PADDING_DP
 import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_WIDTH_FRACTION
 import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_TITLE_TOP_PADDING_DP
@@ -48,47 +47,54 @@ fun NewsScreen(
 
     Box(modifier = modifier.fillMaxSize().background(Navy)) {
 
-        // Parallax background
-        AsyncImage(
-            model = "file:///android_asset/header_main.png",
-            contentDescription = null,
-            contentScale = ContentScale.FillWidth,
-            modifier = Modifier
-                .fillMaxWidth()
-                .graphicsLayer { translationY = -scrollState.value * PARALLAX_SCROLL_FRACTION },
-        )
-
-        // Scrollable content
+        // Single scrollable column — background image scrolls at 1× with content
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // Logo
-            Spacer(modifier = Modifier.height(SHORT_HEADER_LOGO_TOP_PADDING_DP.dp))
-            AsyncImage(
-                model = "file:///android_asset/logo_pd_short.png",
-                contentDescription = "Punkáči deťom 2026",
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier.fillMaxWidth(SHORT_HEADER_LOGO_WIDTH_FRACTION),
-            )
-            // Title
-            Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_TOP_PADDING_DP.dp))
-            Text(
-                text = stringResource(R.string.newsletter_title),
-                style = MaterialTheme.typography.displayMedium,
-                color = White,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = spacing.md),
-            )
+            // Header area: background image + logo + title in one Box
+            Box(modifier = Modifier.fillMaxWidth()) {
 
-            // Navy-backed content
+                // Background image — layer 1, scrolls at 1×; extends behind status bar
+                AsyncImage(
+                    model = "file:///android_asset/header_main.png",
+                    contentDescription = null,
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                // Logo + title — layer 2, pushed below status bar
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Spacer(modifier = Modifier.height(SHORT_HEADER_LOGO_TOP_PADDING_DP.dp))
+                    AsyncImage(
+                        model = "file:///android_asset/logo_pd_short.png",
+                        contentDescription = "Punkáči deťom 2026",
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier.fillMaxWidth(SHORT_HEADER_LOGO_WIDTH_FRACTION),
+                    )
+                    Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_TOP_PADDING_DP.dp))
+                    Text(
+                        text = stringResource(R.string.newsletter_title),
+                        style = MaterialTheme.typography.displayMedium,
+                        color = White,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = spacing.md),
+                    )
+                }
+            }
+
+            // Screen content — outer Box provides Navy background colour for uncovered area
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Navy)
                     .padding(spacing.md),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
