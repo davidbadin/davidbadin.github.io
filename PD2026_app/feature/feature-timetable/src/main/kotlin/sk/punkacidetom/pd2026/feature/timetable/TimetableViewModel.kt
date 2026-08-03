@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -37,6 +38,9 @@ class TimetableViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _selectedDayIndex = MutableStateFlow(0)
+
+    /** Direct StateFlow for selectedDayIndex — bypasses the combine pipeline for instant UI updates. */
+    val selectedDayIndex: StateFlow<Int> = _selectedDayIndex.asStateFlow()
 
     init {
         // On first data load, default to the current festival day when DURING
@@ -73,7 +77,7 @@ class TimetableViewModel @Inject constructor(
                 ?.sortedWith(compareBy({ it.startDate }, { it.startTime })) ?: emptyList(),
             favouriteIds = favouriteIds,
         )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), TimetableUiState())
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, TimetableUiState())
 
     fun selectDay(index: Int) {
         _selectedDayIndex.value = index

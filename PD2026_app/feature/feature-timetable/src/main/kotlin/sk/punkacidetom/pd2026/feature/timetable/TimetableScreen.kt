@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,9 +23,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -85,6 +87,7 @@ fun TimetableScreen(
     viewModel: TimetableViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val selectedDayIndex by viewModel.selectedDayIndex.collectAsState()  // direct — bypasses combine pipeline
     val spacing = LocalAppSpacing.current
     val density = LocalDensity.current
 
@@ -132,7 +135,7 @@ fun TimetableScreen(
                         onDragCancel = { swipeAccumulator = 0f },
                         onHorizontalDrag = { _, dragAmount ->
                             // change.consume() intentionally omitted — consuming events here
-                            // prevents TextButton click handlers in the static header from firing
+                            // prevents Button click handlers in the static header from firing
                             swipeAccumulator += dragAmount
                         },
                     )
@@ -221,19 +224,22 @@ fun TimetableScreen(
                             val dayName = day.date.dayOfWeek
                                 .getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
                                 .replaceFirstChar { it.uppercase() }
-                            val selected = index == uiState.selectedDayIndex
-                            TextButton(
+                            val selected = index == selectedDayIndex  // direct StateFlow — instant update
+                            Button(
                                 onClick = { viewModel.selectDay(index) },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = if (selected) Crimson else NavyLight,
+                                    contentColor   = if (selected) White   else WhiteAlpha60,
+                                ),
+                                shape = RoundedCornerShape(spacing.cardCorner),
+                                contentPadding = PaddingValues(horizontal = spacing.sm, vertical = 0.dp),
                                 modifier = Modifier
                                     .weight(1f)
-                                    .clip(RoundedCornerShape(spacing.cardCorner))
-                                    .background(if (selected) Crimson else NavyLight)
                                     .alpha(if (selected) 1f else INACTIVE_DAY_BUTTON_ALPHA),
                             ) {
                                 Text(
                                     text = dayName,
                                     style = MaterialTheme.typography.labelLarge,
-                                    color = if (selected) White else WhiteAlpha60,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                 )
