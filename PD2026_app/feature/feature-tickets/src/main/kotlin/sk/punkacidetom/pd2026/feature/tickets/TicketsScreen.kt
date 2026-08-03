@@ -17,55 +17,73 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import sk.punkacidetom.pd2026.core.ui.components.FestivalScreenHeader
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import sk.punkacidetom.pd2026.core.ui.theme.Crimson
 import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
 import sk.punkacidetom.pd2026.core.ui.theme.NAV_BUTTON_WIDTH_FRACTION
 import sk.punkacidetom.pd2026.core.ui.theme.Navy
+import sk.punkacidetom.pd2026.core.ui.theme.PARALLAX_SCROLL_FRACTION
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_TOP_PADDING_DP
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_WIDTH_FRACTION
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_TITLE_TOP_PADDING_DP
 import sk.punkacidetom.pd2026.core.ui.theme.White
 
 @Composable
 fun TicketsScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val spacing = LocalAppSpacing.current
-    val density = LocalDensity.current
+    val scrollState = rememberScrollState()
 
     fun openUrl(url: String) {
         CustomTabsIntent.Builder().build().launchUrl(context, Uri.parse(url))
     }
 
-    var contentStartPx by remember { mutableIntStateOf(0) }
-    val contentStartDp = with(density) { contentStartPx.toDp() }
-
     Box(modifier = modifier.fillMaxSize().background(Navy)) {
 
-        // Layer 1: static pinned header
-        FestivalScreenHeader(
-            title = stringResource(R.string.tickets_title),
-            onContentStartY = { contentStartPx = it },
+        // Parallax background
+        AsyncImage(
+            model = "file:///android_asset/header_main.png",
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier
+                .fillMaxWidth()
+                .graphicsLayer { translationY = -scrollState.value * PARALLAX_SCROLL_FRACTION },
         )
 
-        // Layer 2: scrollable content
+        // Scrollable content
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+                .fillMaxWidth()
+                .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // Transparent spacer — header visible behind it
-            Spacer(modifier = Modifier.height(contentStartDp))
+            // Logo
+            Spacer(modifier = Modifier.height(SHORT_HEADER_LOGO_TOP_PADDING_DP.dp))
+            AsyncImage(
+                model = "file:///android_asset/logo_pd_short.png",
+                contentDescription = "Punkáči deťom 2026",
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier.fillMaxWidth(SHORT_HEADER_LOGO_WIDTH_FRACTION),
+            )
+            // Title
+            Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_TOP_PADDING_DP.dp))
+            Text(
+                text = stringResource(R.string.tickets_title),
+                style = MaterialTheme.typography.displayMedium,
+                color = White,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = spacing.md),
+            )
 
-            // Navy-backed content
+            // Navy-backed buttons
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

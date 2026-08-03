@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -25,15 +24,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -46,15 +41,22 @@ import sk.punkacidetom.pd2026.core.ui.theme.Crimson
 import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
 import sk.punkacidetom.pd2026.core.ui.theme.NAV_BUTTON_WIDTH_FRACTION
 import sk.punkacidetom.pd2026.core.ui.theme.Navy
+import sk.punkacidetom.pd2026.core.ui.theme.PARALLAX_SCROLL_FRACTION
 import sk.punkacidetom.pd2026.core.ui.theme.White
 
 private const val URL_FACEBOOK  = "https://www.facebook.com/punkacidetom"
 private const val URL_INSTAGRAM = "https://www.instagram.com/festival_punkaci_detom/"
 private const val URL_WEBSITE   = "https://punkacidetom.sk/"
 
-private const val HOME_HEADER_LOGO_WIDTH_FRACTION       = 0.90f
-private const val HOME_HEADER_LOGO_CENTER_FRACTION      = 0.40f
-private const val HOME_HEADER_COUNTDOWN_CENTER_FRACTION = 0.80f
+private const val MAIN_LOGO_WIDTH_FRACTION      = 0.90f
+private const val MAIN_LOGO_TOP_PADDING_DP      = 60
+private const val MAIN_CT_BLOCK_WIDTH_FRACTION  = 0.90f
+private const val MAIN_CT_BLOCK_TOP_PADDING_DP  = 60
+private const val MAIN_STRIPE_WIDTH_FRACTION    = 0.75f
+private const val MAIN_COUNTDOWN_WIDTH_FRACTION = 0.90f
+private const val MAIN_THANKYOU_WIDTH_FRACTION  = 0.75f
+private const val MAIN_BUTTONS_TOP_PADDING_DP   = 48
+private const val MAIN_SOCIAL_TOP_PADDING_DP    = 48
 
 @Composable
 fun HomeScreen(
@@ -72,11 +74,11 @@ fun HomeScreen(
     val isNewsletterAvailable by viewModel.isNewsletterAvailable.collectAsState()
     val spacing = LocalAppSpacing.current
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
 
-    // Build nav button list as 4-tuples: (label, icon, iconFamily, onClick)
     val navButtons = buildList {
-        add(Triple(stringResource(R.string.home_btn_timetable), "calendar", onNavigateToTimetable))
-        add(Triple(stringResource(R.string.home_btn_bands), "music", onNavigateToBands))
+        add(Triple(stringResource(R.string.home_btn_timetable), "calendar",    onNavigateToTimetable))
+        add(Triple(stringResource(R.string.home_btn_bands),     "music",        onNavigateToBands))
         if (isNewsletterAvailable) {
             add(Triple(stringResource(R.string.home_btn_newsletter), "newspaper", onNavigateToNews))
         }
@@ -85,85 +87,100 @@ fun HomeScreen(
         add(Triple(stringResource(R.string.home_btn_tickets), "ticket",      onNavigateToTickets))
     }
 
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Navy)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .background(Navy),
     ) {
-        HomeHeader(
-            phase        = uiState.phase,
-            countdown    = uiState.countdown,
-            thankyouText = uiState.thankyouText,
-            navButtonsContent = {
-                navButtons.forEach { (label, icon, onClick) ->
+        // Layer 1: background image — outside the scroll column; moves at 0.5× speed
+        AsyncImage(
+            model = "file:///android_asset/header_main.png",
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier
+                .fillMaxWidth()
+                .graphicsLayer { translationY = -scrollState.value * PARALLAX_SCROLL_FRACTION },
+        )
+
+        // Layer 2: all content — scrolls at 1×
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            HomeHeader(
+                phase        = uiState.phase,
+                countdown    = uiState.countdown,
+                thankyouText = uiState.thankyouText,
+                navButtonsContent = {
+                    navButtons.forEach { (label, icon, onClick) ->
+                        HomeNavButton(
+                            label    = label,
+                            icon     = icon,
+                            onClick  = onClick,
+                            modifier = Modifier.fillMaxWidth(NAV_BUTTON_WIDTH_FRACTION),
+                        )
+                        Spacer(modifier = Modifier.height(spacing.sm))
+                    }
                     HomeNavButton(
-                        label   = label,
-                        icon    = icon,
-                        onClick = onClick,
-                        modifier = Modifier.fillMaxWidth(NAV_BUTTON_WIDTH_FRACTION),
+                        label      = stringResource(R.string.home_btn_spotify_playlist),
+                        icon       = "spotify",
+                        iconFamily = FaFamily.Brands,
+                        onClick    = onNavigateToSpotify,
+                        modifier   = Modifier.fillMaxWidth(NAV_BUTTON_WIDTH_FRACTION),
                     )
                     Spacer(modifier = Modifier.height(spacing.sm))
-                }
-                // Spotify button — Brands icon family
-                HomeNavButton(
-                    label      = stringResource(R.string.home_btn_spotify_playlist),
-                    icon       = "spotify",
-                    iconFamily = FaFamily.Brands,
-                    onClick    = onNavigateToSpotify,
-                    modifier   = Modifier.fillMaxWidth(NAV_BUTTON_WIDTH_FRACTION),
-                )
-                Spacer(modifier = Modifier.height(spacing.sm))
-            },
-            socialContent = {
-                Text(
-                    text = stringResource(R.string.home_social_heading),
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = White,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Spacer(modifier = Modifier.height(spacing.sm))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
+                },
+                socialContent = {
+                    Text(
+                        text = stringResource(R.string.home_social_heading),
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = White,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    Spacer(modifier = Modifier.height(spacing.sm))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        SocialLink(
+                            label = stringResource(R.string.home_social_facebook),
+                            icon  = "facebook",
+                            onClick = {
+                                CustomTabsIntent.Builder().build()
+                                    .launchUrl(context, Uri.parse(URL_FACEBOOK))
+                            },
+                        )
+                        SocialLink(
+                            label = stringResource(R.string.home_social_instagram),
+                            icon  = "instagram",
+                            onClick = {
+                                CustomTabsIntent.Builder().build()
+                                    .launchUrl(context, Uri.parse(URL_INSTAGRAM))
+                            },
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(spacing.sm))
                     SocialLink(
-                        label = stringResource(R.string.home_social_facebook),
-                        icon  = "facebook",
-                        onClick = {
+                        label      = stringResource(R.string.home_social_website),
+                        icon       = "globe",
+                        iconFamily = FaFamily.Regular,
+                        onClick    = {
                             CustomTabsIntent.Builder().build()
-                                .launchUrl(context, Uri.parse(URL_FACEBOOK))
+                                .launchUrl(context, Uri.parse(URL_WEBSITE))
                         },
                     )
-                    SocialLink(
-                        label = stringResource(R.string.home_social_instagram),
-                        icon  = "instagram",
-                        onClick = {
-                            CustomTabsIntent.Builder().build()
-                                .launchUrl(context, Uri.parse(URL_INSTAGRAM))
-                        },
-                    )
-                }
-                Spacer(modifier = Modifier.height(spacing.sm))
-                SocialLink(
-                    label      = stringResource(R.string.home_social_website),
-                    icon       = "globe",
-                    iconFamily = FaFamily.Regular,
-                    onClick    = {
-                        CustomTabsIntent.Builder().build()
-                            .launchUrl(context, Uri.parse(URL_WEBSITE))
-                    },
-                )
-            },
-        )
+                },
+            )
+        }
     }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// HomeHeader — background image + logo overlay + all page content in one Box
+// HomeHeader — padding-based logo + C/T block + navy content
 // ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
@@ -174,59 +191,42 @@ private fun HomeHeader(
     navButtonsContent: @Composable ColumnScope.() -> Unit,
     socialContent: @Composable ColumnScope.() -> Unit,
 ) {
-    val density = LocalDensity.current
     val spacing = LocalAppSpacing.current
-    var bgHeightPx   by remember { mutableIntStateOf(0) }
-    var logoHeightPx by remember { mutableIntStateOf(0) }
-    val bgHeightDp   = with(density) { bgHeightPx.toDp() }
-    val logoHeightDp = with(density) { logoHeightPx.toDp() }
 
-    Box(modifier = Modifier.fillMaxWidth()) {
-
-        // Layer 1: background image — full width, full natural height
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        // Logo
+        Spacer(modifier = Modifier.height(MAIN_LOGO_TOP_PADDING_DP.dp))
         AsyncImage(
-            model = "file:///android_asset/header_main.png",
-            contentDescription = null,
+            model = "file:///android_asset/logo_pd_main.png",
+            contentDescription = "Punkáči deťom 2026",
             contentScale = ContentScale.FillWidth,
-            modifier = Modifier
-                .fillMaxWidth()
-                .onSizeChanged { bgHeightPx = it.height },
+            modifier = Modifier.fillMaxWidth(MAIN_LOGO_WIDTH_FRACTION),
         )
 
-        // Layer 2: logo centred at 40% of bg height
-        if (bgHeightPx > 0) {
-            val logoCenter = bgHeightDp * HOME_HEADER_LOGO_CENTER_FRACTION
-            AsyncImage(
-                model = "file:///android_asset/logo_pd_main.png",
-                contentDescription = "Punkáči deťom 2026",
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .fillMaxWidth(HOME_HEADER_LOGO_WIDTH_FRACTION)
-                    .align(Alignment.TopCenter)
-                    .onSizeChanged { logoHeightPx = it.height }
-                    .offset(y = logoCenter - logoHeightDp / 2),
-            )
-        }
-
-        // Layer 3: content column starts at 80% of bg height
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = bgHeightDp * HOME_HEADER_COUNTDOWN_CENTER_FRACTION),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
+        // Countdown / Thank-you block (hidden during festival)
+        if (phase != FestivalInfo.Phase.DURING) {
+            Spacer(modifier = Modifier.height(MAIN_CT_BLOCK_TOP_PADDING_DP.dp))
             PhaseBlock(
                 phase        = phase,
                 countdown    = countdown,
                 thankyouText = thankyouText,
             )
+        }
 
-            Spacer(modifier = Modifier.height(spacing.lg))
-
+        // Navy-backed section — buttons + social
+        Spacer(modifier = Modifier.height(MAIN_BUTTONS_TOP_PADDING_DP.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Navy),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
             navButtonsContent()
 
-            Spacer(modifier = Modifier.height(spacing.lg))
-
+            Spacer(modifier = Modifier.height(MAIN_SOCIAL_TOP_PADDING_DP.dp))
             socialContent()
 
             Spacer(modifier = Modifier.height(spacing.xl))
@@ -235,7 +235,7 @@ private fun HomeHeader(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PhaseBlock — stripe image + countdown or thank-you text (hidden during festival)
+// PhaseBlock — stripe + countdown or thank-you (not shown during festival)
 // ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
@@ -244,23 +244,25 @@ private fun PhaseBlock(
     countdown: CountdownState,
     thankyouText: String,
 ) {
-    if (phase == FestivalInfo.Phase.DURING) return
-
-    Box(modifier = Modifier.fillMaxWidth()) {
+    Box(
+        modifier = Modifier.fillMaxWidth(MAIN_CT_BLOCK_WIDTH_FRACTION),
+        contentAlignment = Alignment.Center,
+    ) {
+        // Stripe — 75% of screen = (0.75 / 0.90) of C/T block width
         AsyncImage(
             model = "file:///android_asset/stripe.png",
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(MAIN_STRIPE_WIDTH_FRACTION / MAIN_CT_BLOCK_WIDTH_FRACTION),
         )
         when (phase) {
             FestivalInfo.Phase.BEFORE -> CountdownContent(
                 countdown = countdown,
-                modifier  = Modifier.align(Alignment.Center),
+                modifier  = Modifier.fillMaxWidth(),
             )
             FestivalInfo.Phase.AFTER  -> ThankyouContent(
                 text     = thankyouText,
-                modifier = Modifier.align(Alignment.Center),
+                modifier = Modifier.fillMaxWidth(MAIN_THANKYOU_WIDTH_FRACTION / MAIN_CT_BLOCK_WIDTH_FRACTION),
             )
             else -> {}
         }
@@ -274,7 +276,7 @@ private fun CountdownContent(
 ) {
     val spacing = LocalAppSpacing.current
     Column(
-        modifier = modifier.padding(spacing.md),
+        modifier = modifier.padding(spacing.sm),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -282,6 +284,9 @@ private fun CountdownContent(
             style = MaterialTheme.typography.displayMedium,
             color = White,
             textAlign = TextAlign.Center,
+            maxLines = 1,
+            softWrap = false,
+            modifier = Modifier.fillMaxWidth(),
         )
         Text(
             text = "${countdown.days} ${stringResource(R.string.home_countdown_days)} " +
@@ -290,6 +295,9 @@ private fun CountdownContent(
             style = MaterialTheme.typography.displayMedium,
             color = White,
             textAlign = TextAlign.Center,
+            maxLines = 1,
+            softWrap = false,
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }

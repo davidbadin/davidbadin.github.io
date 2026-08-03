@@ -25,25 +25,26 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import sk.punkacidetom.pd2026.core.model.Band
 import sk.punkacidetom.pd2026.core.model.Stages
-import sk.punkacidetom.pd2026.core.ui.components.FestivalScreenHeader
 import sk.punkacidetom.pd2026.core.ui.theme.Crimson
 import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
 import sk.punkacidetom.pd2026.core.ui.theme.Navy
 import sk.punkacidetom.pd2026.core.ui.theme.NavyLight
+import sk.punkacidetom.pd2026.core.ui.theme.PARALLAX_SCROLL_FRACTION
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_TOP_PADDING_DP
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_WIDTH_FRACTION
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_TITLE_TOP_PADDING_DP
 import sk.punkacidetom.pd2026.core.ui.theme.White
 import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
 
@@ -55,29 +56,47 @@ fun BandsScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     val spacing = LocalAppSpacing.current
-    val density = LocalDensity.current
-
-    var contentStartPx by remember { mutableIntStateOf(0) }
-    val contentStartDp = with(density) { contentStartPx.toDp() }
+    val scrollState = rememberScrollState()
 
     Box(modifier = modifier.fillMaxSize().background(Navy)) {
 
-        // Layer 1: static pinned header
-        FestivalScreenHeader(
-            title = stringResource(R.string.bands_title),
-            onContentStartY = { contentStartPx = it },
+        // Parallax background — outside the scroll column
+        AsyncImage(
+            model = "file:///android_asset/header_main.png",
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier
+                .fillMaxWidth()
+                .graphicsLayer { translationY = -scrollState.value * PARALLAX_SCROLL_FRACTION },
         )
 
-        // Layer 2: scrollable content
+        // Scrollable content
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+                .fillMaxWidth()
+                .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // Transparent spacer — header visible behind it
-            Spacer(modifier = Modifier.height(contentStartDp))
+            // Logo
+            Spacer(modifier = Modifier.height(SHORT_HEADER_LOGO_TOP_PADDING_DP.dp))
+            AsyncImage(
+                model = "file:///android_asset/logo_pd_short.png",
+                contentDescription = "Punkáči deťom 2026",
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier.fillMaxWidth(SHORT_HEADER_LOGO_WIDTH_FRACTION),
+            )
+            // Title
+            Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_TOP_PADDING_DP.dp))
+            Text(
+                text = stringResource(R.string.bands_title),
+                style = MaterialTheme.typography.displayMedium,
+                color = White,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = spacing.md),
+            )
 
-            // Navy-backed content
+            // Navy-backed band list
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -91,6 +110,7 @@ fun BandsScreen(
                         modifier = Modifier.padding(spacing.md),
                     )
                 } else {
+                    Spacer(modifier = Modifier.height(spacing.sm))
                     uiState.bands.forEach { band ->
                         BandRow(
                             band = band,
@@ -100,7 +120,6 @@ fun BandsScreen(
                         )
                         Spacer(modifier = Modifier.height(spacing.sm))
                     }
-                    Spacer(modifier = Modifier.height(spacing.sm))
                 }
             }
         }
@@ -115,7 +134,7 @@ private fun BandRow(
     onToggleFavourite: () -> Unit,
 ) {
     val spacing = LocalAppSpacing.current
-    val dayStr = "${band.startDate.dayOfMonth}. ${band.startDate.monthValue}."
+    val dayStr  = "${band.startDate.dayOfMonth}. ${band.startDate.monthValue}."
     val timeStr = "${band.startTime.hour}:${band.startTime.minute.toString().padStart(2, '0')}"
 
     Row(
@@ -135,9 +154,7 @@ private fun BandRow(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(spacing.sm),
-            ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(spacing.sm)) {
                 Text(
                     text = Stages.displayName(band.stageCode),
                     style = MaterialTheme.typography.labelSmall,
@@ -159,7 +176,6 @@ private fun BandRow(
                 color = WhiteAlpha60,
             )
         }
-        Spacer(modifier = Modifier.height(0.dp))
         IconButton(onClick = onToggleFavourite) {
             Icon(
                 imageVector = if (isFavourite) Icons.Filled.Favorite

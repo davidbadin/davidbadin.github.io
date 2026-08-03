@@ -79,6 +79,17 @@ class TimetableViewModel @Inject constructor(
         _selectedDayIndex.value = index
     }
 
+    fun selectNextDay() {
+        val days    = uiState.value.days
+        val current = uiState.value.selectedDayIndex
+        if (current < days.size - 1) selectDay(current + 1)
+    }
+
+    fun selectPreviousDay() {
+        val current = uiState.value.selectedDayIndex
+        if (current > 0) selectDay(current - 1)
+    }
+
     fun toggleFavourite(bandId: Int) {
         viewModelScope.launch {
             val wasFavourite = uiState.value.favouriteIds.contains(bandId)

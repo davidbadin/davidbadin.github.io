@@ -49,3 +49,16 @@ val LocalFontScaleMultiplier = compositionLocalOf { 1.0f }
 
 /** Width fraction for major nav/action buttons — 75% of screen width, centred. */
 const val NAV_BUTTON_WIDTH_FRACTION = 0.75f
+
+// ── Parallax / secondary-screen header constants ──────────────────────────────
+/** Background image scroll speed for parallax screens (0.5 = half scroll speed). */
+const val PARALLAX_SCROLL_FRACTION = 0.5f
+
+/** Width fraction for logo_pd_short.png on secondary screens. */
+const val SHORT_HEADER_LOGO_WIDTH_FRACTION = 0.90f
+
+/** Top padding (dp) above logo on secondary screens. */
+const val SHORT_HEADER_LOGO_TOP_PADDING_DP = 32
+
+/** Vertical padding (dp) between logo bottom and screen title on secondary screens. */
+const val SHORT_HEADER_TITLE_TOP_PADDING_DP = 32

@@ -3,6 +3,7 @@ package sk.punkacidetom.pd2026.feature.timetable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +29,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
@@ -65,9 +69,13 @@ import java.time.LocalDateTime
 import java.time.format.TextStyle
 import java.util.Locale
 
-private const val GLOW_HEIGHT_MINUTES  = 15
-private const val GLOW_START_ALPHA     = 0.5f
-private const val INACTIVE_DAY_BUTTON_ALPHA = 0.5f
+private const val GLOW_HEIGHT_MINUTES             = 15
+private const val GLOW_START_ALPHA                = 0.5f
+private const val INACTIVE_DAY_BUTTON_ALPHA       = 0.5f
+private const val SCHEDULE_DAYBUTTON_TOP_PADDING_DP      = 32
+private const val SCHEDULE_STAGE_LABEL_TOP_PADDING_DP    = 4
+private const val SCHEDULE_STAGE_LABEL_BOTTOM_PADDING_DP = 4
+private const val SWIPE_DAY_THRESHOLD_DP          = 50
 
 @Composable
 fun TimetableScreen(
@@ -79,11 +87,9 @@ fun TimetableScreen(
     val spacing = LocalAppSpacing.current
     val density = LocalDensity.current
 
-    // Scale card height with font size — 50% taller at all scales so text fits
     val fontScale = LocalFontScaleMultiplier.current
-    val minuteHeightDp = 2f * 1.5f * fontScale   // dp per timeline-minute
+    val minuteHeightDp = 2f * 1.5f * fontScale
 
-    // Ticking clock for the "LIVE" indicator — updates every 60 seconds
     var now by remember { mutableStateOf(LocalDateTime.now()) }
     LaunchedEffect(Unit) {
         while (true) {
@@ -92,13 +98,54 @@ fun TimetableScreen(
         }
     }
 
-    // Measure static header (FestivalScreenHeader + day tabs + stage images) for spacer
+    // Hoisted scroll state for per-day save/restore
+    val scrollState = rememberScrollState()
+    val savedScrollOffsets = remember { mutableStateMapOf<Int, Int>() }
+    var isRestoringScroll by remember { mutableStateOf(false) }
+
+    LaunchedEffect(uiState.selectedDayIndex) {
+        isRestoringScroll = true
+        scrollState.scrollTo(savedScrollOffsets[uiState.selectedDayIndex] ?: 0)
+        isRestoringScroll = false
+    }
+
+    LaunchedEffect(scrollState.value) {
+        if (!isRestoringScroll) {
+            savedScrollOffsets[uiState.selectedDayIndex] = scrollState.value
+        }
+    }
+
+    // Swipe to change day
+    val swipeThresholdPx = with(density) { SWIPE_DAY_THRESHOLD_DP.dp.toPx() }
+    var swipeAccumulator by remember { mutableFloatStateOf(0f) }
+
+    // Measure total static header height for the transparent spacer
     var staticHeaderHeightPx by remember { mutableIntStateOf(0) }
     val staticHeaderHeightDp = with(density) { staticHeaderHeightPx.toDp() }
 
-    Box(modifier = modifier.fillMaxSize().background(Navy)) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Navy)
+            .pointerInput(Unit) {
+                detectHorizontalDragGestures(
+                    onDragEnd = {
+                        when {
+                            swipeAccumulator < -swipeThresholdPx -> viewModel.selectNextDay()
+                            swipeAccumulator >  swipeThresholdPx -> viewModel.selectPreviousDay()
+                        }
+                        swipeAccumulator = 0f
+                    },
+                    onDragCancel = { swipeAccumulator = 0f },
+                    onHorizontalDrag = { change, dragAmount ->
+                        change.consume()
+                        swipeAccumulator += dragAmount
+                    },
+                )
+            },
+    ) {
 
-        // Layer 1: static header column (pinned — does not scroll)
+        // Layer 1: static header column (FestivalScreenHeader + day tabs + stage images)
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -111,7 +158,11 @@ fun TimetableScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = spacing.md),
+                        .padding(
+                            top   = SCHEDULE_DAYBUTTON_TOP_PADDING_DP.dp,
+                            start = spacing.md,
+                            end   = spacing.md,
+                        ),
                     horizontalArrangement = Arrangement.spacedBy(spacing.sm),
                 ) {
                     uiState.days.forEachIndexed { index, day ->
@@ -139,13 +190,16 @@ fun TimetableScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(spacing.sm))
-
             // Stage header images
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = spacing.md),
+                    .padding(
+                        top    = SCHEDULE_STAGE_LABEL_TOP_PADDING_DP.dp,
+                        bottom = SCHEDULE_STAGE_LABEL_BOTTOM_PADDING_DP.dp,
+                        start  = spacing.md,
+                        end    = spacing.md,
+                    ),
             ) {
                 AsyncImage(
                     model = "file:///android_asset/stage_A.png",
@@ -161,18 +215,15 @@ fun TimetableScreen(
                     modifier = Modifier.weight(1f),
                 )
             }
-
-            Spacer(modifier = Modifier.height(spacing.xs))
         }
 
-        // Layer 2: scrollable timetable content
+        // Layer 2: scrollable timetable
         val allBands = uiState.stageABands + uiState.stageBBands
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(scrollState),
         ) {
-            // Transparent spacer matching the static header height
             Spacer(modifier = Modifier.height(staticHeaderHeightDp))
 
             if (allBands.isEmpty()) {
@@ -184,7 +235,7 @@ fun TimetableScreen(
                 )
             } else {
                 val dayStartDt = allBands.minOf { LocalDateTime.of(it.startDate, it.startTime) }
-                val dayEndDt = allBands.maxOf { LocalDateTime.of(it.endDate, it.endTime) }
+                val dayEndDt   = allBands.maxOf { LocalDateTime.of(it.endDate, it.endTime) }
                 val totalMinutes = Duration.between(dayStartDt, dayEndDt).toMinutes()
                 val totalTimelineHeight = (totalMinutes * minuteHeightDp).dp
 
@@ -205,9 +256,7 @@ fun TimetableScreen(
                         onToggleFavourite = viewModel::toggleFavourite,
                         modifier = Modifier.weight(1f),
                     )
-
                     Spacer(modifier = Modifier.width(spacing.sm))
-
                     ProportionalStageColumn(
                         bands = uiState.stageBBands,
                         dayStartDt = dayStartDt,
@@ -237,7 +286,6 @@ private fun ProportionalStageColumn(
     onToggleFavourite: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    // Remove overlapping bands within this column (keep earlier ones, skip later ones)
     val dedupedBands: List<Band> = buildList {
         var lastEndDt = LocalDateTime.MIN
         for (band in bands.sortedWith(compareBy({ it.startDate }, { it.startTime }))) {
@@ -264,7 +312,6 @@ private fun ProportionalStageColumn(
             val isPlaying = !now.isBefore(bandStartDt) && now.isBefore(bandEndDt)
 
             if (isPlaying) {
-                // Top glow — transparent at top, Crimson at card edge
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -276,7 +323,6 @@ private fun ProportionalStageColumn(
                             )
                         )
                 )
-                // Bottom glow — Crimson at card edge, transparent at bottom
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -318,7 +364,6 @@ private fun SlotCard(
     val timeStr = "${band.startTime.hour}:${band.startTime.minute.toString().padStart(2, '0')}" +
         " – ${band.endTime.hour}:${band.endTime.minute.toString().padStart(2, '0')}"
 
-    // Always sharp corners
     val containerShape = RectangleShape
     val containerColor = when {
         isPlaying   -> Crimson.copy(alpha = 0.85f)
