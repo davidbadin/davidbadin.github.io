@@ -8,31 +8,38 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import sk.punkacidetom.pd2026.core.ui.components.FestivalScreenHeader
+import coil.compose.AsyncImage
 import sk.punkacidetom.pd2026.core.ui.theme.Crimson
 import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
 import sk.punkacidetom.pd2026.core.ui.theme.NAV_BUTTON_WIDTH_FRACTION
 import sk.punkacidetom.pd2026.core.ui.theme.Navy
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_TOP_PADDING_DP
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_WIDTH_FRACTION
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_TITLE_BOTTOM_PADDING_DP
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_TITLE_TOP_PADDING_DP
 import sk.punkacidetom.pd2026.core.ui.theme.White
 import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
+import sk.punkacidetom.pd2026.core.ui.theme.PARALLAX_SCROLL_FRACTION
 
 @Composable
 fun NewsScreen(
@@ -42,59 +49,102 @@ fun NewsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val spacing = LocalAppSpacing.current
-    val density = LocalDensity.current
+    val scrollState = rememberScrollState()
 
-    var contentStartPx by remember { mutableIntStateOf(0) }
-    val contentStartDp = with(density) { contentStartPx.toDp() }
+    Scaffold(
+        containerColor = Navy,
+    ) { innerPadding ->
 
-    Box(modifier = modifier.fillMaxSize().background(Navy)) {
-
-        // Layer 1: static pinned header
-        FestivalScreenHeader(
-            title = stringResource(R.string.newsletter_title),
-            onContentStartY = { contentStartPx = it },
-        )
-
-        // Layer 2: scrollable content
-        Column(
-            modifier = Modifier
+        Box(
+            modifier = modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .background(Navy)
+                .padding(innerPadding),
         ) {
-            // Transparent spacer — header visible behind it
-            Spacer(modifier = Modifier.height(contentStartDp))
 
-            // Navy-backed content
+            // Background image — fills Box
+            AsyncImage(
+                model = "file:///android_asset/header_main.png",
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .graphicsLayer { translationY = -scrollState.value * PARALLAX_SCROLL_FRACTION },
+                alignment = Alignment.TopCenter,
+            )
+
+            // Single scrollable column — background image scrolls at 1× with content
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Navy)
-                    .padding(spacing.md),
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                if (uiState.volumes.isEmpty()) {
-                    Text(
-                        text = stringResource(R.string.newsletter_not_yet),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = WhiteAlpha60,
-                    )
-                } else {
-                    uiState.volumes.forEach { volume ->
-                        Button(
-                            onClick = { onOpenVolume(volume.id) },
+                // Header area: Box sized by logo/title Column; background clipped to that height
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .clipToBounds(),
+                ) {
+
+                    // Logo + title — sizes the Box; pushed below status bar
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .statusBarsPadding(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_LOGO_TOP_PADDING_DP.dp))
+                        AsyncImage(
+                            model = "file:///android_asset/logo_pd_short.png",
+                            contentDescription = "Punkáči deťom 2026",
+                            contentScale = ContentScale.FillWidth,
+                            modifier = Modifier.fillMaxWidth(SHORT_HEADER_LOGO_WIDTH_FRACTION),
+                        )
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_TOP_PADDING_DP.dp))
+                        Text(
+                            text = stringResource(R.string.newsletter_title),
+                            style = MaterialTheme.typography.displayMedium,
+                            color = White,
                             modifier = Modifier
-                                .fillMaxWidth(NAV_BUTTON_WIDTH_FRACTION)
-                                .height(spacing.homeButtonMinHeight),
-                            colors = ButtonDefaults.buttonColors(containerColor = Crimson),
-                        ) {
-                            Text(
-                                text = stringResource(R.string.newsletter_volume, volume.id),
-                                style = MaterialTheme.typography.headlineMedium,
-                                color = White,
-                            )
+                                .fillMaxWidth()
+                                .padding(horizontal = spacing.md),
+                        )
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_BOTTOM_PADDING_DP.dp))
+                    }
+                }
+
+                // Screen content — outer Box provides Navy background colour for uncovered area
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(spacing.md),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    if (uiState.volumes.isEmpty()) {
+                        Text(
+                            text = stringResource(R.string.newsletter_not_yet),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = WhiteAlpha60,
+                        )
+                    } else {
+                        uiState.volumes.forEach { volume ->
+                            Button(
+                                onClick = { onOpenVolume(volume.id) },
+                                modifier = Modifier
+                                    .fillMaxWidth(NAV_BUTTON_WIDTH_FRACTION)
+                                    .height(spacing.homeButtonMinHeight),
+                                colors = ButtonDefaults.buttonColors(containerColor = Crimson),
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.newsletter_volume, volume.id),
+                                    style = MaterialTheme.typography.headlineMedium,
+                                    color = White,
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(spacing.sm))
                         }
-                        Spacer(modifier = Modifier.height(spacing.sm))
                     }
                 }
             }

@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -28,26 +30,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import sk.punkacidetom.pd2026.core.ui.components.FestivalScreenHeader
+import coil.compose.AsyncImage
 import sk.punkacidetom.pd2026.core.ui.theme.Crimson
 import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
 import sk.punkacidetom.pd2026.core.ui.theme.Navy
 import sk.punkacidetom.pd2026.core.ui.theme.NavyLight
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_TOP_PADDING_DP
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_WIDTH_FRACTION
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_TITLE_BOTTOM_PADDING_DP
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_TITLE_TOP_PADDING_DP
 import sk.punkacidetom.pd2026.core.ui.theme.White
 import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
+import sk.punkacidetom.pd2026.core.ui.theme.PARALLAX_SCROLL_FRACTION
 
 @Composable
 fun SettingsScreen(
@@ -59,15 +65,13 @@ fun SettingsScreen(
     val canScheduleExactAlarms by viewModel.canScheduleExactAlarms.collectAsState()
     val spacing                = LocalAppSpacing.current
     val context                = LocalContext.current
-    val density                = LocalDensity.current
     val snackbarHostState      = remember { SnackbarHostState() }
+    val scrollState            = rememberScrollState()
 
-    // Recheck the permission every time this screen is resumed
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         viewModel.refreshExactAlarmPermission()
     }
 
-    // Recreate the Activity after a locale switch
     val activity = context as? Activity
     LaunchedEffect(Unit) {
         viewModel.recreateActivity.collect { activity?.recreate() }
@@ -90,9 +94,6 @@ fun SettingsScreen(
         }
     }
 
-    var contentStartPx by remember { mutableIntStateOf(0) }
-    val contentStartDp = with(density) { contentStartPx.toDp() }
-
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = Navy,
@@ -103,26 +104,63 @@ fun SettingsScreen(
                 .background(Navy)
                 .padding(innerPadding),
         ) {
-            // Layer 1: static pinned header
-            FestivalScreenHeader(
-                title = stringResource(R.string.settings_title),
-                onContentStartY = { contentStartPx = it },
+            // Background image — fills Box
+            AsyncImage(
+                model = "file:///android_asset/header_main.png",
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .graphicsLayer { translationY = -scrollState.value * PARALLAX_SCROLL_FRACTION },
+                alignment = Alignment.TopCenter,
             )
 
-            // Layer 2: scrollable settings content
+            // Single scrollable column — background image scrolls at 1× with content
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                // Transparent spacer — header visible behind it
-                Spacer(modifier = Modifier.height(contentStartDp))
+                // Header area: Box sized by logo/title Column; background clipped to that height
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .clipToBounds(),
+                ) {
 
-                // Navy-backed settings content
+                    // Logo + title — sizes the Box; pushed below status bar
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .statusBarsPadding(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_LOGO_TOP_PADDING_DP.dp))
+                        AsyncImage(
+                            model = "file:///android_asset/logo_pd_short.png",
+                            contentDescription = "Punkáči deťom 2026",
+                            contentScale = ContentScale.FillWidth,
+                            modifier = Modifier.fillMaxWidth(SHORT_HEADER_LOGO_WIDTH_FRACTION),
+                        )
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_TOP_PADDING_DP.dp))
+                        Text(
+                            text = stringResource(R.string.settings_title),
+                            style = MaterialTheme.typography.displayMedium,
+                            color = White,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = spacing.md),
+                        )
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_BOTTOM_PADDING_DP.dp))
+                    }
+                }
+
+                // Settings content — outer Box provides Navy background colour for uncovered area
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Navy)
                         .padding(spacing.md),
                 ) {
                     // Language
@@ -189,7 +227,7 @@ fun SettingsScreen(
                         )
                     }
 
-                    // Exact-alarm permission warning (Android 12+, shown only when relevant)
+                    /*// Exact-alarm permission warning (Android 12+)
                     if (uiState.isNotificationsEnabled && uiState.isExactAlarmPermissionMissing) {
                         Spacer(modifier = Modifier.height(spacing.sm))
                         Text(
@@ -219,11 +257,11 @@ fun SettingsScreen(
                                 color = White,
                             )
                         }
-                    }
+                    }*/
 
                     Spacer(modifier = Modifier.height(spacing.lg))
 
-                    // Android permissions button — shown only when exact-alarm permission not granted
+                    // Android permissions button — shown when exact-alarm permission not granted
                     if (!canScheduleExactAlarms) {
                         Button(
                             onClick = {
@@ -267,11 +305,17 @@ fun SettingsScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.weight(1f))
                     Spacer(modifier = Modifier.height(spacing.xl))
 
                     Text(
-                        text = stringResource(R.string.settings_credit),
+                        text = stringResource(R.string.settings_credit_development),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = WhiteAlpha60,
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                    )
+
+                    Text(
+                        text = stringResource(R.string.settings_credit_design),
                         style = MaterialTheme.typography.bodySmall,
                         color = WhiteAlpha60,
                         modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -296,11 +340,7 @@ fun SettingsScreen(
 
 @Composable
 private fun SectionLabel(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.headlineSmall,
-        color = White,
-    )
+    Text(text = text, style = MaterialTheme.typography.headlineSmall, color = White)
 }
 
 @Composable

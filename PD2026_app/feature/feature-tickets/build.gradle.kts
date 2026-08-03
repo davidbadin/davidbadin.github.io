@@ -35,4 +35,5 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.androidx.browser)
+    implementation(libs.coil.compose)
 }
