@@ -23,14 +23,17 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+// import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+// import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -49,6 +52,7 @@ import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_TITLE_BOTTOM_PADDING_DP
 import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_TITLE_TOP_PADDING_DP
 import sk.punkacidetom.pd2026.core.ui.theme.White
 import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
+import sk.punkacidetom.pd2026.core.ui.theme.PARALLAX_SCROLL_FRACTION
 
 @Composable
 fun BandsScreen(
@@ -60,76 +64,92 @@ fun BandsScreen(
     val spacing = LocalAppSpacing.current
     val scrollState = rememberScrollState()
 
-    Box(modifier = modifier.fillMaxSize().background(Navy)) {
 
-        // Single scrollable column — background image scrolls at 1× with content
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(scrollState),
-            horizontalAlignment = Alignment.CenterHorizontally,
+    Scaffold(
+        containerColor = Navy,
+    ) { innerPadding ->
+
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .background(Navy)
+                .padding(innerPadding),
         ) {
-            // Header area: Box sized by logo/title Column; background clipped to that height
-            Box(
+
+            // Background image — fills Box
+            AsyncImage(
+                model = "file:///android_asset/header_main.png",
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentHeight()
-                    .clipToBounds(),
-            ) {
-                // Background image — fills Box (sized by content Column below); clipped at bottom
-                AsyncImage(
-                    model = "file:///android_asset/header_main.png",
-                    contentDescription = null,
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.matchParentSize(),
-                )
+                    .graphicsLayer { translationY = -scrollState.value * PARALLAX_SCROLL_FRACTION },
+                alignment = Alignment.TopCenter,
+            )
 
-                // Logo + title — sizes the Box; pushed below status bar
-                Column(
+
+            // Single scrollable column — background image scrolls at 1× with content
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                // Header area: Box sized by logo/title Column; background clipped to that height
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .statusBarsPadding(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                        .wrapContentHeight()
+                        .clipToBounds(),
                 ) {
-                    Spacer(modifier = Modifier.height(SHORT_HEADER_LOGO_TOP_PADDING_DP.dp))
-                    AsyncImage(
-                        model = "file:///android_asset/logo_pd_short.png",
-                        contentDescription = "Punkáči deťom 2026",
-                        contentScale = ContentScale.FillWidth,
-                        modifier = Modifier.fillMaxWidth(SHORT_HEADER_LOGO_WIDTH_FRACTION),
-                    )
-                    Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_TOP_PADDING_DP.dp))
-                    Text(
-                        text = stringResource(R.string.bands_title),
-                        style = MaterialTheme.typography.displayMedium,
-                        color = White,
+
+                    // Logo + title — sizes the Box; pushed below status bar
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = spacing.md),
-                    )
-                    Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_BOTTOM_PADDING_DP.dp))
-                }
-            }
-
-            // Band list — outer Box provides Navy background colour for uncovered area
-            Column(modifier = Modifier.fillMaxWidth()) {
-                if (uiState.bands.isEmpty()) {
-                    Text(
-                        text = stringResource(R.string.bands_empty),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = WhiteAlpha60,
-                        modifier = Modifier.padding(spacing.md),
-                    )
-                } else {
-                    Spacer(modifier = Modifier.height(spacing.sm))
-                    uiState.bands.forEach { band ->
-                        BandRow(
-                            band = band,
-                            isFavourite = uiState.favouriteIds.contains(band.id),
-                            onBandClick = { onBandClick(band.id) },
-                            onToggleFavourite = { viewModel.toggleFavourite(band.id) },
+                            .statusBarsPadding(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_LOGO_TOP_PADDING_DP.dp))
+                        AsyncImage(
+                            model = "file:///android_asset/logo_pd_short.png",
+                            contentDescription = "Punkáči deťom 2026",
+                            contentScale = ContentScale.FillWidth,
+                            modifier = Modifier.fillMaxWidth(SHORT_HEADER_LOGO_WIDTH_FRACTION),
                         )
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_TOP_PADDING_DP.dp))
+                        Text(
+                            text = stringResource(R.string.bands_title),
+                            style = MaterialTheme.typography.displayMedium,
+                            color = White,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = spacing.md),
+                        )
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_BOTTOM_PADDING_DP.dp))
+                    }
+                }
+
+                // Band list — outer Box provides Navy background colour for uncovered area
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    if (uiState.bands.isEmpty()) {
+                        Text(
+                            text = stringResource(R.string.bands_empty),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = WhiteAlpha60,
+                            modifier = Modifier.padding(spacing.md),
+                        )
+                    } else {
                         Spacer(modifier = Modifier.height(spacing.sm))
+                        uiState.bands.forEach { band ->
+                            BandRow(
+                                band = band,
+                                isFavourite = uiState.favouriteIds.contains(band.id),
+                                onBandClick = { onBandClick(band.id) },
+                                onToggleFavourite = { viewModel.toggleFavourite(band.id) },
+                            )
+                            Spacer(modifier = Modifier.height(spacing.sm))
+                        }
                     }
                 }
             }

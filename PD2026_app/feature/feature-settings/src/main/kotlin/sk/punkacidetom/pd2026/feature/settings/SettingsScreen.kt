@@ -36,6 +36,7 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -52,6 +53,7 @@ import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_TITLE_BOTTOM_PADDING_DP
 import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_TITLE_TOP_PADDING_DP
 import sk.punkacidetom.pd2026.core.ui.theme.White
 import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
+import sk.punkacidetom.pd2026.core.ui.theme.PARALLAX_SCROLL_FRACTION
 
 @Composable
 fun SettingsScreen(
@@ -102,6 +104,17 @@ fun SettingsScreen(
                 .background(Navy)
                 .padding(innerPadding),
         ) {
+            // Background image — fills Box
+            AsyncImage(
+                model = "file:///android_asset/header_main.png",
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .graphicsLayer { translationY = -scrollState.value * PARALLAX_SCROLL_FRACTION },
+                alignment = Alignment.TopCenter,
+            )
+
             // Single scrollable column — background image scrolls at 1× with content
             Column(
                 modifier = Modifier
@@ -116,13 +129,6 @@ fun SettingsScreen(
                         .wrapContentHeight()
                         .clipToBounds(),
                 ) {
-                    // Background image — fills Box (sized by content Column below); clipped at bottom
-                    AsyncImage(
-                        model = "file:///android_asset/header_main.png",
-                        contentDescription = null,
-                        contentScale = ContentScale.FillWidth,
-                        modifier = Modifier.matchParentSize(),
-                    )
 
                     // Logo + title — sizes the Box; pushed below status bar
                     Column(
@@ -221,7 +227,7 @@ fun SettingsScreen(
                         )
                     }
 
-                    // Exact-alarm permission warning (Android 12+)
+                    /*// Exact-alarm permission warning (Android 12+)
                     if (uiState.isNotificationsEnabled && uiState.isExactAlarmPermissionMissing) {
                         Spacer(modifier = Modifier.height(spacing.sm))
                         Text(
@@ -251,7 +257,7 @@ fun SettingsScreen(
                                 color = White,
                             )
                         }
-                    }
+                    }*/
 
                     Spacer(modifier = Modifier.height(spacing.lg))
 
@@ -302,7 +308,14 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(spacing.xl))
 
                     Text(
-                        text = stringResource(R.string.settings_credit),
+                        text = stringResource(R.string.settings_credit_development),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = WhiteAlpha60,
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                    )
+
+                    Text(
+                        text = stringResource(R.string.settings_credit_design),
                         style = MaterialTheme.typography.bodySmall,
                         color = WhiteAlpha60,
                         modifier = Modifier.align(Alignment.CenterHorizontally),

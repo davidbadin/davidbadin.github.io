@@ -21,6 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -53,7 +54,7 @@ private const val URL_WEBSITE   = "https://punkacidetom.sk/"
 private const val MAIN_LOGO_WIDTH_FRACTION      = 0.90f
 private const val MAIN_LOGO_TOP_PADDING_DP      = 60
 private const val MAIN_CT_BLOCK_WIDTH_FRACTION  = 0.90f
-private const val MAIN_CT_BLOCK_TOP_PADDING_DP  = 60
+private const val MAIN_CT_BLOCK_TOP_PADDING_DP  = 48
 private const val MAIN_STRIPE_WIDTH_FRACTION    = 0.75f
 private const val MAIN_COUNTDOWN_WIDTH_FRACTION = 0.90f
 private const val MAIN_THANKYOU_WIDTH_FRACTION  = 0.75f
@@ -89,28 +90,26 @@ fun HomeScreen(
         add(Triple(stringResource(R.string.home_btn_tickets), "ticket",      onNavigateToTickets))
     }
 
+    Scaffold(
+        containerColor = Navy,
+    ) { innerPadding ->
+
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Navy),
+            .background(Navy)
+            .padding(innerPadding),
     ) {
-        // Layer 1: background image — clipped below status bar so it can't render behind it
-        Box(
+        // Background image — fills Box
+        AsyncImage(
+            model = "file:///android_asset/header_main.png",
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth,
             modifier = Modifier
                 .fillMaxWidth()
-                .statusBarsPadding()
-                .clipToBounds(),
-        ) {
-            AsyncImage(
-                model = "file:///android_asset/header_main.png",
-                contentDescription = null,
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .graphicsLayer { translationY = -scrollState.value * PARALLAX_SCROLL_FRACTION },
-            )
-        }
-
+                .graphicsLayer { translationY = -scrollState.value * PARALLAX_SCROLL_FRACTION },
+            alignment = Alignment.TopCenter,
+        )
         // Layer 2: all content — scrolls at 1×; statusBarsPadding keeps logo below status bar
         Column(
             modifier = Modifier
@@ -120,25 +119,25 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             HomeHeader(
-                phase        = uiState.phase,
-                countdown    = uiState.countdown,
+                phase = uiState.phase,
+                countdown = uiState.countdown,
                 thankyouText = uiState.thankyouText,
                 navButtonsContent = {
                     navButtons.forEach { (label, icon, onClick) ->
                         HomeNavButton(
-                            label    = label,
-                            icon     = icon,
-                            onClick  = onClick,
+                            label = label,
+                            icon = icon,
+                            onClick = onClick,
                             modifier = Modifier.fillMaxWidth(NAV_BUTTON_WIDTH_FRACTION),
                         )
                         Spacer(modifier = Modifier.height(spacing.sm))
                     }
                     HomeNavButton(
-                        label      = stringResource(R.string.home_btn_spotify_playlist),
-                        icon       = "spotify",
+                        label = stringResource(R.string.home_btn_spotify_playlist),
+                        icon = "spotify",
                         iconFamily = FaFamily.Brands,
-                        onClick    = onNavigateToSpotify,
-                        modifier   = Modifier.fillMaxWidth(NAV_BUTTON_WIDTH_FRACTION),
+                        onClick = onNavigateToSpotify,
+                        modifier = Modifier.fillMaxWidth(NAV_BUTTON_WIDTH_FRACTION),
                     )
                     Spacer(modifier = Modifier.height(spacing.sm))
                 },
@@ -158,7 +157,7 @@ fun HomeScreen(
                     ) {
                         SocialLink(
                             label = stringResource(R.string.home_social_facebook),
-                            icon  = "facebook",
+                            icon = "facebook",
                             onClick = {
                                 CustomTabsIntent.Builder().build()
                                     .launchUrl(context, Uri.parse(URL_FACEBOOK))
@@ -166,7 +165,7 @@ fun HomeScreen(
                         )
                         SocialLink(
                             label = stringResource(R.string.home_social_instagram),
-                            icon  = "instagram",
+                            icon = "instagram",
                             onClick = {
                                 CustomTabsIntent.Builder().build()
                                     .launchUrl(context, Uri.parse(URL_INSTAGRAM))
@@ -175,10 +174,10 @@ fun HomeScreen(
                     }
                     Spacer(modifier = Modifier.height(spacing.sm))
                     SocialLink(
-                        label      = stringResource(R.string.home_social_website),
-                        icon       = "globe",
+                        label = stringResource(R.string.home_social_website),
+                        icon = "globe",
                         iconFamily = FaFamily.Regular,
-                        onClick    = {
+                        onClick = {
                             CustomTabsIntent.Builder().build()
                                 .launchUrl(context, Uri.parse(URL_WEBSITE))
                         },
@@ -186,6 +185,7 @@ fun HomeScreen(
                 },
             )
         }
+    }
     }
 }
 
@@ -294,7 +294,7 @@ private fun CountdownContent(
             style = MaterialTheme.typography.displayMedium,
             color = White,
             textAlign = TextAlign.Center,
-            maxLines = 1,
+            maxLines = 2,
             softWrap = false,
             modifier = Modifier.fillMaxWidth(),
         )
