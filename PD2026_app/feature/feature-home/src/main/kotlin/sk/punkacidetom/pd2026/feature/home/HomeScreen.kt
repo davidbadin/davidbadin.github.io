@@ -32,6 +32,7 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -299,9 +300,9 @@ private fun CountdownContent(
             modifier = Modifier.fillMaxWidth(),
         )
         Text(
-            text = "${countdown.days} ${stringResource(R.string.home_countdown_days)} " +
-                   "${countdown.hours} ${stringResource(R.string.home_countdown_hours)} " +
-                   "${countdown.minutes} ${stringResource(R.string.home_countdown_minutes)}",
+            text = "${countdown.days} ${pluralStringResource(R.plurals.home_countdown_days, countdown.days.toInt())} " +
+                   "${countdown.hours} ${pluralStringResource(R.plurals.home_countdown_hours, countdown.hours.toInt())} " +
+                   "${countdown.minutes} ${pluralStringResource(R.plurals.home_countdown_minutes, countdown.minutes.toInt())}",
             style = MaterialTheme.typography.displayMedium,
             color = White,
             textAlign = TextAlign.Center,
