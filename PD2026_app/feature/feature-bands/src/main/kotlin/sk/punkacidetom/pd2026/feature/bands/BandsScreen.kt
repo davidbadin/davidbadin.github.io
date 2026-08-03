@@ -3,6 +3,7 @@ package sk.punkacidetom.pd2026.feature.bands
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,35 +12,47 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+// import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+// import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import sk.punkacidetom.pd2026.core.model.Band
 import sk.punkacidetom.pd2026.core.model.Stages
-import sk.punkacidetom.pd2026.core.ui.icons.FaIcon
 import sk.punkacidetom.pd2026.core.ui.theme.Crimson
 import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
 import sk.punkacidetom.pd2026.core.ui.theme.Navy
 import sk.punkacidetom.pd2026.core.ui.theme.NavyLight
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_TOP_PADDING_DP
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_WIDTH_FRACTION
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_TITLE_BOTTOM_PADDING_DP
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_TITLE_TOP_PADDING_DP
 import sk.punkacidetom.pd2026.core.ui.theme.White
 import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
+import sk.punkacidetom.pd2026.core.ui.theme.PARALLAX_SCROLL_FRACTION
 
 @Composable
 fun BandsScreen(
@@ -47,44 +60,97 @@ fun BandsScreen(
     modifier: Modifier = Modifier,
     viewModel: BandsViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState = viewModel.uiState.collectAsState().value
     val spacing = LocalAppSpacing.current
+    val scrollState = rememberScrollState()
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Navy),
-    ) {
-        Text(
-            text = stringResource(R.string.bands_title),
-            style = MaterialTheme.typography.displayMedium,
-            color = White,
-            modifier = Modifier.padding(horizontal = spacing.md, vertical = spacing.sm),
-        )
 
-        if (uiState.bands.isEmpty()) {
-            Text(
-                text = stringResource(R.string.bands_empty),
-                style = MaterialTheme.typography.bodyMedium,
-                color = WhiteAlpha60,
-                modifier = Modifier.padding(spacing.md),
+    Scaffold(
+        containerColor = Navy,
+    ) { innerPadding ->
+
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .background(Navy)
+                .padding(innerPadding),
+        ) {
+
+            // Background image — fills Box
+            AsyncImage(
+                model = "file:///android_asset/header_main.png",
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .graphicsLayer { translationY = -scrollState.value * PARALLAX_SCROLL_FRACTION },
+                alignment = Alignment.TopCenter,
             )
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(spacing.sm),
-                contentPadding = androidx.compose.foundation.layout.PaddingValues(
-                    horizontal = spacing.md,
-                    vertical = spacing.sm,
-                ),
+
+
+            // Single scrollable column — background image scrolls at 1× with content
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                items(uiState.bands, key = { it.id }) { band ->
-                    BandRow(
-                        band = band,
-                        isFavourite = uiState.favouriteIds.contains(band.id),
-                        onBandClick = { onBandClick(band.id) },
-                        onToggleFavourite = { viewModel.toggleFavourite(band.id) },
-                    )
+                // Header area: Box sized by logo/title Column; background clipped to that height
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .clipToBounds(),
+                ) {
+
+                    // Logo + title — sizes the Box; pushed below status bar
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .statusBarsPadding(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_LOGO_TOP_PADDING_DP.dp))
+                        AsyncImage(
+                            model = "file:///android_asset/logo_pd_short.png",
+                            contentDescription = "Punkáči deťom 2026",
+                            contentScale = ContentScale.FillWidth,
+                            modifier = Modifier.fillMaxWidth(SHORT_HEADER_LOGO_WIDTH_FRACTION),
+                        )
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_TOP_PADDING_DP.dp))
+                        Text(
+                            text = stringResource(R.string.bands_title),
+                            style = MaterialTheme.typography.displayMedium,
+                            color = White,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = spacing.md),
+                        )
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_BOTTOM_PADDING_DP.dp))
+                    }
+                }
+
+                // Band list — outer Box provides Navy background colour for uncovered area
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    if (uiState.bands.isEmpty()) {
+                        Text(
+                            text = stringResource(R.string.bands_empty),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = WhiteAlpha60,
+                            modifier = Modifier.padding(spacing.md),
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.height(spacing.sm))
+                        uiState.bands.forEach { band ->
+                            BandRow(
+                                band = band,
+                                isFavourite = uiState.favouriteIds.contains(band.id),
+                                onBandClick = { onBandClick(band.id) },
+                                onToggleFavourite = { viewModel.toggleFavourite(band.id) },
+                            )
+                            Spacer(modifier = Modifier.height(spacing.sm))
+                        }
+                    }
                 }
             }
         }
@@ -99,7 +165,7 @@ private fun BandRow(
     onToggleFavourite: () -> Unit,
 ) {
     val spacing = LocalAppSpacing.current
-    val dayStr = "${band.startDate.dayOfMonth}. ${band.startDate.monthValue}."
+    val dayStr  = "${band.startDate.dayOfMonth}. ${band.startDate.monthValue}."
     val timeStr = "${band.startTime.hour}:${band.startTime.minute.toString().padStart(2, '0')}"
 
     Row(
@@ -119,9 +185,7 @@ private fun BandRow(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(spacing.sm),
-            ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(spacing.sm)) {
                 Text(
                     text = Stages.displayName(band.stageCode),
                     style = MaterialTheme.typography.labelSmall,
@@ -143,7 +207,6 @@ private fun BandRow(
                 color = WhiteAlpha60,
             )
         }
-        Spacer(modifier = Modifier.height(0.dp))
         IconButton(onClick = onToggleFavourite) {
             Icon(
                 imageVector = if (isFavourite) Icons.Filled.Favorite

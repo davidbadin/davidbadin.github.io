@@ -7,13 +7,26 @@
     <string name="home_btn_info">Info</string>
     <string name="home_btn_nfctron">NFCtron</string>
     <string name="home_btn_tickets">Vstupenky &amp; Eshop</string>
-    <string name="home_social_heading">Sociálne siete</string>
+    <string name="home_btn_spotify_playlist">Spotify playlist</string>
+    <string name="home_social_heading">SLEDUJ FESTIVAL</string>
     <string name="home_social_facebook">Facebook</string>
     <string name="home_social_instagram">Instagram</string>
     <string name="home_social_spotify">Spotify</string>
-    <string name="home_countdown_until">Do štartu festivalu</string>
-    <string name="home_countdown_days">dní</string>
-    <string name="home_countdown_hours">hodín</string>
-    <string name="home_countdown_minutes">minút</string>
-    <string name="home_countdown_seconds">sekúnd</string>
+    <string name="home_social_website">punkacidetom.sk</string>
+    <string name="home_countdown_until">Do začiatku festivalu:</string>
+    <plurals name="home_countdown_days">
+        <item quantity="one">deň</item>
+        <item quantity="few">dni</item>
+        <item quantity="other">dní</item>
+    </plurals>
+    <plurals name="home_countdown_hours">
+        <item quantity="one">hodina</item>
+        <item quantity="few">hodiny</item>
+        <item quantity="other">hodín</item>
+    </plurals>
+    <plurals name="home_countdown_minutes">
+        <item quantity="one">minúta</item>
+        <item quantity="few">minúty</item>
+        <item quantity="other">minút</item>
+    </plurals>
 </resources>

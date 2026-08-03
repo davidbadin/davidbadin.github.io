@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,11 +13,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
@@ -31,16 +35,25 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import sk.punkacidetom.pd2026.core.ui.theme.Crimson
 import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
 import sk.punkacidetom.pd2026.core.ui.theme.Navy
 import sk.punkacidetom.pd2026.core.ui.theme.NavyLight
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_TOP_PADDING_DP
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_WIDTH_FRACTION
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_TITLE_BOTTOM_PADDING_DP
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_TITLE_TOP_PADDING_DP
 import sk.punkacidetom.pd2026.core.ui.theme.White
 import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
+import sk.punkacidetom.pd2026.core.ui.theme.PARALLAX_SCROLL_FRACTION
 
 @Composable
 fun SettingsScreen(
@@ -53,14 +66,12 @@ fun SettingsScreen(
     val spacing                = LocalAppSpacing.current
     val context                = LocalContext.current
     val snackbarHostState      = remember { SnackbarHostState() }
+    val scrollState            = rememberScrollState()
 
-    // Recheck the permission every time this screen is resumed so the button
-    // disappears automatically after the user grants it and navigates back.
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         viewModel.refreshExactAlarmPermission()
     }
 
-    // Recreate the Activity after a locale switch so the new language takes effect immediately
     val activity = context as? Activity
     LaunchedEffect(Unit) {
         viewModel.recreateActivity.collect { activity?.recreate() }
@@ -83,199 +94,253 @@ fun SettingsScreen(
         }
     }
 
-    androidx.compose.material3.Scaffold(
+    Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = Navy,
     ) { innerPadding ->
-        Column(
+        Box(
             modifier = modifier
                 .fillMaxSize()
                 .background(Navy)
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .padding(spacing.md),
+                .padding(innerPadding),
         ) {
-            Text(
-                text = stringResource(R.string.settings_title),
-                style = MaterialTheme.typography.displayMedium,
-                color = White,
-            )
-            Spacer(modifier = Modifier.height(spacing.lg))
-
-            // Language
-            SectionLabel(stringResource(R.string.settings_language))
-            Spacer(modifier = Modifier.height(spacing.sm))
-            Row {
-                ToggleButton(
-                    label = stringResource(R.string.settings_language_sk),
-                    selected = uiState.language == "sk",
-                    modifier = Modifier.weight(1f),
-                ) { viewModel.setLanguage("sk") }
-                Spacer(modifier = Modifier.height(0.dp).also { /* horizontal gap */ })
-                ToggleButton(
-                    label = stringResource(R.string.settings_language_en),
-                    selected = uiState.language == "en",
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = spacing.sm),
-                ) { viewModel.setLanguage("en") }
-            }
-
-            Spacer(modifier = Modifier.height(spacing.lg))
-
-            // Font size
-            SectionLabel(stringResource(R.string.settings_font_size))
-            Spacer(modifier = Modifier.height(spacing.sm))
-            Row {
-                ToggleButton(
-                    label = stringResource(R.string.settings_font_normal),
-                    selected = !uiState.isFontLarge,
-                    modifier = Modifier.weight(1f),
-                ) { viewModel.setFontLarge(false) }
-                ToggleButton(
-                    label = stringResource(R.string.settings_font_large),
-                    selected = uiState.isFontLarge,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = spacing.sm),
-                ) { viewModel.setFontLarge(true) }
-            }
-
-            Spacer(modifier = Modifier.height(spacing.lg))
-
-            // Band-start notifications toggle
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = stringResource(R.string.settings_notifications),
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = White,
-                    modifier = Modifier.weight(1f),
-                )
-                Switch(
-                    checked = uiState.isNotificationsEnabled,
-                    onCheckedChange = { viewModel.setNotificationsEnabled(it) },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor   = White,
-                        checkedTrackColor   = Crimson,
-                        uncheckedThumbColor = WhiteAlpha60,
-                        uncheckedTrackColor = NavyLight,
-                    ),
-                )
-            }
-
-            // Exact-alarm permission warning (Android 12+, shown only when relevant)
-            if (uiState.isNotificationsEnabled && uiState.isExactAlarmPermissionMissing) {
-                Spacer(modifier = Modifier.height(spacing.sm))
-                Text(
-                    text = stringResource(R.string.settings_exact_alarm_warning),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = WhiteAlpha60,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Spacer(modifier = Modifier.height(spacing.sm))
-                Button(
-                    onClick = {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                            context.startActivity(
-                                Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-                            )
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(spacing.buttonMinHeight),
-                    colors = ButtonDefaults.buttonColors(containerColor = NavyLight),
-                ) {
-                    Text(
-                        text = stringResource(R.string.settings_exact_alarm_grant),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = White,
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(spacing.lg))
-
-            // Android permissions button — shown only when exact-alarm permission is not granted (API 31+)
-            if (!canScheduleExactAlarms) {
-                Button(
-                    onClick = {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                            context.startActivity(
-                                Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-                            )
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(spacing.buttonMinHeight),
-                    colors = ButtonDefaults.buttonColors(containerColor = Crimson),
-                ) {
-                    Text(
-                        text = stringResource(R.string.settings_android_permissions),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = White,
-                    )
-                }
-                Spacer(modifier = Modifier.height(spacing.lg))
-            }
-
-            // Update data
-            Button(
-                onClick = { viewModel.triggerDataUpdate() },
-                enabled = updateState != UpdateState.UPDATING,
+            // Background image — fills Box
+            AsyncImage(
+                model = "file:///android_asset/header_main.png",
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(spacing.buttonMinHeight),
-                colors = ButtonDefaults.buttonColors(containerColor = Crimson),
+                    .graphicsLayer { translationY = -scrollState.value * PARALLAX_SCROLL_FRACTION },
+                alignment = Alignment.TopCenter,
+            )
+
+            // Single scrollable column — background image scrolls at 1× with content
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text(
-                    text = if (updateState == UpdateState.UPDATING)
-                        stringResource(R.string.settings_updating)
-                    else
-                        stringResource(R.string.settings_update_data),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = White,
-                )
+                // Header area: Box sized by logo/title Column; background clipped to that height
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .clipToBounds(),
+                ) {
+
+                    // Logo + title — sizes the Box; pushed below status bar
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .statusBarsPadding(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_LOGO_TOP_PADDING_DP.dp))
+                        AsyncImage(
+                            model = "file:///android_asset/logo_pd_short.png",
+                            contentDescription = "Punkáči deťom 2026",
+                            contentScale = ContentScale.FillWidth,
+                            modifier = Modifier.fillMaxWidth(SHORT_HEADER_LOGO_WIDTH_FRACTION),
+                        )
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_TOP_PADDING_DP.dp))
+                        Text(
+                            text = stringResource(R.string.settings_title),
+                            style = MaterialTheme.typography.displayMedium,
+                            color = White,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = spacing.md),
+                        )
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_BOTTOM_PADDING_DP.dp))
+                    }
+                }
+
+                // Settings content — outer Box provides Navy background colour for uncovered area
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(spacing.md),
+                ) {
+                    // Language
+                    SectionLabel(stringResource(R.string.settings_language))
+                    Spacer(modifier = Modifier.height(spacing.sm))
+                    Row {
+                        ToggleButton(
+                            label = stringResource(R.string.settings_language_sk),
+                            selected = uiState.language == "sk",
+                            modifier = Modifier.weight(1f),
+                        ) { viewModel.setLanguage("sk") }
+                        Spacer(modifier = Modifier.height(0.dp))
+                        ToggleButton(
+                            label = stringResource(R.string.settings_language_en),
+                            selected = uiState.language == "en",
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(start = spacing.sm),
+                        ) { viewModel.setLanguage("en") }
+                    }
+
+                    Spacer(modifier = Modifier.height(spacing.lg))
+
+                    // Font size
+                    SectionLabel(stringResource(R.string.settings_font_size))
+                    Spacer(modifier = Modifier.height(spacing.sm))
+                    Row {
+                        ToggleButton(
+                            label = stringResource(R.string.settings_font_normal),
+                            selected = !uiState.isFontLarge,
+                            modifier = Modifier.weight(1f),
+                        ) { viewModel.setFontLarge(false) }
+                        ToggleButton(
+                            label = stringResource(R.string.settings_font_large),
+                            selected = uiState.isFontLarge,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(start = spacing.sm),
+                        ) { viewModel.setFontLarge(true) }
+                    }
+
+                    Spacer(modifier = Modifier.height(spacing.lg))
+
+                    // Band-start notifications toggle
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = stringResource(R.string.settings_notifications),
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = White,
+                            modifier = Modifier.weight(1f),
+                        )
+                        Switch(
+                            checked = uiState.isNotificationsEnabled,
+                            onCheckedChange = { viewModel.setNotificationsEnabled(it) },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor   = White,
+                                checkedTrackColor   = Crimson,
+                                uncheckedThumbColor = WhiteAlpha60,
+                                uncheckedTrackColor = NavyLight,
+                            ),
+                        )
+                    }
+
+                    /*// Exact-alarm permission warning (Android 12+)
+                    if (uiState.isNotificationsEnabled && uiState.isExactAlarmPermissionMissing) {
+                        Spacer(modifier = Modifier.height(spacing.sm))
+                        Text(
+                            text = stringResource(R.string.settings_exact_alarm_warning),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = WhiteAlpha60,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                        Spacer(modifier = Modifier.height(spacing.sm))
+                        Button(
+                            onClick = {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                    context.startActivity(
+                                        Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                                    )
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(spacing.buttonMinHeight),
+                            colors = ButtonDefaults.buttonColors(containerColor = NavyLight),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.settings_exact_alarm_grant),
+                                style = MaterialTheme.typography.labelLarge,
+                                color = White,
+                            )
+                        }
+                    }*/
+
+                    Spacer(modifier = Modifier.height(spacing.lg))
+
+                    // Android permissions button — shown when exact-alarm permission not granted
+                    if (!canScheduleExactAlarms) {
+                        Button(
+                            onClick = {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                    context.startActivity(
+                                        Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                                    )
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(spacing.buttonMinHeight),
+                            colors = ButtonDefaults.buttonColors(containerColor = Crimson),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.settings_android_permissions),
+                                style = MaterialTheme.typography.labelLarge,
+                                color = White,
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(spacing.lg))
+                    }
+
+                    // Update data
+                    Button(
+                        onClick = { viewModel.triggerDataUpdate() },
+                        enabled = updateState != UpdateState.UPDATING,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(spacing.buttonMinHeight),
+                        colors = ButtonDefaults.buttonColors(containerColor = Crimson),
+                    ) {
+                        Text(
+                            text = if (updateState == UpdateState.UPDATING)
+                                stringResource(R.string.settings_updating)
+                            else
+                                stringResource(R.string.settings_update_data),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = White,
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(spacing.xl))
+
+                    Text(
+                        text = stringResource(R.string.settings_credit_development),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = WhiteAlpha60,
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                    )
+
+                    Text(
+                        text = stringResource(R.string.settings_credit_design),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = WhiteAlpha60,
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                    )
+
+                    val versionName = remember {
+                        context.packageManager
+                            .getPackageInfo(context.packageName, 0)
+                            .versionName ?: ""
+                    }
+                    Text(
+                        text = "version $versionName",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = WhiteAlpha60,
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                    )
+                }
             }
-
-            Spacer(modifier = Modifier.weight(1f))
-            Spacer(modifier = Modifier.height(spacing.xl))
-
-            Text(
-                text = stringResource(R.string.settings_credit),
-                style = MaterialTheme.typography.bodySmall,
-                color = WhiteAlpha60,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-            )
-
-            val versionName = remember {
-                context.packageManager
-                    .getPackageInfo(context.packageName, 0)
-                    .versionName ?: ""
-            }
-            Text(
-                text = "version $versionName",
-                style = MaterialTheme.typography.labelSmall,
-                color = WhiteAlpha60,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-            )
         }
     }
 }
 
 @Composable
 private fun SectionLabel(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.headlineSmall,
-        color = White,
-    )
+    Text(text = text, style = MaterialTheme.typography.headlineSmall, color = White)
 }
 
 @Composable

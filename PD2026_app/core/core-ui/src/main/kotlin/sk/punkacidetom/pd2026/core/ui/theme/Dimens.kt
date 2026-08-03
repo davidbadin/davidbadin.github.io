@@ -46,3 +46,32 @@ fun AppSpacing.scale(factor: Float) = AppSpacing(
 )
 
 val LocalFontScaleMultiplier = compositionLocalOf { 1.0f }
+
+/** Width fraction for major nav/action buttons — 75% of screen width, centred. */
+const val NAV_BUTTON_WIDTH_FRACTION = 0.75f
+
+// ── Parallax / secondary-screen header constants ──────────────────────────────
+/** Background image scroll speed for parallax screens (0.5 = half scroll speed). */
+const val PARALLAX_SCROLL_FRACTION = 0.5f
+
+/** Width fraction for logo_pd_short.png on secondary screens. */
+const val SHORT_HEADER_LOGO_WIDTH_FRACTION = 0.90f
+
+/** Top padding (dp) above logo on secondary screens. */
+const val SHORT_HEADER_LOGO_TOP_PADDING_DP = 32
+
+/** Vertical padding (dp) between logo bottom and screen title on secondary screens. */
+const val SHORT_HEADER_TITLE_TOP_PADDING_DP = 32
+
+/** Bottom padding (dp) below the screen title in the secondary-screen header Box. */
+const val SHORT_HEADER_TITLE_BOTTOM_PADDING_DP = 16
+
+// ── Schedule screen header constants ─────────────────────────────────────────
+/** Width fraction for logo_pd_short.png in the Schedule (timetable) header. */
+const val SCHEDULE_LOGO_WIDTH_FRACTION  = 0.90f
+
+/** Top padding (dp) above logo in the Schedule header. */
+const val SCHEDULE_LOGO_TOP_PADDING_DP  = 16
+
+/** Vertical padding (dp) between logo bottom and screen title in the Schedule header. */
+const val SCHEDULE_TITLE_TOP_PADDING_DP = 16

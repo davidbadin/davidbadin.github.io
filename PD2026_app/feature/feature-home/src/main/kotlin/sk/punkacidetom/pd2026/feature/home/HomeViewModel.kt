@@ -24,7 +24,6 @@ data class CountdownState(
     val days: Long = 0,
     val hours: Long = 0,
     val minutes: Long = 0,
-    val seconds: Long = 0,
 )
 
 data class HomeUiState(
@@ -47,7 +46,7 @@ class HomeViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             while (true) {
-                delay(1_000L)
+                delay(60_000L)
                 _ticker.value = LocalDateTime.now()
             }
         }
@@ -71,10 +70,9 @@ class HomeViewModel @Inject constructor(
                 val dur = Duration.between(now, start)
                 val s = dur.seconds
                 CountdownState(
-                    days = s / 86400,
-                    hours = (s % 86400) / 3600,
+                    days    = s / 86400,
+                    hours   = (s % 86400) / 3600,
                     minutes = (s % 3600) / 60,
-                    seconds = s % 60,
                 )
             }
         } else CountdownState()

@@ -37,7 +37,7 @@ val FaRegularCodes: Map<String, Int> = mapOf(
     "plus" to 0xF0FE,        // → square-plus (F067 missing)
     "bars" to 0xF0C9,
     "envelope" to 0xF0E0,    // ✓ present
-    "globe" to 0xF0AC,
+    "globe" to 0xF14E,  // compass — 0xF0AC not present in this font build
     "link" to 0xF0C1,
     "list" to 0xF03A,
     "circle" to 0xF111,      // ✓ present
