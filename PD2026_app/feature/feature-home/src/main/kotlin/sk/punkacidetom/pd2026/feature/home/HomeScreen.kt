@@ -55,7 +55,7 @@ private const val URL_WEBSITE   = "https://punkacidetom.sk/"
 private const val MAIN_LOGO_WIDTH_FRACTION      = 0.90f
 private const val MAIN_LOGO_TOP_PADDING_DP      = 60
 private const val MAIN_CT_BLOCK_WIDTH_FRACTION  = 0.90f
-private const val MAIN_CT_BLOCK_TOP_PADDING_DP  = 48
+private const val MAIN_CT_BLOCK_TOP_PADDING_DP  = 42
 private const val MAIN_STRIPE_WIDTH_FRACTION    = 0.75f
 private const val MAIN_COUNTDOWN_WIDTH_FRACTION = 0.90f
 private const val MAIN_THANKYOU_WIDTH_FRACTION  = 0.75f
@@ -125,7 +125,7 @@ fun HomeScreen(
                             label = label,
                             icon = icon,
                             onClick = onClick,
-                            modifier = Modifier.fillMaxWidth(NAV_BUTTON_WIDTH_FRACTION),
+                            modifier = Modifier.fillMaxWidth(NAV_BUTTON_WIDTH_FRACTION).height(48.dp),
                         )
                         Spacer(modifier = Modifier.height(spacing.sm))
                     }
@@ -134,7 +134,7 @@ fun HomeScreen(
                         icon = "spotify",
                         iconFamily = FaFamily.Brands,
                         onClick = onNavigateToSpotify,
-                        modifier = Modifier.fillMaxWidth(NAV_BUTTON_WIDTH_FRACTION),
+                        modifier = Modifier.fillMaxWidth(NAV_BUTTON_WIDTH_FRACTION).height(48.dp),
                     )
                     Spacer(modifier = Modifier.height(spacing.sm))
                 },
@@ -227,8 +227,7 @@ private fun HomeHeader(
         Spacer(modifier = Modifier.height(MAIN_BUTTONS_TOP_PADDING_DP.dp))
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(Navy),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             navButtonsContent()
@@ -237,6 +236,7 @@ private fun HomeHeader(
             socialContent()
 
             Spacer(modifier = Modifier.height(spacing.xl))
+
         }
     }
 }
