@@ -1,11 +1,13 @@
 package sk.punkacidetom.pd2026.feature.spotify
 
 import android.annotation.SuppressLint
+import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -37,17 +39,19 @@ private fun spotifyEmbedHtml(embedUrl: String, heightDp: Int): String = """
       <iframe
         src="$embedUrl"
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-        loading="lazy">
+        loading="lazy"
+        onload="Android.onIframeLoaded()">
       </iframe>
     </body>
     </html>
 """.trimIndent()
 
-@SuppressLint("SetJavaScriptEnabled")
+@SuppressLint("SetJavaScriptEnabled", "AddJavascriptInterface")
 @Composable
 fun SpotifyWebViewCard(embedUrl: String) {
     val spacing = LocalAppSpacing.current
     var webViewRef by remember { mutableStateOf<WebView?>(null) }
+    var isLoaded by remember { mutableStateOf(false) }
 
     DisposableEffect(embedUrl) {
         onDispose {
@@ -56,20 +60,33 @@ fun SpotifyWebViewCard(embedUrl: String) {
                 wv.destroy()
                 webViewRef = null
             }
+            isLoaded = false
         }
     }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(SPOTIFY_EMBED_HEIGHT_DP.dp)
-            .clip(RoundedCornerShape(spacing.cardCorner)),
+            .clipToBounds()
+            .then(
+                if (isLoaded) Modifier
+                    .height(SPOTIFY_EMBED_HEIGHT_DP.dp)
+                    .clip(RoundedCornerShape(spacing.cardCorner))
+                else Modifier.height(0.dp)
+            ),
     ) {
         AndroidView(
             factory = { ctx ->
                 WebView(ctx).apply {
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
+                    addJavascriptInterface(
+                        object {
+                            @JavascriptInterface
+                            fun onIframeLoaded() { isLoaded = true }
+                        },
+                        "Android",
+                    )
                     webViewClient = WebViewClient()
                     loadDataWithBaseURL(
                         "https://open.spotify.com/",
