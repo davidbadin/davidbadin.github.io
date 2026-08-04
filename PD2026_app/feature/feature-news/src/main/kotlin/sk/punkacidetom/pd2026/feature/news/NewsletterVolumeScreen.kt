@@ -47,7 +47,6 @@ import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
 import sk.punkacidetom.pd2026.core.ui.theme.Navy
 import sk.punkacidetom.pd2026.core.ui.theme.White
 import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
-import java.io.File
 
 @Composable
 fun NewsletterVolumeScreen(
@@ -97,7 +96,7 @@ fun NewsletterVolumeScreen(
                     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(File(path))
+                                .data(path)
                                 .build(),
                             contentDescription = null,
                             contentScale = ContentScale.FillWidth,
@@ -128,7 +127,7 @@ fun NewsletterVolumeScreen(
                 if (index >= 0 && index < uiState.pagePaths.size) {
                     ZoomableAsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(File(uiState.pagePaths[index]))
+                            .data(uiState.pagePaths[index])
                             .build(),
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
