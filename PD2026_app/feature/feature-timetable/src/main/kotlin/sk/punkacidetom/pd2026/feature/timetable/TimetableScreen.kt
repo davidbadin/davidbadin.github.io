@@ -119,9 +119,6 @@ fun TimetableScreen(
     val swipeThresholdPx = with(density) { SWIPE_DAY_THRESHOLD_DP.dp.toPx() }
     var swipeAccumulator by remember { mutableFloatStateOf(0f) }
 
-    // -1 = swiped left (next day), +1 = swiped right (previous day)
-    var swipeDirection by remember { mutableIntStateOf(-1) }
-
     // Measure total static header height for the transparent spacer
     var staticHeaderHeightPx by remember { mutableIntStateOf(0) }
     val staticHeaderHeightDp = with(density) { staticHeaderHeightPx.toDp() }
@@ -139,14 +136,8 @@ fun TimetableScreen(
                     detectHorizontalDragGestures(
                         onDragEnd = {
                             when {
-                                swipeAccumulator < -swipeThresholdPx -> {
-                                    swipeDirection = -1
-                                    viewModel.selectNextDay()
-                                }
-                                swipeAccumulator >  swipeThresholdPx -> {
-                                    swipeDirection = 1
-                                    viewModel.selectPreviousDay()
-                                }
+                                swipeAccumulator < -swipeThresholdPx -> viewModel.selectNextDay()
+                                swipeAccumulator >  swipeThresholdPx -> viewModel.selectPreviousDay()
                             }
                             swipeAccumulator = 0f
                         },
@@ -164,9 +155,9 @@ fun TimetableScreen(
             AnimatedContent(
                 targetState = selectedDayIndex,
                 transitionSpec = {
-                    val dir = swipeDirection
-                    (slideInHorizontally(initialOffsetX = { if (dir < 0) -it else it }) + fadeIn()) togetherWith
-                        (slideOutHorizontally(targetOffsetX = { if (dir < 0) -it else it }) + fadeOut())
+                    val goingForward = targetState > initialState
+                    (slideInHorizontally(initialOffsetX = { if (goingForward) -it else it }) + fadeIn()) togetherWith
+                        (slideOutHorizontally(targetOffsetX = { if (goingForward) -it else it }) + fadeOut())
                 },
                 label = "DaySlideTransition",
             ) { _ ->
@@ -282,10 +273,7 @@ fun TimetableScreen(
                                     .replaceFirstChar { it.uppercase() }
                                 val selected = index == selectedDayIndex  // direct StateFlow — instant update
                                 Button(
-                                    onClick = {
-                                        swipeDirection = if (index > selectedDayIndex) -1 else 1
-                                        viewModel.selectDay(index)
-                                    },
+                                    onClick = { viewModel.selectDay(index) },
                                     colors = ButtonDefaults.buttonColors(
                                         containerColor = if (selected) Crimson else NavyLight,
                                         contentColor   = if (selected) White   else WhiteAlpha60,
