@@ -156,7 +156,7 @@ fun TimetableScreen(
                 targetState = selectedDayIndex,
                 transitionSpec = {
                     val goingForward = targetState > initialState
-                    (slideInHorizontally(initialOffsetX = { if (goingForward) -it else it }) + fadeIn()) togetherWith
+                    (slideInHorizontally(initialOffsetX = { if (goingForward) it else -it }) + fadeIn()) togetherWith
                         (slideOutHorizontally(targetOffsetX = { if (goingForward) -it else it }) + fadeOut())
                 },
                 label = "DaySlideTransition",
