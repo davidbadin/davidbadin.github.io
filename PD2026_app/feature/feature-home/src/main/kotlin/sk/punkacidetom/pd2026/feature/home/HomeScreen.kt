@@ -66,9 +66,7 @@ private const val MAIN_SOCIAL_TOP_PADDING_DP    = 48
 fun HomeScreen(
     onNavigateToNews: () -> Unit,
     onNavigateToBands: () -> Unit,
-    onNavigateToTimetable: () -> Unit,
     onNavigateToInfo: () -> Unit,
-    onNavigateToNfctron: () -> Unit,
     onNavigateToTickets: () -> Unit,
     onNavigateToSpotify: () -> Unit,
     modifier: Modifier = Modifier,
@@ -81,13 +79,11 @@ fun HomeScreen(
     val scrollState = rememberScrollState()
 
     val navButtons = buildList {
-        add(Triple(stringResource(R.string.home_btn_timetable), "calendar",    onNavigateToTimetable))
         add(Triple(stringResource(R.string.home_btn_bands),     "music",        onNavigateToBands))
         if (isNewsletterAvailable) {
             add(Triple(stringResource(R.string.home_btn_newsletter), "newspaper", onNavigateToNews))
         }
         add(Triple(stringResource(R.string.home_btn_info),    "circle-info", onNavigateToInfo))
-        add(Triple(stringResource(R.string.home_btn_nfctron), "rss",         onNavigateToNfctron))
         add(Triple(stringResource(R.string.home_btn_tickets), "ticket",      onNavigateToTickets))
     }
 
