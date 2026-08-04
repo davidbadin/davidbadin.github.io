@@ -21,7 +21,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -40,7 +39,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import sk.punkacidetom.pd2026.core.model.Band
@@ -51,8 +49,9 @@ import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
 import sk.punkacidetom.pd2026.core.ui.theme.Navy
 import sk.punkacidetom.pd2026.core.ui.theme.White
 import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
-import sk.punkacidetom.pd2026.feature.spotify.SpotifyPlayerComposable
-import sk.punkacidetom.pd2026.feature.spotify.SpotifyViewModel
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import sk.punkacidetom.pd2026.feature.spotify.SpotifyWebViewCard
 import sk.punkacidetom.pd2026.feature.spotify.spotifyArtistEmbedUrl
 import sk.punkacidetom.pd2026.feature.spotify.util.SpotifyLauncher
 import java.time.format.TextStyle
@@ -98,10 +97,8 @@ fun BandDetailScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: BandDetailViewModel = hiltViewModel(),
-    spotifyViewModel: SpotifyViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val spotifyState by spotifyViewModel.uiState.collectAsStateWithLifecycle()
     val spacing = LocalAppSpacing.current
     val context = LocalContext.current
     val band = uiState.band
@@ -109,13 +106,6 @@ fun BandDetailScreen(
     // True when the band record has a photo (imageName non-blank).
     // Used to switch layout: image present → hide text name/genre, show compact favourite row.
     val hasPhoto = band != null && band.imageName.isNotBlank()
-
-    LaunchedEffect(band?.spotifyArtistId) {
-        val artistId = band?.spotifyArtistId
-        if (!artistId.isNullOrBlank()) {
-            spotifyViewModel.connect("spotify:artist:$artistId")
-        }
-    }
 
     LazyColumn(
         modifier = modifier
@@ -248,15 +238,23 @@ fun BandDetailScreen(
         if (band.spotifyArtistId.isNotBlank()) {
             item(key = "spotify") {
                 Spacer(modifier = Modifier.height(spacing.md))
-                SpotifyPlayerComposable(
-                    uiState = spotifyState,
+                SpotifyWebViewCard(
                     embedUrl = spotifyArtistEmbedUrl(band.spotifyArtistId),
-                    onOpenClick = { SpotifyLauncher.openArtist(context, band.spotifyArtistId) },
-                    onTogglePlayPause = spotifyViewModel::togglePlayPause,
-                    onSkipNext = spotifyViewModel::skipNext,
-                    onSkipPrevious = spotifyViewModel::skipPrevious,
-                    modifier = Modifier.padding(horizontal = spacing.md),
                 )
+                Spacer(modifier = Modifier.height(spacing.sm))
+                Button(
+                    onClick = { SpotifyLauncher.openArtist(context, band.spotifyArtistId) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = spacing.md),
+                    colors = ButtonDefaults.buttonColors(containerColor = Crimson),
+                ) {
+                    Text(
+                        text = "Spotify",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = White,
+                    )
+                }
             }
         }
 

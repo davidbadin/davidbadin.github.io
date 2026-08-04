@@ -1,5 +1,11 @@
 package sk.punkacidetom.pd2026.feature.timetable
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,6 +22,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -59,12 +66,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
-import sk.punkacidetom.pd2026.core.ui.components.FestivalScreenHeader
 import sk.punkacidetom.pd2026.core.ui.theme.Crimson
 import sk.punkacidetom.pd2026.core.ui.theme.LocalAppSpacing
 import sk.punkacidetom.pd2026.core.ui.theme.LocalFontScaleMultiplier
 import sk.punkacidetom.pd2026.core.ui.theme.Navy
 import sk.punkacidetom.pd2026.core.ui.theme.NavyLight
+import sk.punkacidetom.pd2026.core.ui.theme.SCHEDULE_LOGO_TOP_PADDING_DP
+import sk.punkacidetom.pd2026.core.ui.theme.SCHEDULE_LOGO_WIDTH_FRACTION
+import sk.punkacidetom.pd2026.core.ui.theme.SCHEDULE_TITLE_TOP_PADDING_DP
 import sk.punkacidetom.pd2026.core.ui.theme.White
 import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
 import java.time.Duration
@@ -72,13 +81,13 @@ import java.time.LocalDateTime
 import java.time.format.TextStyle
 import java.util.Locale
 
-private const val GLOW_HEIGHT_MINUTES             = 15
-private const val GLOW_START_ALPHA                = 0.5f
-private const val INACTIVE_DAY_BUTTON_ALPHA       = 0.5f
+private const val GLOW_HEIGHT_MINUTES                    = 15
+private const val GLOW_START_ALPHA                       = 0.5f
+private const val INACTIVE_DAY_BUTTON_ALPHA              = 0.5f
 private const val SCHEDULE_DAYBUTTON_TOP_PADDING_DP      = 16
 private const val SCHEDULE_STAGE_LABEL_TOP_PADDING_DP    = 4
 private const val SCHEDULE_STAGE_LABEL_BOTTOM_PADDING_DP = 4
-private const val SWIPE_DAY_THRESHOLD_DP          = 50
+private const val SWIPE_DAY_THRESHOLD_DP                 = 50
 
 @Composable
 fun TimetableScreen(
@@ -143,48 +152,58 @@ fun TimetableScreen(
         ) {
             Spacer(modifier = Modifier.height(staticHeaderHeightDp))
 
-            if (allBands.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.timetable_no_slots),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = WhiteAlpha60,
-                    modifier = Modifier.padding(spacing.md),
-                )
-            } else {
-                val dayStartDt = allBands.minOf { LocalDateTime.of(it.startDate, it.startTime) }
-                val dayEndDt   = allBands.maxOf { LocalDateTime.of(it.endDate, it.endTime) }
-                val totalMinutes = Duration.between(dayStartDt, dayEndDt).toMinutes()
-                val totalTimelineHeight = (totalMinutes * minuteHeightDp).dp
+            AnimatedContent(
+                targetState = selectedDayIndex,
+                transitionSpec = {
+                    val goingForward = targetState > initialState
+                    (slideInHorizontally(initialOffsetX = { if (goingForward) it else -it }) + fadeIn()) togetherWith
+                        (slideOutHorizontally(targetOffsetX = { if (goingForward) -it else it }) + fadeOut())
+                },
+                label = "DaySlideTransition",
+            ) { _ ->
+                if (allBands.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.timetable_no_slots),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = WhiteAlpha60,
+                        modifier = Modifier.padding(spacing.md),
+                    )
+                } else {
+                    val dayStartDt = allBands.minOf { LocalDateTime.of(it.startDate, it.startTime) }
+                    val dayEndDt   = allBands.maxOf { LocalDateTime.of(it.endDate, it.endTime) }
+                    val totalMinutes = Duration.between(dayStartDt, dayEndDt).toMinutes()
+                    val totalTimelineHeight = (totalMinutes * minuteHeightDp).dp
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = spacing.md),
-                    verticalAlignment = Alignment.Top,
-                ) {
-                    ProportionalStageColumn(
-                        bands = uiState.stageABands,
-                        dayStartDt = dayStartDt,
-                        totalTimelineHeight = totalTimelineHeight,
-                        minuteHeightDp = minuteHeightDp,
-                        favouriteIds = uiState.favouriteIds,
-                        now = now,
-                        onBandClick = onBandClick,
-                        onToggleFavourite = viewModel::toggleFavourite,
-                        modifier = Modifier.weight(1f),
-                    )
-                    Spacer(modifier = Modifier.width(spacing.sm))
-                    ProportionalStageColumn(
-                        bands = uiState.stageBBands,
-                        dayStartDt = dayStartDt,
-                        totalTimelineHeight = totalTimelineHeight,
-                        minuteHeightDp = minuteHeightDp,
-                        favouriteIds = uiState.favouriteIds,
-                        now = now,
-                        onBandClick = onBandClick,
-                        onToggleFavourite = viewModel::toggleFavourite,
-                        modifier = Modifier.weight(1f),
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = spacing.md),
+                        verticalAlignment = Alignment.Top,
+                    ) {
+                        ProportionalStageColumn(
+                            bands = uiState.stageABands,
+                            dayStartDt = dayStartDt,
+                            totalTimelineHeight = totalTimelineHeight,
+                            minuteHeightDp = minuteHeightDp,
+                            favouriteIds = uiState.favouriteIds,
+                            now = now,
+                            onBandClick = onBandClick,
+                            onToggleFavourite = viewModel::toggleFavourite,
+                            modifier = Modifier.weight(1f),
+                        )
+                        Spacer(modifier = Modifier.width(spacing.sm))
+                        ProportionalStageColumn(
+                            bands = uiState.stageBBands,
+                            dayStartDt = dayStartDt,
+                            totalTimelineHeight = totalTimelineHeight,
+                            minuteHeightDp = minuteHeightDp,
+                            favouriteIds = uiState.favouriteIds,
+                            now = now,
+                            onBandClick = onBandClick,
+                            onToggleFavourite = viewModel::toggleFavourite,
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
                 }
             }
         }
@@ -197,82 +216,111 @@ fun TimetableScreen(
                 .background(Navy),
         )
 
-        // Layer 3: static header column (FestivalScreenHeader + day tabs + stage images)
-        // zIndex(1f) ensures this is drawn on top of the Navy overlay and scrollable band blocks
-        Column(
+        // Layer 3: static header — background image behind ALL header elements
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .zIndex(1f)
                 .onSizeChanged { staticHeaderHeightPx = it.height },
         ) {
-            FestivalScreenHeader(title = stringResource(R.string.timetable_title))
-
-            // Day tab selector
-            if (uiState.days.isNotEmpty()) {
-                Row(
+            // Background: stretches to fill the full height of this Box
+            AsyncImage(
+                model = "file:///android_asset/header_short.png",
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier.matchParentSize(),
+            )
+            // All header content stacked in one Column
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(modifier = Modifier.height(SCHEDULE_LOGO_TOP_PADDING_DP.dp))
+                AsyncImage(
+                    model = "file:///android_asset/logo_pd_short.png",
+                    contentDescription = "Punkáči deťom 2026",
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier.fillMaxWidth(SCHEDULE_LOGO_WIDTH_FRACTION),
+                )
+                Spacer(modifier = Modifier.height(SCHEDULE_TITLE_TOP_PADDING_DP.dp))
+                Text(
+                    text = stringResource(R.string.timetable_title),
+                    style = MaterialTheme.typography.displayMedium,
+                    color = White,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(
-                            top   = SCHEDULE_DAYBUTTON_TOP_PADDING_DP.dp,
-                            start = spacing.md,
-                            end   = spacing.md,
-                        ),
-                    horizontalArrangement = Arrangement.spacedBy(spacing.sm),
-                ) {
-                    uiState.days.forEachIndexed { index, day ->
-                        key(index) {
-                            val dayName = day.date.dayOfWeek
-                                .getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
-                                .replaceFirstChar { it.uppercase() }
-                            val selected = index == selectedDayIndex  // direct StateFlow — instant update
-                            Button(
-                                onClick = { viewModel.selectDay(index) },
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = if (selected) Crimson else NavyLight,
-                                    contentColor   = if (selected) White   else WhiteAlpha60,
-                                ),
-                                shape = RoundedCornerShape(spacing.cardCorner),
-                                contentPadding = PaddingValues(horizontal = spacing.sm, vertical = 0.dp),
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .alpha(if (selected) 1f else INACTIVE_DAY_BUTTON_ALPHA),
-                            ) {
-                                Text(
-                                    text = dayName,
-                                    style = MaterialTheme.typography.labelLarge,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                )
+                        .padding(horizontal = spacing.md),
+                )
+
+                // Day tab selector
+                if (uiState.days.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                top   = SCHEDULE_DAYBUTTON_TOP_PADDING_DP.dp,
+                                start = spacing.md,
+                                end   = spacing.md,
+                            ),
+                        horizontalArrangement = Arrangement.spacedBy(spacing.sm),
+                    ) {
+                        uiState.days.forEachIndexed { index, day ->
+                            key(index) {
+                                val dayName = day.date.dayOfWeek
+                                    .getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
+                                    .replaceFirstChar { it.uppercase() }
+                                val selected = index == selectedDayIndex  // direct StateFlow — instant update
+                                Button(
+                                    onClick = { viewModel.selectDay(index) },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = if (selected) Crimson else NavyLight,
+                                        contentColor   = if (selected) White   else WhiteAlpha60,
+                                    ),
+                                    shape = RoundedCornerShape(spacing.cardCorner),
+                                    contentPadding = PaddingValues(horizontal = spacing.sm, vertical = 0.dp),
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .alpha(if (selected) 1f else INACTIVE_DAY_BUTTON_ALPHA),
+                                ) {
+                                    Text(
+                                        text = dayName,
+                                        style = MaterialTheme.typography.labelLarge,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            // Stage header images
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        top    = SCHEDULE_STAGE_LABEL_TOP_PADDING_DP.dp,
-                        bottom = SCHEDULE_STAGE_LABEL_BOTTOM_PADDING_DP.dp,
-                        start  = spacing.md,
-                        end    = spacing.md,
-                    ),
-            ) {
-                AsyncImage(
-                    model = "file:///android_asset/stage_A.png",
-                    contentDescription = "Stage A",
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.weight(1f),
-                )
-                Spacer(modifier = Modifier.width(spacing.sm))
-                AsyncImage(
-                    model = "file:///android_asset/stage_B.png",
-                    contentDescription = "Stage B",
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.weight(1f),
-                )
+                // Stage header images
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            top    = SCHEDULE_STAGE_LABEL_TOP_PADDING_DP.dp,
+                            bottom = SCHEDULE_STAGE_LABEL_BOTTOM_PADDING_DP.dp,
+                            start  = spacing.md,
+                            end    = spacing.md,
+                        ),
+                ) {
+                    AsyncImage(
+                        model = "file:///android_asset/stage_A.png",
+                        contentDescription = "Stage A",
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier.weight(1f),
+                    )
+                    Spacer(modifier = Modifier.width(spacing.sm))
+                    AsyncImage(
+                        model = "file:///android_asset/stage_B.png",
+                        contentDescription = "Stage B",
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
             }
         }
     }
