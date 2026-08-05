@@ -51,8 +51,6 @@
     <string name="news_offline">Správy nie sú dostupné offline.</string>
     <string name="news_open_facebook">Otvoriť Facebook</string>
 
-    <!-- Info screen -->
-    <string name="info_title">Info</string>
 
     <!-- Tickets screen -->
     <string name="tickets_title">Vstupenky &amp; Eshop</string>
