@@ -19,7 +19,7 @@
             font-weight: 400; font-style: normal; font-display: block;
         }
         :root {
-            --bg:     #10133D;
+            --bg:     transparent;
             --accent: #AD1C24;
             --fg:     #FFFFFF;
             --muted:  rgba(255,255,255,0.65);
@@ -29,7 +29,8 @@
         * { box-sizing: border-box; }
         html, body {
             margin: 0; padding: 0;
-            background: var(--bg);
+            overflow: visible;
+            background: transparent;
             color: var(--fg);
             font-family: var(--f-body);
             line-height: 1.55;
@@ -59,11 +60,10 @@
             font-family: var(--f-big);
             font-weight: normal;
             font-size: clamp(1.6rem, 6vw, 2.2rem);
-            color: var(--fg);
+            color: var(--accent);
             margin: 28px 0 6px;
             letter-spacing: 0.04em;
         }
-        h2.novinka { color: var(--accent); }
         h3 {
             font-family: var(--f-body);
             font-weight: 600;
@@ -81,17 +81,12 @@
 </head>
 <body>
     <div class="wrap">
-        <img class="logo"
-             src="logo_pd.png"
-             alt="Punkáči deťom 2026">
-        <h1>NFCtron – bezhotovostné platby</h1>
-        <div class="rule"></div>
 
-        <p>Na festivale <strong>Punkáči deťom</strong> zaplatíš za jedlo, nápoje aj ďalšie služby jednoducho pomocou <strong>NFCtron</strong>.</p>
+        <p>TEST Na festivale <strong>Punkáči deťom</strong> zaplatíš za jedlo, nápoje aj ďalšie služby jednoducho pomocou <strong>NFCtron</strong>.</p>
         <p>Pri vstupe dostaneš festivalový náramok s čipom, ktorým zaplatíš jednoduchým priložením k terminálu.</p>
         <p>Dobíjacie miesto je v areáli otvorené: Štvrtok 13:00–02:00, Piatok 09:00–02:00, Sobota 09:00–04:00. Na dobíjacom mieste sa nachádza aj výkup kelímkov.</p>
 
-        <h2 class="novinka">Novinka 2026</h2>
+        <h2>Novinka 2026</h2>
         <p>Počas festivalu si môžeš kredit <strong>dobíjať aj priamo cez mobilnú aplikáciu NFCtron</strong>, takže už nemusíš chodiť na dobíjacie miesto. Stačí mať spárovaný náramok a podporu NFC vo svojom telefóne.</p>
 
         <h2>Ako si dobiť kredit</h2>
