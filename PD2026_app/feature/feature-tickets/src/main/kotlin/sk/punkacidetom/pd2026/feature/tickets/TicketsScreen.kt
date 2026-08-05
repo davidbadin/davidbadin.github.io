@@ -126,10 +126,6 @@ fun TicketsScreen(modifier: Modifier = Modifier) {
                         openUrl("https://punkacidetom.sk/vstupenky/")
                     }
                     Spacer(modifier = Modifier.height(spacing.md))
-                    TicketButton(label = stringResource(R.string.tickets_goout)) {
-                        openUrl("https://goout.net/sk/punkaci-detom-2026/szbuqay/")
-                    }
-                    Spacer(modifier = Modifier.height(spacing.md))
                     TicketButton(label = stringResource(R.string.tickets_eshop)) {
                         openUrl("https://shop.punkacidetom.sk/")
                     }
