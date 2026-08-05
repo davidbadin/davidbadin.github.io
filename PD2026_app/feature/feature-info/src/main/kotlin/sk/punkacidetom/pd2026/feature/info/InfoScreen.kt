@@ -125,6 +125,7 @@ fun InfoScreen(modifier: Modifier = Modifier) {
                 AndroidView(
                     factory = { ctx ->
                         WebView(ctx).apply {
+                            setBackgroundColor(android.graphics.Color.TRANSPARENT)
                             isScrollContainer = false  // outer Column handles scrolling
                             settings.javaScriptEnabled = false
                             webViewClient = object : WebViewClient() {
