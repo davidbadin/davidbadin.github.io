@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Punkáči deťom 2026 — INFO</title>
-    <!-- All resources are loaded from the local asset bundle so this page
-         works in fully offline / first-launch mode.
-         Base URL when served from the app is file:///android_asset/       -->
+    <!-- Content-only HTML — logo and title are rendered by the native Compose header above.
+         Base URL when served from the app is file:///android_asset/                      -->
     <style>
         @font-face {
             font-family: "BebasNeue";
@@ -37,23 +36,7 @@
         .wrap {
             max-width: 720px;
             margin: 0 auto;
-            padding: 28px 18px 64px;
-        }
-        .logo { max-width: 280px; width: 70%; height: auto; margin-bottom: 8px; display: block; margin-left: auto; margin-right: auto; }
-        h1 {
-            font-family: var(--f-big);
-            font-weight: normal;
-            text-transform: uppercase;
-            font-size: clamp(3rem, 14vw, 5rem);
-            color: var(--fg);
-            letter-spacing: 0.06em;
-            margin: 8px 0 4px;
-            line-height: 1;
-            text-align: center;
-        }
-        .rule {
-            height: 4px; background: var(--accent);
-            width: 80px; margin: 0 auto 32px;
+            padding: 16px 16px 80px;
         }
         h2 {
             font-family: var(--f-big);
@@ -63,10 +46,7 @@
             margin: 28px 0 6px;
             letter-spacing: 0.04em;
         }
-        strong {
-            color: var(--fg);
-            font-weight: 600;
-        }
+        strong { color: var(--fg); font-weight: 600; }
         p { font-size: 1rem; color: var(--muted); margin: 6px 0 10px; }
         ul { margin: 6px 0 10px 0; padding-left: 1.4em; }
         li { font-size: 1rem; color: var(--muted); margin-bottom: 4px; }
@@ -75,13 +55,8 @@
 </head>
 <body>
     <div class="wrap">
-        <img class="logo"
-             src="logo_pd.png"
-             alt="Punkáči deťom 2026">
-        <h1>Festivalové informácie</h1>
-        <div class="rule"></div>
 
-        <h2>Festivalový areál TEST</h2>
+        <h2>Festivalový areál</h2>
         <p>Festivalový areál je otvorený od štvrtka 27. 8. od 13:00 do nedele 30. 8. do 11:00.</p>
         <p>V areáli nájdeš:</p>
         <ul>
@@ -190,6 +165,7 @@
         <h2>Platby</h2>
         <p>Na festivale sa platí prostredníctvom systému NFCtron.</p>
         <p>Hotovosť prijíma iba festivalový merch stánok.</p>
+
     </div>
 </body>
 </html>
