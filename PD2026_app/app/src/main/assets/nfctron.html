@@ -19,7 +19,7 @@
             font-weight: 400; font-style: normal; font-display: block;
         }
         :root {
-            --bg:     #10133D;
+            --bg:     transparent;
             --accent: #AD1C24;
             --fg:     #FFFFFF;
             --muted:  rgba(255,255,255,0.65);
@@ -29,7 +29,8 @@
         * { box-sizing: border-box; }
         html, body {
             margin: 0; padding: 0;
-            background: var(--bg);
+            overflow: visible;
+            background: transparent;
             color: var(--fg);
             font-family: var(--f-body);
             line-height: 1.55;
@@ -38,9 +39,8 @@
             max-width: 720px;
             margin: 0 auto;
             padding: 28px 18px 64px;
-            text-align: center;
         }
-        .logo { max-width: 280px; width: 70%; height: auto; margin-bottom: 8px; }
+        .logo { max-width: 280px; width: 70%; height: auto; margin-bottom: 8px; display: block; margin-left: auto; margin-right: auto; }
         h1 {
             font-family: var(--f-big);
             font-weight: normal;
@@ -50,24 +50,99 @@
             letter-spacing: 0.06em;
             margin: 8px 0 4px;
             line-height: 1;
+            text-align: center;
         }
         .rule {
             height: 4px; background: var(--accent);
             width: 80px; margin: 0 auto 32px;
         }
-        p { font-size: 1rem; color: var(--muted); margin: 8px 0 14px; }
+        h2 {
+            font-family: var(--f-big);
+            font-weight: normal;
+            font-size: clamp(1.6rem, 6vw, 2.2rem);
+            color: var(--accent);
+            margin: 28px 0 6px;
+            letter-spacing: 0.04em;
+        }
+        h3 {
+            font-family: var(--f-body);
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--fg);
+            margin: 16px 0 4px;
+        }
+        strong { color: var(--fg); font-weight: 600; }
+        p { font-size: 1rem; color: var(--muted); margin: 6px 0 10px; }
+        ul { margin: 6px 0 10px 0; padding-left: 1.4em; }
+        li { font-size: 1rem; color: var(--muted); margin-bottom: 4px; }
         em { color: var(--fg); font-style: normal; }
     </style>
 </head>
 <body>
     <div class="wrap">
-        <img class="logo"
-             src="logo_pd.png"
-             alt="Punkáči deťom 2026">
-        <h1>NFCtron</h1>
-        <div class="rule"></div>
-        <p>Informácie pripravujeme.</p>
-        <p><em>We are working on this section.</em></p>
+
+        <p>TEST Na festivale <strong>Punkáči deťom</strong> zaplatíš za jedlo, nápoje aj ďalšie služby jednoducho pomocou <strong>NFCtron</strong>.</p>
+        <p>Pri vstupe dostaneš festivalový náramok s čipom, ktorým zaplatíš jednoduchým priložením k terminálu.</p>
+        <p>Dobíjacie miesto je v areáli otvorené: Štvrtok 13:00–02:00, Piatok 09:00–02:00, Sobota 09:00–04:00. Na dobíjacom mieste sa nachádza aj výkup kelímkov.</p>
+
+        <h2>Novinka 2026</h2>
+        <p>Počas festivalu si môžeš kredit <strong>dobíjať aj priamo cez mobilnú aplikáciu NFCtron</strong>, takže už nemusíš chodiť na dobíjacie miesto. Stačí mať spárovaný náramok a podporu NFC vo svojom telefóne.</p>
+
+        <h2>Ako si dobiť kredit</h2>
+        <h3>Online pred festivalom (odporúčame)</h3>
+        <p>Kredit si môžeš dobiť ešte pred príchodom cez <strong>NFCtron Tickets</strong>.</p>
+        <p>Výhody:</p>
+        <ul>
+            <li>bez aktivačného poplatku</li>
+            <li>rýchlejší vstup</li>
+            <li>prvá platba bez čakania</li>
+        </ul>
+
+        <h3>Cez mobilnú aplikáciu NFCtron (NOVINKA)</h3>
+        <p>Po aktivácii náramku si môžeš počas festivalu kredit dobíjať priamo v aplikácii NFCtron. Kredit sa na náramok pripíše priebežne a nemusíš navštíviť dobíjacie miesto.</p>
+
+        <h3>Na dobíjacom mieste</h3>
+        <p>Kredit si môžeš dobiť aj na označenom NFCtron dobíjacom mieste.</p>
+        <p>Možnosti platby:</p>
+        <ul>
+            <li>hotovosť</li>
+            <li>platobná karta</li>
+        </ul>
+        <p>Pri prvom dobití na mieste sa účtuje <strong>aktivačný poplatok 1,50 €</strong>.</p>
+
+        <h2>Mobilná aplikácia NFCtron</h2>
+        <p>Odporúčame stiahnuť si aplikáciu <strong>NFCtron</strong> pre Android alebo iPhone.</p>
+        <p>V aplikácii môžeš:</p>
+        <ul>
+            <li>dobíjať kredit počas festivalu</li>
+            <li>sledovať aktuálny zostatok</li>
+            <li>prezerať históriu platieb</li>
+            <li>dostávať upozornenia o platbách</li>
+            <li>hodnotiť predajcov</li>
+            <li>po skončení festivalu jednoducho požiadať o vrátenie zostávajúceho kreditu</li>
+        </ul>
+
+        <h2>Vrátenie zostatku</h2>
+        <p>Ak celý kredit neminieš, o peniaze neprídeš.</p>
+        <p>O vrátenie zostatku môžeš bezplatne požiadať <strong>do 14 dní po skončení festivalu</strong>. Peniaze budú zaslané na tvoj bankový účet.</p>
+
+        <h2>Často kladené otázky</h2>
+        <h3>Ako zistím zostatok?</h3>
+        <ul>
+            <li>po každom nákupe u predajcu</li>
+            <li>priamo v aplikácii NFCtron</li>
+        </ul>
+
+        <h3>Potrebujem hotovosť?</h3>
+        <p>Nie. Väčšina platieb prebieha cez NFCtron. Hotovosť využiješ len na dobitie kreditu na dobíjacom mieste alebo vo festivalovom merch stánku.</p>
+
+        <h3>Potrebujem chytrý telefón?</h3>
+        <p>Nie. Dobiť náramok je možné na dobíjacom mieste buď kartou alebo hotovosťou.</p>
+
+        <h2>Nechaj svoj kredit pomáhať</h2>
+        <p>Ak sa rozhodneš nepožiadať o vrátenie zostávajúceho kreditu do <strong>14 dní po skončení festivalu</strong>, celý nevyplatený zostatok bude v plnej výške venovaný občianskemu združeniu <strong>Punkáči deťom</strong>.</p>
+        <p>Aj týmto spôsobom môžeš podporiť našu činnosť a pomôcť deťom, ktorým je festival venovaný.</p>
+        <p><strong>Ďakujeme, že pomáhaš spolu s nami.</strong></p>
     </div>
 </body>
 </html>

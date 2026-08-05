@@ -80,6 +80,7 @@ fun SpotifyWebViewCard(embedUrl: String) {
                 WebView(ctx).apply {
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
+                    setBackgroundColor(android.graphics.Color.TRANSPARENT)
                     addJavascriptInterface(
                         object {
                             @JavascriptInterface
