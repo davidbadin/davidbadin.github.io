@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -59,7 +60,10 @@ fun InfoScreen(modifier: Modifier = Modifier) {
     // Tracks measured content height of the WebView so the outer Column can size it correctly
     var webViewHeightDp by remember { mutableStateOf(1.dp) }
 
-    Scaffold(containerColor = Navy) { innerPadding ->
+    Scaffold(
+        containerColor = Navy,
+        contentWindowInsets = WindowInsets(0),
+    ) { innerPadding ->
 
         Box(
             modifier = modifier
