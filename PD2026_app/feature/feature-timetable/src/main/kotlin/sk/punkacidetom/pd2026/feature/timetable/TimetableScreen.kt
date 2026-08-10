@@ -81,12 +81,12 @@ import java.time.LocalDateTime
 import java.time.format.TextStyle
 import java.util.Locale
 
-private const val GLOW_HEIGHT_MINUTES                    = 15
+private const val GLOW_HEIGHT_MINUTES                    = 10
 private const val GLOW_START_ALPHA                       = 0.5f
 private const val INACTIVE_DAY_BUTTON_ALPHA              = 0.5f
-private const val SCHEDULE_DAYBUTTON_TOP_PADDING_DP      = 16
-private const val SCHEDULE_STAGE_LABEL_TOP_PADDING_DP    = 4
-private const val SCHEDULE_STAGE_LABEL_BOTTOM_PADDING_DP = 4
+private const val SCHEDULE_DAYBUTTON_TOP_PADDING_DP      = 32
+private const val SCHEDULE_STAGE_LABEL_TOP_PADDING_DP    = 8
+private const val SCHEDULE_STAGE_LABEL_BOTTOM_PADDING_DP = 8
 private const val SWIPE_DAY_THRESHOLD_DP                 = 50
 
 @Composable
@@ -160,7 +160,11 @@ fun TimetableScreen(
                         (slideOutHorizontally(targetOffsetX = { if (goingForward) -it else it }) + fadeOut())
                 },
                 label = "DaySlideTransition",
-            ) { _ ->
+            ) { dayIndex ->
+
+                // dummy command to override an 'unused' error
+                if (dayIndex < 0) return@AnimatedContent
+
                 if (allBands.isEmpty()) {
                     Text(
                         text = stringResource(R.string.timetable_no_slots),
@@ -225,10 +229,11 @@ fun TimetableScreen(
         ) {
             // Background: stretches to fill the full height of this Box
             AsyncImage(
-                model = "file:///android_asset/header_short.png",
+                model = "file:///android_asset/header_main.png",
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier.matchParentSize(),
+                alignment = Alignment.TopCenter,
             )
             // All header content stacked in one Column
             Column(
@@ -244,15 +249,15 @@ fun TimetableScreen(
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier.fillMaxWidth(SCHEDULE_LOGO_WIDTH_FRACTION),
                 )
-                Spacer(modifier = Modifier.height(SCHEDULE_TITLE_TOP_PADDING_DP.dp))
-                Text(
-                    text = stringResource(R.string.timetable_title),
-                    style = MaterialTheme.typography.displayMedium,
-                    color = White,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = spacing.md),
-                )
+//                Spacer(modifier = Modifier.height(SCHEDULE_TITLE_TOP_PADDING_DP.dp))
+//                Text(
+//                    text = stringResource(R.string.timetable_title),
+//                    style = MaterialTheme.typography.displayMedium,
+//                    color = White,
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(horizontal = spacing.md),
+//                )
 
                 // Day tab selector
                 if (uiState.days.isNotEmpty()) {

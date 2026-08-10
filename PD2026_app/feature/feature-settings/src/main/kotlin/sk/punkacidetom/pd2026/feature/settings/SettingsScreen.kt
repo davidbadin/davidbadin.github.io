@@ -321,6 +321,8 @@ fun SettingsScreen(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                     )
 
+                    Spacer(modifier = Modifier.height(spacing.sm))
+
                     val versionName = remember {
                         context.packageManager
                             .getPackageInfo(context.packageName, 0)

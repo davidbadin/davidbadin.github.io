@@ -51,9 +51,6 @@
     <string name="news_offline">News not available offline.</string>
     <string name="news_open_facebook">Open Facebook</string>
 
-    <!-- Info screen -->
-    <string name="info_title">Info</string>
-
     <!-- Tickets screen -->
     <string name="tickets_title">Tickets &amp; Eshop</string>
     <string name="tickets_buy">Buy tickets</string>
