@@ -311,14 +311,6 @@ fun BandDetailScreen(
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(spacing.xl))
-                        Spacer(modifier = Modifier.height(spacing.xl))
-                        Spacer(modifier = Modifier.height(spacing.xl))
-                        Spacer(modifier = Modifier.height(spacing.xl))
-                        Spacer(modifier = Modifier.height(spacing.xl))
-                        Spacer(modifier = Modifier.height(spacing.xl))
-
-
                         // Spotify player
                         if (band.spotifyArtistId.isNotBlank()) {
                             Spacer(modifier = Modifier.height(spacing.md))

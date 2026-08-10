@@ -61,6 +61,7 @@ private const val MAIN_COUNTDOWN_WIDTH_FRACTION = 0.90f
 private const val MAIN_THANKYOU_WIDTH_FRACTION  = 0.75f
 private const val MAIN_BUTTONS_TOP_PADDING_DP   = 48
 private const val MAIN_SOCIAL_TOP_PADDING_DP    = 48
+private const val MAIN_LOGO_DURING_EXTRA_PADDING_DP    = 48
 
 @Composable
 fun HomeScreen(
@@ -204,6 +205,11 @@ private fun HomeHeader(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+
+        if (phase == FestivalInfo.Phase.DURING) {
+            Spacer(modifier = Modifier.height(MAIN_LOGO_DURING_EXTRA_PADDING_DP.dp))
+        }
+
         // Logo
         Spacer(modifier = Modifier.height(MAIN_LOGO_TOP_PADDING_DP.dp))
         AsyncImage(
@@ -217,10 +223,12 @@ private fun HomeHeader(
         if (phase != FestivalInfo.Phase.DURING) {
             Spacer(modifier = Modifier.height(MAIN_CT_BLOCK_TOP_PADDING_DP.dp))
             PhaseBlock(
-                phase        = phase,
-                countdown    = countdown,
+                phase = phase,
+                countdown = countdown,
                 thankyouText = thankyouText,
             )
+        } else {
+            Spacer(modifier = Modifier.height(MAIN_LOGO_DURING_EXTRA_PADDING_DP.dp))
         }
 
         // Navy-backed section — buttons + social
