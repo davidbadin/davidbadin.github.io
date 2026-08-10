@@ -68,10 +68,10 @@ const val SHORT_HEADER_TITLE_BOTTOM_PADDING_DP = 16
 
 // ── Schedule screen header constants ─────────────────────────────────────────
 /** Width fraction for logo_pd_short.png in the Schedule (timetable) header. */
-const val SCHEDULE_LOGO_WIDTH_FRACTION  = 0.90f
+const val SCHEDULE_LOGO_WIDTH_FRACTION  = 0.75f
 
 /** Top padding (dp) above logo in the Schedule header. */
-const val SCHEDULE_LOGO_TOP_PADDING_DP  = 16
+const val SCHEDULE_LOGO_TOP_PADDING_DP  = 32
 
 /** Vertical padding (dp) between logo bottom and screen title in the Schedule header. */
 const val SCHEDULE_TITLE_TOP_PADDING_DP = 16

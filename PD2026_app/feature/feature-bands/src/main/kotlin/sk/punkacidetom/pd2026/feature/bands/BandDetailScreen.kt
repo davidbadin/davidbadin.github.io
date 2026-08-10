@@ -1,5 +1,6 @@
 package sk.punkacidetom.pd2026.feature.bands
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,7 +13,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -51,6 +56,12 @@ import sk.punkacidetom.pd2026.core.ui.theme.White
 import sk.punkacidetom.pd2026.core.ui.theme.WhiteAlpha60
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.dp
+import sk.punkacidetom.pd2026.core.ui.theme.PARALLAX_SCROLL_FRACTION
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_TOP_PADDING_DP
+import sk.punkacidetom.pd2026.core.ui.theme.SHORT_HEADER_LOGO_WIDTH_FRACTION
 import sk.punkacidetom.pd2026.feature.spotify.SpotifyWebViewCard
 import sk.punkacidetom.pd2026.feature.spotify.spotifyArtistEmbedUrl
 import sk.punkacidetom.pd2026.feature.spotify.util.SpotifyLauncher
@@ -120,7 +131,7 @@ fun BandDetailScreen(
                     // Photo branch: height is self-determined from intrinsic image dimensions.
                     // No-photo branch: fixed height to leave room for the festival logo.
                     modifier = if (hasPhoto) Modifier.fillMaxWidth()
-                               else Modifier.fillMaxWidth().height(spacing.bandImageHeight * 0.45f),
+                    else Modifier.fillMaxWidth().height(spacing.bandImageHeight * 0.45f),
                 )
                 IconButton(
                     onClick = onBack,
@@ -157,7 +168,7 @@ fun BandDetailScreen(
                     IconButton(onClick = { viewModel.toggleFavourite() }) {
                         Icon(
                             imageVector = if (uiState.isFavourite) Icons.Filled.Favorite
-                                          else Icons.Outlined.FavoriteBorder,
+                            else Icons.Outlined.FavoriteBorder,
                             contentDescription = null,
                             tint = if (uiState.isFavourite) Crimson else WhiteAlpha60,
                             modifier = Modifier.size(spacing.iconLg),
@@ -181,7 +192,7 @@ fun BandDetailScreen(
                     IconButton(onClick = { viewModel.toggleFavourite() }) {
                         Icon(
                             imageVector = if (uiState.isFavourite) Icons.Filled.Favorite
-                                          else Icons.Outlined.FavoriteBorder,
+                            else Icons.Outlined.FavoriteBorder,
                             contentDescription = null,
                             tint = if (uiState.isFavourite) Crimson else WhiteAlpha60,
                             modifier = Modifier.size(spacing.iconLg),
@@ -210,7 +221,7 @@ fun BandDetailScreen(
                 .replaceFirstChar { it.uppercase() }
             val dateStr = "${band.startDate.dayOfMonth}. ${band.startDate.monthValue}. ${band.startDate.year}"
             val timeStr = "${band.startTime.hour}:${band.startTime.minute.toString().padStart(2, '0')}" +
-                " – ${band.endTime.hour}:${band.endTime.minute.toString().padStart(2, '0')}"
+                    " – ${band.endTime.hour}:${band.endTime.minute.toString().padStart(2, '0')}"
             Column(modifier = Modifier.padding(horizontal = spacing.md)) {
                 Spacer(modifier = Modifier.height(spacing.sm))
                 Text(text = "$dayName, $dateStr", style = MaterialTheme.typography.bodyMedium, color = WhiteAlpha60)
@@ -238,9 +249,11 @@ fun BandDetailScreen(
         if (band.spotifyArtistId.isNotBlank()) {
             item(key = "spotify") {
                 Spacer(modifier = Modifier.height(spacing.md))
-                SpotifyWebViewCard(
-                    embedUrl = spotifyArtistEmbedUrl(band.spotifyArtistId),
-                )
+                Box(modifier = Modifier.padding(horizontal = spacing.md)) {
+                    SpotifyWebViewCard(
+                        embedUrl = spotifyArtistEmbedUrl(band.spotifyArtistId),
+                    )
+                }
                 Spacer(modifier = Modifier.height(spacing.sm))
                 Button(
                     onClick = { SpotifyLauncher.openArtist(context, band.spotifyArtistId) },
@@ -273,6 +286,7 @@ fun BandDetailScreen(
 // No-photo branch — festival logo centred on Navy; unchanged from original design.
 // ---------------------------------------------------------------------------
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
 
@@ -303,7 +317,7 @@ private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
 
             // H(i): rendered image height after scaling to fill width (aspect-ratio-correct)
             val renderedHeightPx = containerWidthPx *
-                imgIntrinsicHeight.toFloat() / imgIntrinsicWidth.toFloat()
+                    imgIntrinsicHeight.toFloat() / imgIntrinsicWidth.toFloat()
 
             // H(c): visible container height = 62% of H(i)
             val containerHeightPx  = renderedHeightPx * (1f - CR_TOP - CR_BOTTOM)
@@ -358,7 +372,7 @@ private fun BandHeaderImage(band: Band?, modifier: Modifier = Modifier) {
                             // H(i): actual rendered height; fall back to square
                             // (width == H(i)) if the image hasn't loaded yet.
                             val hi      = if (placeable.height > 0) placeable.height
-                                          else constraints.maxWidth
+                            else constraints.maxWidth
                             val cropTop = (hi * CR_TOP).roundToInt()
                             val hc      = hi - cropTop - (hi * CR_BOTTOM).roundToInt()
                             // Report H(c) to parent; place image shifted up by cropTop.
