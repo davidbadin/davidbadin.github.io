@@ -133,7 +133,8 @@ fun BandDetailScreen(
                 .padding(innerPadding),
         ) {
             val density = LocalDensity.current
-            val screenWidthPx = with(density) { maxWidth.toPx() }
+            val scopeMaxWidth = maxWidth                          // BoxWithConstraintsScope.maxWidth
+            val screenWidthPx = with(density) { scopeMaxWidth.toPx() }
 
             // Visible height of the band photo after cropping (H(c) = H(i) * (1 - CR_TOP - CR_BOTTOM)).
             // Defaults to a reasonable height before the image loads (square-aspect fallback).
