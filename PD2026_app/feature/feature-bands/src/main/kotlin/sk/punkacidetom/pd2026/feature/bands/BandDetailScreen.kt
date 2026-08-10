@@ -104,6 +104,7 @@ private const val FADE_BOT  = 0.10f   // 10% of H(i) — bottom fade height
 
 // ---------------------------------------------------------------------------
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun BandDetailScreen(
     onBack: () -> Unit,
@@ -133,7 +134,8 @@ fun BandDetailScreen(
                 .padding(innerPadding),
         ) {
             val density = LocalDensity.current
-            val scopeMaxWidth = maxWidth                          // BoxWithConstraintsScope.maxWidth
+            val scopeMaxWidth =
+                maxWidth                          // BoxWithConstraintsScope.maxWidth
             val screenWidthPx = with(density) { scopeMaxWidth.toPx() }
 
             // Visible height of the band photo after cropping (H(c) = H(i) * (1 - CR_TOP - CR_BOTTOM)).
@@ -141,7 +143,7 @@ fun BandDetailScreen(
             // The Column spacer reserves this exact height so content starts below the photo.
             val bandImageVisibleHeightDp = with(density) {
                 (screenWidthPx * imgIntrinsicHeight.toFloat() / imgIntrinsicWidth.toFloat() *
-                    (1f - CR_TOP - CR_BOTTOM)).toDp()
+                        (1f - CR_TOP - CR_BOTTOM)).toDp()
             }
 
             // ── Background layer (outside the scrollable Column) ─────────────────
@@ -152,7 +154,7 @@ fun BandDetailScreen(
                     scrollOffset = scrollState.value,
                     screenWidthPx = screenWidthPx,
                     onIntrinsicSize = { w, h ->
-                        imgIntrinsicWidth  = w
+                        imgIntrinsicWidth = w
                         imgIntrinsicHeight = h
                     },
                 )
@@ -256,11 +258,11 @@ fun BandDetailScreen(
                             .getDisplayName(TextStyle.FULL, Locale.forLanguageTag(uiState.language))
                             .replaceFirstChar { it.uppercase() }
                         val dateStr = "${band.startDate.dayOfMonth}. " +
-                            "${band.startDate.monthValue}. ${band.startDate.year}"
+                                "${band.startDate.monthValue}. ${band.startDate.year}"
                         val timeStr = "${band.startTime.hour}:" +
-                            "${band.startTime.minute.toString().padStart(2, '0')}" +
-                            " – ${band.endTime.hour}:" +
-                            "${band.endTime.minute.toString().padStart(2, '0')}"
+                                "${band.startTime.minute.toString().padStart(2, '0')}" +
+                                " – ${band.endTime.hour}:" +
+                                "${band.endTime.minute.toString().padStart(2, '0')}"
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -290,7 +292,7 @@ fun BandDetailScreen(
                             IconButton(onClick = { viewModel.toggleFavourite() }) {
                                 Icon(
                                     imageVector = if (uiState.isFavourite) Icons.Filled.Favorite
-                                                  else Icons.Outlined.FavoriteBorder,
+                                    else Icons.Outlined.FavoriteBorder,
                                     contentDescription = null,
                                     tint = if (uiState.isFavourite) Crimson else WhiteAlpha60,
                                     modifier = Modifier.size(spacing.iconLg),
@@ -318,7 +320,12 @@ fun BandDetailScreen(
                             }
                             Spacer(modifier = Modifier.height(spacing.sm))
                             Button(
-                                onClick = { SpotifyLauncher.openArtist(context, band.spotifyArtistId) },
+                                onClick = {
+                                    SpotifyLauncher.openArtist(
+                                        context,
+                                        band.spotifyArtistId
+                                    )
+                                },
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = ButtonDefaults.buttonColors(containerColor = Crimson),
                             ) {
