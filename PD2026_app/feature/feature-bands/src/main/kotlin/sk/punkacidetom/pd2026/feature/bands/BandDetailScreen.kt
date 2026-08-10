@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -310,6 +311,14 @@ fun BandDetailScreen(
                             )
                         }
 
+                        Spacer(modifier = Modifier.height(spacing.xl))
+                        Spacer(modifier = Modifier.height(spacing.xl))
+                        Spacer(modifier = Modifier.height(spacing.xl))
+                        Spacer(modifier = Modifier.height(spacing.xl))
+                        Spacer(modifier = Modifier.height(spacing.xl))
+                        Spacer(modifier = Modifier.height(spacing.xl))
+
+
                         // Spotify player
                         if (band.spotifyArtistId.isNotBlank()) {
                             Spacer(modifier = Modifier.height(spacing.md))
@@ -369,7 +378,6 @@ fun BandDetailScreen(
 // [onIntrinsicSize] is called once on successful image load with (width, height) in pixels.
 // ---------------------------------------------------------------------------
 
-@SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 private fun BandPhotoBackground(
     band: Band,
@@ -394,69 +402,86 @@ private fun BandPhotoBackground(
 
     val imageUrl = if (source != ImageSource.None) band.imageUri(source) else ""
 
-    // The outer Box is the visible window (H(c) tall) and moves at parallax speed.
-    // clipToBounds() confines the image crop to this window.
-    Box(
+    // Outer Column moves at parallax speed. Wrapping both the photo window and the
+    // Navy cover ensures they always translate together — no bottom-crop bleed-through.
+    Column(
         modifier = modifier
             .fillMaxWidth()
-            .height(containerHeightDp)
-            .clipToBounds()
+            .fillMaxHeight()
             .graphicsLayer {
                 translationY = -scrollOffset * PARALLAX_SCROLL_FRACTION
             },
     ) {
-        if (imageUrl.isNotBlank()) {
-            // Band photo — uses the same layout{} crop trick as the old BandHeaderImage.
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(imageUrl)
-                    .listener(
-                        onError = { _, _ -> source = source.next() },
-                        onSuccess = { _, result ->
-                            val w = result.drawable.intrinsicWidth.coerceAtLeast(1)
-                            val h = result.drawable.intrinsicHeight.coerceAtLeast(1)
-                            imgIntrinsicWidth  = w
-                            imgIntrinsicHeight = h
-                            onIntrinsicSize(w, h)
-                        },
-                    )
-                    .crossfade(true)
-                    .build(),
-                contentDescription = band.name,
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .layout { measurable, constraints ->
-                        val placeable = measurable.measure(
-                            constraints.copy(minHeight = 0, maxHeight = Constraints.Infinity)
+        // Photo window — crop applied here via clipToBounds().
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(containerHeightDp)
+                .clipToBounds(),
+        ) {
+            if (imageUrl.isNotBlank()) {
+                // Band photo — uses the same layout{} crop trick as the old BandHeaderImage.
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(imageUrl)
+                        .listener(
+                            onError = { _, _ -> source = source.next() },
+                            onSuccess = { _, result ->
+                                val w = result.drawable.intrinsicWidth.coerceAtLeast(1)
+                                val h = result.drawable.intrinsicHeight.coerceAtLeast(1)
+                                imgIntrinsicWidth  = w
+                                imgIntrinsicHeight = h
+                                onIntrinsicSize(w, h)
+                            },
                         )
-                        val hi      = if (placeable.height > 0) placeable.height
-                                      else constraints.maxWidth
-                        val cropTop = (hi * CR_TOP).roundToInt()
-                        val hc      = hi - cropTop - (hi * CR_BOTTOM).roundToInt()
-                        layout(placeable.width, hc.coerceAtLeast(1)) {
-                            placeable.placeRelative(0, -cropTop)
-                        }
-                    },
-            )
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = band.name,
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .layout { measurable, constraints ->
+                            val placeable = measurable.measure(
+                                constraints.copy(minHeight = 0, maxHeight = Constraints.Infinity)
+                            )
+                            val hi      = if (placeable.height > 0) placeable.height
+                                          else constraints.maxWidth
+                            val cropTop = (hi * CR_TOP).roundToInt()
+                            val hc      = hi - cropTop - (hi * CR_BOTTOM).roundToInt()
+                            layout(placeable.width, hc.coerceAtLeast(1)) {
+                                placeable.placeRelative(0, -cropTop)
+                            }
+                        },
+                )
 
-            // Top fade: Navy → Transparent
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(fadeTopHeightDp)
-                    .align(Alignment.TopCenter)
-                    .background(Brush.verticalGradient(listOf(Navy, Color.Transparent))),
-            )
+                // Top fade: Navy → Transparent
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(fadeTopHeightDp)
+                        .align(Alignment.TopCenter)
+                        .background(Brush.verticalGradient(listOf(Navy, Color.Transparent))),
+                )
 
-            // Bottom fade: Transparent → Navy
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(fadeBotHeightDp)
-                    .align(Alignment.BottomCenter)
-                    .background(Brush.verticalGradient(listOf(Color.Transparent, Navy))),
-            )
+                // Bottom fade: Transparent → Navy
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(fadeBotHeightDp)
+                        .align(Alignment.BottomCenter)
+                        .background(Brush.verticalGradient(listOf(Color.Transparent, Navy))),
+                )
+            }
         }
+
+        // Navy cover — fills everything below the photo window.
+        // Moves at the same parallax speed as the photo (same graphicsLayer),
+        // so the bottom-cropped strip can never become visible on scroll.
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .background(Navy),
+        )
     }
 }
