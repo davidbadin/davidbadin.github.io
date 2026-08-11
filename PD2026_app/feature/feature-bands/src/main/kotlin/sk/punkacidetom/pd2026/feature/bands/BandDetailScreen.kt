@@ -124,241 +124,241 @@ fun BandDetailScreen(
 
     // Lifted from BandPhotoBackground so the Column spacer height can be computed here.
     // Defaults to 1:1 aspect ratio; updated via callback when the image loads.
-    var imgIntrinsicWidth  by remember(band?.imageName) { mutableIntStateOf(1080) }
+    var imgIntrinsicWidth by remember(band?.imageName) { mutableIntStateOf(1080) }
     var imgIntrinsicHeight by remember(band?.imageName) { mutableIntStateOf(1080) }
 
-    Scaffold(containerColor = Navy) { innerPadding ->
-        BoxWithConstraints(
-            modifier = modifier
-                .fillMaxSize()
-                .background(Navy)
-                .padding(innerPadding),
-        ) {
-            val density = LocalDensity.current
-            val scopeMaxWidth =
-                maxWidth                          // BoxWithConstraintsScope.maxWidth
-            val screenWidthPx = with(density) { scopeMaxWidth.toPx() }
 
-            // Visible height of the band photo after cropping (H(c) = H(i) * (1 - CR_TOP - CR_BOTTOM)).
-            // Defaults to a reasonable height before the image loads (square-aspect fallback).
-            // The Column spacer reserves this exact height so content starts below the photo.
-            val bandImageVisibleHeightDp = with(density) {
-                (screenWidthPx * imgIntrinsicHeight.toFloat() / imgIntrinsicWidth.toFloat() *
-                        (1f - CR_TOP - CR_BOTTOM)).toDp()
-            }
+    BoxWithConstraints(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Navy),
+    ) {
+        val density = LocalDensity.current
+        val scopeMaxWidth =
+            maxWidth                          // BoxWithConstraintsScope.maxWidth
+        val screenWidthPx = with(density) { scopeMaxWidth.toPx() }
 
-            // ── Background layer (outside the scrollable Column) ─────────────────
-            if (hasPhoto && band != null) {
-                // Band photo with same crop/fade logic as before, now with parallax.
-                BandPhotoBackground(
-                    band = band,
-                    scrollOffset = scrollState.value,
-                    screenWidthPx = screenWidthPx,
-                    onIntrinsicSize = { w, h ->
-                        imgIntrinsicWidth = w
-                        imgIntrinsicHeight = h
-                    },
-                )
-            } else {
-                // Generic festival header — same pattern as News, Tickets, Settings.
-                AsyncImage(
-                    model = "file:///android_asset/header_main.png",
-                    contentDescription = null,
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .graphicsLayer {
-                            translationY = -scrollState.value * PARALLAX_SCROLL_FRACTION
-                        },
-                    alignment = Alignment.TopCenter,
-                )
-            }
+        // Visible height of the band photo after cropping (H(c) = H(i) * (1 - CR_TOP - CR_BOTTOM)).
+        // Defaults to a reasonable height before the image loads (square-aspect fallback).
+        // The Column spacer reserves this exact height so content starts below the photo.
+        val bandImageVisibleHeightDp = with(density) {
+            (screenWidthPx * imgIntrinsicHeight.toFloat() / imgIntrinsicWidth.toFloat() *
+                    (1f - CR_TOP - CR_BOTTOM)).toDp()
+        }
 
-            // ── Scrollable content column ────────────────────────────────────────
-            Column(
+        // ── Background layer (outside the scrollable Column) ─────────────────
+        if (hasPhoto && band != null) {
+            // Band photo with same crop/fade logic as before, now with parallax.
+            BandPhotoBackground(
+                band = band,
+                scrollOffset = scrollState.value,
+                screenWidthPx = screenWidthPx,
+                onIntrinsicSize = { w, h ->
+                    imgIntrinsicWidth = w
+                    imgIntrinsicHeight = h
+                },
+            )
+        } else {
+            // Generic festival header — same pattern as News, Tickets, Settings.
+            AsyncImage(
+                model = "file:///android_asset/header_main.png",
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .verticalScroll(scrollState),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
+                    .graphicsLayer {
+                        translationY = -scrollState.value * PARALLAX_SCROLL_FRACTION
+                    },
+                alignment = Alignment.TopCenter,
+            )
+        }
 
-                // Header area — sized by its content; clipped so nothing bleeds out.
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .clipToBounds(),
-                ) {
-                    if (hasPhoto) {
-                        // Reserve the same height as the visible cropped band photo.
-                        // This placeholder moves at 1× scroll speed; the photo behind
-                        // it moves at 0.5×, creating the parallax effect.
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(bandImageVisibleHeightDp),
+        // ── Scrollable content column ────────────────────────────────────────
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+
+            // Header area — sized by its content; clipped so nothing bleeds out.
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .clipToBounds(),
+            ) {
+                if (hasPhoto) {
+                    // Reserve the same height as the visible cropped band photo.
+                    // This placeholder moves at 1× scroll speed; the photo behind
+                    // it moves at 0.5×, creating the parallax effect.
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(bandImageVisibleHeightDp),
+                    )
+                } else {
+                    // Short header: logo + band name as title + genre.
+                    // Matches the pattern used by BandsScreen, NewsScreen, etc.
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .statusBarsPadding(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_LOGO_TOP_PADDING_DP.dp))
+                        AsyncImage(
+                            model = "file:///android_asset/logo_pd_short.png",
+                            contentDescription = "Punkáči deťom 2026",
+                            contentScale = ContentScale.FillWidth,
+                            modifier = Modifier.fillMaxWidth(SHORT_HEADER_LOGO_WIDTH_FRACTION),
                         )
-                    } else {
-                        // Short header: logo + band name as title + genre.
-                        // Matches the pattern used by BandsScreen, NewsScreen, etc.
-                        Column(
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_TOP_PADDING_DP.dp))
+                        Text(
+                            text = band?.name ?: "",
+                            style = MaterialTheme.typography.displayMedium,
+                            color = White,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .statusBarsPadding(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                        ) {
-                            Spacer(modifier = Modifier.height(SHORT_HEADER_LOGO_TOP_PADDING_DP.dp))
-                            AsyncImage(
-                                model = "file:///android_asset/logo_pd_short.png",
-                                contentDescription = "Punkáči deťom 2026",
-                                contentScale = ContentScale.FillWidth,
-                                modifier = Modifier.fillMaxWidth(SHORT_HEADER_LOGO_WIDTH_FRACTION),
-                            )
-                            Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_TOP_PADDING_DP.dp))
+                                .padding(horizontal = spacing.md),
+                        )
+                        if (band != null && band.genre.isNotBlank()) {
                             Text(
-                                text = band?.name ?: "",
-                                style = MaterialTheme.typography.displayMedium,
-                                color = White,
+                                text = band.genre,
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Crimson,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = spacing.md),
                             )
-                            if (band != null && band.genre.isNotBlank()) {
-                                Text(
-                                    text = band.genre,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = Crimson,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = spacing.md),
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_BOTTOM_PADDING_DP.dp))
                         }
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_BOTTOM_PADDING_DP.dp))
                     }
                 }
+            }
 
-                // ── Screen content ───────────────────────────────────────────────
-                if (band == null) {
-                    Text(
-                        text = "…",
-                        color = WhiteAlpha60,
-                        modifier = Modifier.padding(spacing.md),
-                    )
-                } else {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(spacing.md),
-                        horizontalAlignment = Alignment.CenterHorizontally,
+            // ── Screen content ───────────────────────────────────────────────
+            if (band == null) {
+                Text(
+                    text = "…",
+                    color = WhiteAlpha60,
+                    modifier = Modifier.padding(spacing.md),
+                )
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = spacing.md, end = spacing.md, bottom = spacing.md),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    // Day / date + time + stage  |  Favourite icon
+                    // NOTE: favourite icon is on the RIGHT, vertically aligned with the
+                    // "dayName, dateStr" line (first line of the left column).
+                    val dayName = band.startDate.dayOfWeek
+                        .getDisplayName(TextStyle.FULL, Locale.forLanguageTag(uiState.language))
+                        .replaceFirstChar { it.uppercase() }
+                    val dateStr = "${band.startDate.dayOfMonth}. " +
+                            "${band.startDate.monthValue}. ${band.startDate.year}"
+                    val timeStr = "${band.startTime.hour}:" +
+                            "${band.startTime.minute.toString().padStart(2, '0')}" +
+                            " – ${band.endTime.hour}:" +
+                            "${band.endTime.minute.toString().padStart(2, '0')}"
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Top,
                     ) {
-                        // Day / date + time + stage  |  Favourite icon
-                        // NOTE: favourite icon is on the RIGHT, vertically aligned with the
-                        // "dayName, dateStr" line (first line of the left column).
-                        val dayName = band.startDate.dayOfWeek
-                            .getDisplayName(TextStyle.FULL, Locale.forLanguageTag(uiState.language))
-                            .replaceFirstChar { it.uppercase() }
-                        val dateStr = "${band.startDate.dayOfMonth}. " +
-                                "${band.startDate.monthValue}. ${band.startDate.year}"
-                        val timeStr = "${band.startTime.hour}:" +
-                                "${band.startTime.minute.toString().padStart(2, '0')}" +
-                                " – ${band.endTime.hour}:" +
-                                "${band.endTime.minute.toString().padStart(2, '0')}"
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.Top,
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Spacer(modifier = Modifier.height(spacing.sm))
-                                Text(
-                                    text = "$dayName, $dateStr",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = WhiteAlpha60,
-                                )
-                                Text(
-                                    text = timeStr,
-                                    style = MaterialTheme.typography.titleSmall,
-                                    color = White,
-                                )
-                                Spacer(modifier = Modifier.height(spacing.xs))
-                                Text(
-                                    text = Stages.displayName(band.stageCode),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = WhiteAlpha60,
-                                )
-                                Spacer(modifier = Modifier.height(spacing.md))
-                            }
-                            IconButton(onClick = { viewModel.toggleFavourite() }) {
-                                Icon(
-                                    imageVector = if (uiState.isFavourite) Icons.Filled.Favorite
-                                    else Icons.Outlined.FavoriteBorder,
-                                    contentDescription = null,
-                                    tint = if (uiState.isFavourite) Crimson else WhiteAlpha60,
-                                    modifier = Modifier.size(spacing.iconLg),
-                                )
-                            }
-                        }
-
-                        // Description
-                        val description = band.description(uiState.language)
-                        if (description.isNotBlank()) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Spacer(modifier = Modifier.height(spacing.sm))
                             Text(
-                                text = description,
+                                text = "$dayName, $dateStr",
                                 style = MaterialTheme.typography.bodyMedium,
+                                color = WhiteAlpha60,
+                            )
+                            Text(
+                                text = timeStr,
+                                style = MaterialTheme.typography.titleSmall,
+                                color = White,
+                            )
+                            Spacer(modifier = Modifier.height(spacing.xs))
+                            Text(
+                                text = Stages.displayName(band.stageCode),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = WhiteAlpha60,
+                            )
+                            Spacer(modifier = Modifier.height(spacing.md))
+                        }
+                        IconButton(onClick = { viewModel.toggleFavourite() }) {
+                            Icon(
+                                imageVector = if (uiState.isFavourite) Icons.Filled.Favorite
+                                else Icons.Outlined.FavoriteBorder,
+                                contentDescription = null,
+                                tint = if (uiState.isFavourite) Crimson else WhiteAlpha60,
+                                modifier = Modifier.size(spacing.iconLg),
+                            )
+                        }
+                    }
+
+                    // Description
+                    val description = band.description(uiState.language)
+                    if (description.isNotBlank()) {
+                        Text(
+                            text = description,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = White,
+                        )
+                    }
+
+                    // Spotify player
+                    if (band.spotifyArtistId.isNotBlank()) {
+                        Spacer(modifier = Modifier.height(spacing.md))
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            SpotifyWebViewCard(
+                                embedUrl = spotifyArtistEmbedUrl(band.spotifyArtistId),
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(spacing.sm))
+                        Button(
+                            onClick = {
+                                SpotifyLauncher.openArtist(
+                                    context,
+                                    band.spotifyArtistId
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(containerColor = Crimson),
+                        ) {
+                            Text(
+                                text = "Spotify",
+                                style = MaterialTheme.typography.labelLarge,
                                 color = White,
                             )
                         }
-
-                        // Spotify player
-                        if (band.spotifyArtistId.isNotBlank()) {
-                            Spacer(modifier = Modifier.height(spacing.md))
-                            Box(modifier = Modifier.fillMaxWidth()) {
-                                SpotifyWebViewCard(
-                                    embedUrl = spotifyArtistEmbedUrl(band.spotifyArtistId),
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(spacing.sm))
-                            Button(
-                                onClick = {
-                                    SpotifyLauncher.openArtist(
-                                        context,
-                                        band.spotifyArtistId
-                                    )
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = ButtonDefaults.buttonColors(containerColor = Crimson),
-                            ) {
-                                Text(
-                                    text = "Spotify",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = White,
-                                )
-                            }
-                        }
-
-                        // Bottom spacer
-                        Spacer(modifier = Modifier.height(spacing.xl))
                     }
+
+                    // Bottom spacer
+                    Spacer(modifier = Modifier.height(spacing.xl))
                 }
             }
+        }
 
-            // ── Back button — static, never scrolls away ─────────────────────────
-            // Placed AFTER the Column in the BoxWithConstraints z-order so it
-            // renders on top of the scrollable content.
-            IconButton(
-                onClick = onBack,
-                modifier = Modifier
-                    .statusBarsPadding()
-                    .padding(spacing.sm)
-                    .align(Alignment.TopStart),
-            ) {
-                FaIcon(name = "arrow-left", size = spacing.iconLg, tint = White)
-            }
+        // ── Back button — static, never scrolls away ─────────────────────────
+        // Placed AFTER the Column in the BoxWithConstraints z-order so it
+        // renders on top of the scrollable content.
+        IconButton(
+            onClick = onBack,
+            modifier = Modifier
+                .statusBarsPadding()
+                .padding(spacing.sm)
+                .align(Alignment.TopStart),
+        ) {
+            FaIcon(name = "arrow-left", size = spacing.iconLg, tint = White)
         }
     }
 }
+
+
 
 // ---------------------------------------------------------------------------
 // BandPhotoBackground

@@ -103,6 +103,7 @@ fun NfctronScreen(modifier: Modifier = Modifier) {
                                 .padding(horizontal = spacing.md),
                         )
                         Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_BOTTOM_PADDING_DP.dp))
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_BOTTOM_PADDING_DP.dp))
                     }
                 }
 

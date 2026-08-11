@@ -69,13 +69,12 @@ private const val INFO_BACK_SWIPE_THRESHOLD_DP = 80
 
 private enum class InfoChapter(val title: String) {
     FESTIVAL_AREA("Festivalový areál"),
-    SAFETY("Bezpečnosť"),
-    HYGIENE("Hygiena a sprchy"),
-    ECOLOGY("Ekológia"),
-    ENTRY_AND_CAMPING("Vstup a stanovanie"),
-    LOST_AND_FOUND("Straty a nálezy"),
     ARRIVAL("Príchod"),
-    SWIMMING("Kúpanie"),
+    ENTRY_AND_CAMPING("Vstup a stanovanie"),
+    SAFETY("Bezpečnosť"),
+    HYGIENE("Hygiena, sprchy a kúpanie"),
+    ECOLOGY("Ekológia"),
+    LOST_AND_FOUND("Straty a nálezy"),
     CHILDREN("Deti na festivale"),
     PAYMENTS("Platby"),
 }
@@ -172,6 +171,7 @@ fun InfoScreen(modifier: Modifier = Modifier) {
                                 .padding(horizontal = spacing.md),
                         )
                         Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_BOTTOM_PADDING_DP.dp))
+                        Spacer(modifier = Modifier.height(SHORT_HEADER_TITLE_BOTTOM_PADDING_DP.dp))
                     }
                 }
 
@@ -234,7 +234,7 @@ private fun InfoChapterRow(chapter: InfoChapter, onClick: () -> Unit) {
             .clip(RoundedCornerShape(spacing.cardCorner))
             .background(NavyLight)
             .clickable(onClick = onClick)
-            .padding(horizontal = spacing.md, vertical = spacing.sm),
+            .padding(horizontal = spacing.md, vertical = spacing.md),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -320,6 +320,10 @@ private fun InfoChapterContent(
                 InfoParagraph("Štvrtok: 15:00 – 23:00")
                 InfoParagraph("Piatok: 08:00 – 23:00")
                 InfoParagraph("Sobota: 08:00 – 23:00")
+
+                InfoH2("Kúpanie")
+                InfoParagraph("Kúpanie v jazerách campingu je prísne zakázané.")
+                InfoParagraph("Jazerá sú ohradené. Porušenie zákazu môže viesť k odobratiu festivalového náramku bez nároku na náhradu.")
             }
 
             InfoChapter.ECOLOGY -> {
@@ -389,12 +393,6 @@ private fun InfoChapterContent(
                 InfoParagraph("Organizátor nezodpovedá za veci ponechané vo vozidle.")
             }
 
-            InfoChapter.SWIMMING -> {
-                InfoH2("Kúpanie")
-                InfoParagraph("Kúpanie v jazerách campingu je prísne zakázané.")
-                InfoParagraph("Jazerá sú ohradené. Porušenie zákazu môže viesť k odobratiu festivalového náramku bez nároku na náhradu.")
-            }
-
             InfoChapter.CHILDREN -> {
                 InfoH2("Deti na festivale")
                 InfoParagraph("Festival je priateľský k rodinám s deťmi.")
@@ -414,7 +412,7 @@ private fun InfoChapterContent(
             }
         }
 
-        Spacer(modifier = Modifier.height(spacing.md))
+        Spacer(modifier = Modifier.height(spacing.xxl))
         Button(
             onClick = onBack,
             colors = ButtonDefaults.buttonColors(
